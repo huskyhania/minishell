@@ -1,32 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mainh.c                                            :+:      :+:    :+:   */
+/*   ft_putnbr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/02 13:37:20 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/02 14:46:26 by hskrzypi         ###   ########.fr       */
+/*   Created: 2024/04/27 19:36:08 by hskrzypi          #+#    #+#             */
+/*   Updated: 2024/05/07 20:28:19 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
-/*# include <errno.h>
-# include <stdio.h>
-# include <sys/wait.h>
-# include <readline/readline.h>
-# include <readline/history.h>
-*/
+#include "libft.h"
 
-int main(int argc, char **argv, char **envp)
+void	ft_putnbr_fd(int n, int fd)
 {
-	(void)argc;
-	(void)argv;
-	(void)envp;
-	mini	attributes;
-	while (1)
+	if (n == -2147483648)
 	{
-		attributes.readret = readline(PROMPT);
+		ft_putchar_fd('-', fd);
+		ft_putchar_fd('2', fd);
+		ft_putnbr_fd(147483648, fd);
 	}
-	return (0);
+	else if (n < 0)
+	{
+		ft_putchar_fd('-', fd);
+		n = -n;
+		ft_putnbr_fd(n, fd);
+	}
+	else if (n > 9)
+	{
+		ft_putnbr_fd(n / 10, fd);
+		ft_putnbr_fd(n % 10, fd);
+	}
+	else
+		ft_putchar_fd(n + 48, fd);
 }

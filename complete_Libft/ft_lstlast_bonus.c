@@ -1,32 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mainh.c                                            :+:      :+:    :+:   */
+/*   ft_lstlast_bonus.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/02 13:37:20 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/02 14:46:26 by hskrzypi         ###   ########.fr       */
+/*   Created: 2024/05/02 15:38:20 by hskrzypi          #+#    #+#             */
+/*   Updated: 2024/05/02 16:48:20 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
-/*# include <errno.h>
-# include <stdio.h>
-# include <sys/wait.h>
-# include <readline/readline.h>
-# include <readline/history.h>
-*/
+#include "libft.h"
 
-int main(int argc, char **argv, char **envp)
+t_list	*ft_lstlast(t_list *lst)
 {
-	(void)argc;
-	(void)argv;
-	(void)envp;
-	mini	attributes;
-	while (1)
+	if (lst == NULL)
+		return (NULL);
+	while (lst->next != NULL)
 	{
-		attributes.readret = readline(PROMPT);
+		lst = lst->next;
 	}
-	return (0);
+	return (lst);
 }

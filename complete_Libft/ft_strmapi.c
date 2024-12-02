@@ -1,32 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mainh.c                                            :+:      :+:    :+:   */
+/*   ft_strmapi.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/02 13:37:20 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/02 14:46:26 by hskrzypi         ###   ########.fr       */
+/*   Created: 2024/04/26 15:11:08 by hskrzypi          #+#    #+#             */
+/*   Updated: 2024/05/07 20:01:54 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
-/*# include <errno.h>
-# include <stdio.h>
-# include <sys/wait.h>
-# include <readline/readline.h>
-# include <readline/history.h>
-*/
+#include "libft.h"
 
-int main(int argc, char **argv, char **envp)
+char	*ft_strmapi(char const *s, char (*f)(unsigned int, char))
 {
-	(void)argc;
-	(void)argv;
-	(void)envp;
-	mini	attributes;
-	while (1)
+	int		i;
+	char	*result;
+
+	i = 0;
+	result = malloc((ft_strlen(s) + 1) * sizeof(char));
+	if (!result)
+		return (NULL);
+	while (s[i] != '\0')
 	{
-		attributes.readret = readline(PROMPT);
+		result[i] = (*f)(i, s[i]);
+		i++;
 	}
-	return (0);
+	result[i] = '\0';
+	return (result);
 }

@@ -1,32 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mainh.c                                            :+:      :+:    :+:   */
+/*   ft_lstadd_front_bonus.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/02 13:37:20 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/02 14:46:26 by hskrzypi         ###   ########.fr       */
+/*   Created: 2024/04/29 22:46:45 by hskrzypi          #+#    #+#             */
+/*   Updated: 2024/05/02 12:28:49 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
-/*# include <errno.h>
-# include <stdio.h>
-# include <sys/wait.h>
-# include <readline/readline.h>
-# include <readline/history.h>
-*/
+#include "libft.h"
 
-int main(int argc, char **argv, char **envp)
+void	ft_lstadd_front(t_list **lst, t_list *new)
 {
-	(void)argc;
-	(void)argv;
-	(void)envp;
-	mini	attributes;
-	while (1)
-	{
-		attributes.readret = readline(PROMPT);
-	}
-	return (0);
+	new->next = *lst;
+	*lst = new;
 }

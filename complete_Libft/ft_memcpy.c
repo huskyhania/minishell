@@ -1,32 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mainh.c                                            :+:      :+:    :+:   */
+/*   ft_memcpy.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/02 13:37:20 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/02 14:46:26 by hskrzypi         ###   ########.fr       */
+/*   Created: 2024/04/17 21:32:00 by hskrzypi          #+#    #+#             */
+/*   Updated: 2024/05/06 19:18:00 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
-/*# include <errno.h>
-# include <stdio.h>
-# include <sys/wait.h>
-# include <readline/readline.h>
-# include <readline/history.h>
-*/
+#include "libft.h"
 
-int main(int argc, char **argv, char **envp)
+void	*ft_memcpy(void *dst, const void *src, size_t n)
 {
-	(void)argc;
-	(void)argv;
-	(void)envp;
-	mini	attributes;
-	while (1)
+	size_t	i;
+	char	*cast_dest;
+	char	*cast_src;
+
+	i = 0;
+	cast_dest = (char *) dst;
+	cast_src = (char *) src;
+	while (i < n && (dst != NULL || src != NULL))
 	{
-		attributes.readret = readline(PROMPT);
+		cast_dest[i] = cast_src[i];
+		i++;
 	}
-	return (0);
+	return (dst);
 }

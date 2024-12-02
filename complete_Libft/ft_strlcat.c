@@ -1,32 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mainh.c                                            :+:      :+:    :+:   */
+/*   ft_strlcat.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/02 13:37:20 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/02 14:46:26 by hskrzypi         ###   ########.fr       */
+/*   Created: 2024/04/19 19:45:05 by hskrzypi          #+#    #+#             */
+/*   Updated: 2024/05/06 21:01:06 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
-/*# include <errno.h>
-# include <stdio.h>
-# include <sys/wait.h>
-# include <readline/readline.h>
-# include <readline/history.h>
-*/
+#include "libft.h" 
 
-int main(int argc, char **argv, char **envp)
+size_t	ft_strlcat(char *dst, const char *src, size_t dstsize)
 {
-	(void)argc;
-	(void)argv;
-	(void)envp;
-	mini	attributes;
-	while (1)
+	size_t	i;
+	size_t	j;
+	size_t	dst_len;
+	size_t	src_len;
+
+	dst_len = ft_strlen(dst);
+	src_len = ft_strlen(src);
+	j = dst_len;
+	i = 0;
+	if (dstsize <= dst_len)
+		return (dstsize + src_len);
+	while (src[i] != '\0' && j < dstsize - 1)
 	{
-		attributes.readret = readline(PROMPT);
+		dst[j] = src[i];
+		i++;
+		j++;
 	}
-	return (0);
+	dst[j] = '\0';
+	return (dst_len + src_len);
 }

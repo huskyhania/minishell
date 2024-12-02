@@ -1,32 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mainh.c                                            :+:      :+:    :+:   */
+/*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/02 13:37:20 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/02 14:46:26 by hskrzypi         ###   ########.fr       */
+/*   Created: 2024/12/02 13:45:13 by hskrzypi          #+#    #+#             */
+/*   Updated: 2024/12/02 14:38:05 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
-/*# include <errno.h>
+#ifndef MINISHELL_H
+# define MINISHELL_H
+
+# include <errno.h>
 # include <stdio.h>
+# include <stdlib.h>
 # include <sys/wait.h>
 # include <readline/readline.h>
 # include <readline/history.h>
-*/
+//#include <readline.h>
 
-int main(int argc, char **argv, char **envp)
+#define PROMPT "minishell"
+
+typedef struct minishell
 {
-	(void)argc;
-	(void)argv;
-	(void)envp;
-	mini	attributes;
-	while (1)
-	{
-		attributes.readret = readline(PROMPT);
-	}
-	return (0);
-}
+	int exitcode;
+	char *readret;
+}	mini;
+
+#endif

@@ -1,32 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mainh.c                                            :+:      :+:    :+:   */
+/*   ft_calloc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/02 13:37:20 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/02 14:46:26 by hskrzypi         ###   ########.fr       */
+/*   Created: 2024/04/21 16:54:52 by hskrzypi          #+#    #+#             */
+/*   Updated: 2024/05/08 22:10:42 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
-/*# include <errno.h>
-# include <stdio.h>
-# include <sys/wait.h>
-# include <readline/readline.h>
-# include <readline/history.h>
-*/
+#include "libft.h"
 
-int main(int argc, char **argv, char **envp)
+void	*ft_calloc(size_t count, size_t size)
 {
-	(void)argc;
-	(void)argv;
-	(void)envp;
-	mini	attributes;
-	while (1)
+	void	*allocated_space;
+	size_t	i;
+
+	i = 0;
+	if (count && UINT_MAX / count < size)
+		return (NULL);
+	allocated_space = malloc(count * size);
+	if (!allocated_space)
+		return (NULL);
+	while (i < count * size)
 	{
-		attributes.readret = readline(PROMPT);
+		((unsigned char *)allocated_space)[i] = 0;
+		i++;
 	}
-	return (0);
+	return (allocated_space);
 }

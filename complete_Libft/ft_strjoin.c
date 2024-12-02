@@ -1,32 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mainh.c                                            :+:      :+:    :+:   */
+/*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/02 13:37:20 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/02 14:46:26 by hskrzypi         ###   ########.fr       */
+/*   Created: 2024/04/22 20:54:46 by hskrzypi          #+#    #+#             */
+/*   Updated: 2024/05/07 19:15:27 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
-/*# include <errno.h>
-# include <stdio.h>
-# include <sys/wait.h>
-# include <readline/readline.h>
-# include <readline/history.h>
-*/
+#include "libft.h"
 
-int main(int argc, char **argv, char **envp)
+char	*ft_strjoin(char const *s1, char const *s2)
 {
-	(void)argc;
-	(void)argv;
-	(void)envp;
-	mini	attributes;
-	while (1)
+	char	*s3;
+	size_t	len1;
+	size_t	len2;
+	size_t	i;
+
+	i = 0;
+	len1 = ft_strlen(s1);
+	len2 = ft_strlen(s2);
+	s3 = malloc((len1 + len2 + 1) * sizeof(char));
+	if (!s3)
+		return (NULL);
+	while (i < len1)
 	{
-		attributes.readret = readline(PROMPT);
+		s3[i] = s1[i];
+		i++;
 	}
-	return (0);
+	while (i < len1 + len2)
+	{
+		s3[i] = s2[i - len1];
+		i++;
+	}
+	s3[i] = '\0';
+	return (s3);
 }

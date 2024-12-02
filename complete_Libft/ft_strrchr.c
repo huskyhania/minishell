@@ -1,32 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mainh.c                                            :+:      :+:    :+:   */
+/*   ft_strrchr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/02 13:37:20 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/02 14:46:26 by hskrzypi         ###   ########.fr       */
+/*   Created: 2024/04/20 16:11:18 by hskrzypi          #+#    #+#             */
+/*   Updated: 2024/05/05 17:47:11 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
-/*# include <errno.h>
-# include <stdio.h>
-# include <sys/wait.h>
-# include <readline/readline.h>
-# include <readline/history.h>
-*/
+#include "libft.h"
 
-int main(int argc, char **argv, char **envp)
+char	*ft_strrchr(const char *s, int c)
 {
-	(void)argc;
-	(void)argv;
-	(void)envp;
-	mini	attributes;
-	while (1)
+	int		i;
+	char	*count;
+
+	i = 0;
+	count = NULL;
+	while (s[i])
 	{
-		attributes.readret = readline(PROMPT);
+		if (s[i] == (char)c)
+			count = ((char *) &s[i]);
+		i++;
 	}
-	return (0);
+	if (s[i] == (char)c)
+		count = ((char *) &s[i]);
+	return (count);
 }
