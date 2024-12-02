@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:37:20 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/02 14:57:02 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2024/12/02 17:59:49 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,10 @@ int main(int argc, char **argv, char **envp)
 	{
 		attributes.readret = readline(PROMPT);
 		if (attributes.readret)
+		{
+			add_history(attributes.readret);
 			printf("\n your shitty input was %s\n", attributes.readret);
+		}
 	}
 	return (0);
 }
