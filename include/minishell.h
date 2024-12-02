@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:45:13 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/02 14:38:05 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2024/12/02 16:41:33 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 # include <readline/history.h>
 //#include <readline.h>
 
-#define PROMPT "minishell"
+#define PROMPT "minishell~$"
 
 typedef struct minishell
 {
