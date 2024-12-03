@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:37:20 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/02 17:59:49 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2024/12/03 13:00:16 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int main(int argc, char **argv, char **envp)
 	(void)argc;
 	(void)argv;
 	(void)envp;
-	mini	attributes;
+	t_mini	attributes;
 	attributes.readret = NULL;
 	while (1)
 	{
@@ -26,6 +26,8 @@ int main(int argc, char **argv, char **envp)
 		{
 			add_history(attributes.readret);
 			printf("\n your shitty input was %s\n", attributes.readret);
+			ft_tokenization(&attributes);
+			ft_parsing(&attributes);
 		}
 	}
 	return (0);
