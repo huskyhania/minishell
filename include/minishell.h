@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:45:13 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/03 14:02:19 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/03 15:47:10 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,11 +41,17 @@ typedef struct s_tokens {
 	struct s_tokens	*prev;
 } t_tokens;
 
+//Final command table after ast
+typedef struct s_cmd_table {
+	t_token_type	type;
+	char			*str;
+} t_cmd_table;
+	
 typedef struct s_minishell
 {
 	int exitcode;
 	char *readret;
-	char **commands;
+	struct s_cmd_table commands[1];
 	struct s_tokens *tokens;
 }	t_mini;
 
