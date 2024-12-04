@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:45:13 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/04 16:13:00 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/04 21:40:04 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ typedef enum e_token_type {
 	t_lessless, // <<
 	t_bracketleft, // (
 	t_bracketrigth, // )
+	t_quote, // ' "
 } t_token_type;
 
 //Struct for tokens
@@ -64,6 +65,8 @@ void    ft_tokenization(t_mini *attributes);
 
 //ft_tokens_tools.c
 void ft_skip_whitespace(char **line);
+int ft_is_special(char *line);
+int ft_is_whitespace(char *line);
 
 //ft_parsing.c
  void ft_parsing(t_mini *attributes);

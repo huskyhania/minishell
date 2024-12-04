@@ -6,11 +6,27 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 13:00:26 by llaakson          #+#    #+#             */
-/*   Updated: 2024/12/04 16:10:31 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/04 20:38:45 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	free_tokens(t_tokens **stack)
+{
+	t_tokens	*temp;
+
+	if (*stack == NULL)
+		return ;
+	while (*stack)
+	{
+		temp = (*stack)->next;
+		free((*stack)->str);
+		free(*stack);
+		*stack = temp;
+	}
+	*stack = NULL;
+}
 
 t_cmd_table *ft_new_table_node()
 {
@@ -49,4 +65,5 @@ void ft_parsing(t_mini *attributes)
 		printf("STR: %s TYPE: %u\n", attributes->commands[i].str, attributes->commands[i].type);
 		i++;
 	}
+	//free_tokens(&attributes->tokens); // Can't free shit because the table array dissappears
 }

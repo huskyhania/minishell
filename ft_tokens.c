@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 12:06:47 by llaakson          #+#    #+#             */
-/*   Updated: 2024/12/04 15:42:36 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/04 21:43:42 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,28 +61,41 @@ t_tokens	*ft_add_token(t_mini *attributes)
 		}
 		return (new_token);
 }
-
-void	ft_add_pipe(t_mini *attributes, char *line)
+void	ft_add_token_type(t_tokens *new_command, char **line, int size)
 {
-	t_tokens *new_command;
-
-	new_command = ft_add_token(attributes); // Can't handle << or >>
-	if (*line == '|')
-		new_command->type = t_pipe;
-	if (*line == '>')
-		new_command->type = t_great;
-	if (*line == '<')
-		new_command->type = t_less;
-	if (*line == '(')
-		new_command->type = t_bracketleft;
-	if (*line == ')')
-		new_command->type = t_bracketrigth;
-	new_command->str = ft_substr(line, 0, 1);;	
+	new_command->str = ft_substr(*line, 0, size);
 }
 
-int		ft_add_special(char *line, t_mini *attributes)
+void	ft_add_pipe(t_mini *attributes, char **line)
 {
-		if (*line == '|' || *line == '>' || *line == '<' || *line == '(' || *line == ')')
+	t_tokens *new_command;
+	int size;
+	
+	size = 1;
+	new_command = ft_add_token(attributes); // Can't handle << or >>
+	if (**line == '|')
+		new_command->type = t_pipe;
+	if (**line == '>')
+		new_command->type = t_great;
+	if (**line == '<')
+		new_command->type = t_less;
+	if (**line == '(')
+		new_command->type = t_bracketleft;
+	if (**line == ')')
+		new_command->type = t_bracketrigth;
+	if (!(ft_strncmp(*line, ">>", 2)))
+		new_command->type = t_greatgreat;
+	if (!(ft_strncmp(*line, "<<", 2)))
+		new_command->type = t_lessless;
+	if (new_command->type == t_lessless || new_command->type == t_greatgreat)
+		size++;
+	new_command->str = ft_substr(*line, 0, size);
+	(*line) += size;
+}
+
+int		ft_add_special(char **line, t_mini *attributes)
+{
+		if (**line == '|' || **line == '>' || **line == '<' || **line == '(' || **line == ')')
 		{
 			ft_add_pipe(attributes, line);
 			return (1);
@@ -100,7 +113,7 @@ char	*ft_add_command(char *line, t_mini *attributes)
 		temp_line = line;
 		new_command = ft_add_token(attributes);
 		new_command->type = t_command;
-		while (temp_line[i] != ' ') //Might need to check different whitspaces
+		while (!(ft_is_whitespace(&temp_line[i]))) //Might need to check different whitspaces && what if space in middle of string
 		{
 			if (temp_line[i] == '\0')
 				break ;
@@ -118,9 +131,10 @@ void	ft_tokenization(t_mini *attributes)
 	while (*line)
 	{
 		ft_skip_whitespace(&line); // function that skips whitespace
-		if	(ft_add_special(line, attributes))
-			line++;
-		if (*line != ' ')
+		//ft_add_pipe(attributes, &line);
+		if	(ft_is_special(line))
+			ft_add_pipe(attributes, &line);
+		if (*line != ' ' && *line)
 			line = ft_add_command(line, attributes);
 		if (*line)
 			line++;
