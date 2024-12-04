@@ -6,7 +6,7 @@
 #    By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/02 14:41:28 by hskrzypi          #+#    #+#              #
-#    Updated: 2024/12/03 19:38:30 by llaakson         ###   ########.fr        #
+#    Updated: 2024/12/04 13:23:08 by hskrzypi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,7 @@ HEADERS	:= -I ./include -I $(LIBLIBFT)
 
 LIBS := -L$(LIBLIBFT) -lreadline -lft
 
-SRCS 	:= mainh.c ft_tokens.c ft_parsing.c \
+SRCS 	:= mainh.c ft_tokens.c ft_parsing.c ft_execution.c ft_path.c\
 
 OBJS	:= ${SRCS:.c=.o}
 

@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 15:00:53 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/03 15:38:24 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2024/12/04 13:27:03 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,28 +25,104 @@ int	is_empty_or_space(const char *cmd)
 	return (1);
 }
 
-void	check_command(const char *cmd)
+char	**check_if_valid_command(const char *cmd)
 {
 	char **cmd_arr; // to be in struct
 	if (is_empty_or_space(cmd))
 	{
-		write(2, "pipex: ", 7);
 		write(2, cmd, ft_strlen(cmd));
 		write(2, ": command not found\n", 21);
 		//exitcode 127, possibly error flag?
-		return ;
+		return (NULL);
 	}
 	cmd_arr = ft_split(cmd, ' ');
 	if (!cmd_arr)
 	{
 		perror("cmd split error");
-		exit(EXIT_FAILURE); // make sure to close fds if necessary, free cmd-related memory
-	}	
+		return (NULL); // make sure to close fds if necessary, free cmd-related memory
+	}
 	int i = 0;
 	while (cmd_arr[i] != NULL)
 	{
 		printf("cmd_arr[%d]: %s\n", i, cmd_arr[i]);
 		i++;
 	}
+	return (cmd_arr);
 }
 
+void	execute_simple_command(char **cmd_arr, char **envp)
+{
+	char *cmd_path;
+	cmd_path = get_command_path(cmd_arr[0], envp);
+	if (cmd_path)
+	{
+		if (execve(cmd_path, cmd_arr, envp) == -1)
+		{
+			perror("execve error");
+			//free mallocs
+			exit(EXIT_FAILURE);
+		}
+	}
+}
+
+void	handle_simple_command(char **cmd_arr, char **envp)
+{
+	int	pid;
+	int	status;
+	pid = fork();
+	if (pid < 0)
+	{
+		printf("fork call failed");
+		exit(EXIT_FAILURE);
+		//might require closing file descriptors, freeing memory
+	}
+	if (pid == 0)
+		execute_simple_command(cmd_arr, envp);
+	else
+	{
+		waitpid(pid, &status, 0);
+		if (WIFEXITED(status))
+			printf("child exited with status %d\n", WEXITSTATUS(status));
+	}
+}
+
+void	ft_execution(t_mini *attributes)
+{
+	char	**cmd_array;
+	cmd_array = NULL;
+	if (1)
+	{
+		cmd_array = check_if_valid_command(attributes->commands[0].str);
+		if (cmd_array)
+		{
+			handle_simple_command(cmd_array, attributes->envp_copy);
+			int i = 0;
+			while (cmd_array[i] != NULL)
+			{
+				free(cmd_array[i]);
+				i++;
+			}
+			free(cmd_array);
+		}
+	}
+}
+/*
+int main(int argc, char **argv, char **envp)
+{
+	char	**cmd_arr;
+	cmd_arr = NULL;
+	if (argc == 2)
+		cmd_arr = check_if_valid_command(argv[1]);
+	if (cmd_arr)
+	{
+		handle_simple_command(cmd_arr, envp);
+		int i = 0;
+		while (cmd_arr[i] != NULL)
+		{
+			free(cmd_arr[i]);
+			i++;
+		}
+		free(cmd_arr);
+	}
+	return (0);
+}*/
