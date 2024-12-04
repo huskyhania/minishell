@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:45:13 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/04 13:59:41 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/04 16:13:00 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,8 @@ typedef struct s_minishell
 {
 	int exitcode;
 	char *readret;
-	struct s_cmd_table commands[1];
+	char **array;
+	struct s_cmd_table commands[6];
 	struct s_tokens *tokens;
 	char **envp_copy;
 }	t_mini;
