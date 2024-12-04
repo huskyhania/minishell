@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 12:06:47 by llaakson          #+#    #+#             */
-/*   Updated: 2024/12/03 20:47:52 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/04 12:55:17 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,13 @@ t_tokens	*ft_find_last(t_tokens *stack)
 void	print_tokens(t_mini *attributes)
 {
 	//helper fucntion will be deleted from final product
-	while (attributes->tokens->next != NULL)
+	t_tokens *temp;
+	temp = attributes->tokens;
+ 
+	while (temp != NULL)
 	{
-		printf("node type: %u string %s\n", attributes->tokens->type, attributes->tokens->str);
-		attributes->tokens = attributes->tokens->next;
+		printf("node type: %u string %s\n", temp->type, temp->str);
+		temp = temp->next;
 	}
 }
 
