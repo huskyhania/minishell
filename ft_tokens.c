@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 12:06:47 by llaakson          #+#    #+#             */
-/*   Updated: 2024/12/04 12:55:17 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/04 14:11:50 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,26 +62,35 @@ t_tokens	*ft_add_token(t_mini *attributes)
 		return (new_token);
 }
 
-void	ft_add_pipe(t_mini *attributes)
+void	ft_add_pipe(t_mini *attributes, char *line)
 {
 	t_tokens *new_command;
 
-	new_command = ft_add_token(attributes);
-	new_command->type = t_pipe;
-	new_command->str = "|";	
+	new_command = ft_add_token(attributes); // Can't handle << or >>
+	if (*line == '|')
+		new_command->type = t_pipe;
+	if (*line == '>')
+		new_command->type = t_great;
+	if (*line == '<')
+		new_command->type = t_less;
+	if (*line == '(')
+		new_command->type = t_bracketleft;
+	if (*line == ')')
+		new_command->type = t_bracketrigth;
+	new_command->str = ft_substr(line, 0, 1);;	
 }
 
 int		ft_add_special(char *line, t_mini *attributes)
 {
-		if (*line == '|')
+		if (*line == '|' || *line == '>' || *line == '<' || *line == '(' || *line == ')')
 		{
-			ft_add_pipe(attributes);
+			ft_add_pipe(attributes, line);
 			return (1);
 		}
 		return (0);
 	
 }
-
+//Bug?? This functions can add < > () | to the command arg. if middle or at the end of the arg.
 char	*ft_add_command(char *line, t_mini *attributes)
 {
 		t_tokens *new_command;
@@ -91,7 +100,7 @@ char	*ft_add_command(char *line, t_mini *attributes)
 		temp_line = line;
 		new_command = ft_add_token(attributes);
 		new_command->type = t_command;
-		while (temp_line[i] != ' ')
+		while (temp_line[i] != ' ') //Might need to check different whitspaces
 		{
 			if (temp_line[i] == '\0')
 				break ;
@@ -108,8 +117,7 @@ void	ft_tokenization(t_mini *attributes)
 	line = attributes->readret;
 	while (*line)
 	{
-		if (*line == ' ') // add all whitespace later here as function and put it in as while instead of if
-			line++;
+		ft_skip_whitespace(&line); // function that skips whitespace
 		if	(ft_add_special(line, attributes))
 			line++;
 		if (*line != ' ')

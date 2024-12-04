@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:45:13 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/04 13:22:18 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2024/12/04 13:59:41 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,9 @@ typedef enum e_token_type {
 	t_great, // >
 	t_less, // <
 	t_greatgreat, // >>
+	t_lessless, // <<
+	t_bracketleft, // (
+	t_bracketrigth, // )
 } t_token_type;
 
 //Struct for tokens
@@ -57,6 +60,9 @@ typedef struct s_minishell
 
 //ft_tokens.c
 void    ft_tokenization(t_mini *attributes);
+
+//ft_tokens_tools.c
+void ft_skip_whitespace(char **line);
 
 //ft_parsing.c
  void ft_parsing(t_mini *attributes);

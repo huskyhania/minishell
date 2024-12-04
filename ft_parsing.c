@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 13:00:26 by llaakson          #+#    #+#             */
-/*   Updated: 2024/12/03 15:49:29 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/04 14:24:22 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,10 @@ t_cmd_table *ft_new_table_node()
 
 	new_node = malloc(sizeof(t_cmd_table));
 	return (new_node);
-
 }
 
 void ft_parsing(t_mini *attributes)
 {
-
-	//t_cmd_table *commands;
 
 	//new_table = ft_new_table_node();	
 	//printf("Parsin & String: %s\n", attributes->tokens->str);
