@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 19:22:47 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/03 19:43:08 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2024/12/05 14:03:51 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,20 +27,6 @@ char	*join_paths(const char *dir, const char *cmd)
 	full_path[dir_len] = '/';
 	ft_strlcpy(full_path + dir_len + 1, cmd, cmd_len + 1);
 	return (full_path);
-}
-
-char	*find_path_in_envp(char *envp[])
-{
-	int	i;
-
-	i = 0;
-	while (envp[i] != NULL)
-	{
-		if (ft_strncmp(envp[i], "PATH=", 5) == 0)
-			return (envp[i] + 5);
-		i++;
-	}
-	return (NULL);
 }
 
 char	*check_command(const char *cmd)
@@ -133,10 +119,12 @@ char	*get_command_path(const char *cmd, char **envp)
 {
 	char	*path_env;
 	char	**directories;
+	(void)envp;
 
 	if (ft_strchr(cmd, '/'))
 		return (check_command(cmd));
-	path_env = find_path_in_envp(envp);
+	path_env = getenv("PATH");
+	printf("path from getenv is %s\n", path_env);
 	if (!path_env)
 	{
 		errno = ENOENT;
