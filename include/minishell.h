@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:45:13 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/04 21:40:04 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/06 21:06:09 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,13 @@ char	*get_command_path(const char *cmd, char **envp);
 char	*check_command(const char *cmd);
 char	*find_path_in_envp(char *envp[]);
 char	*join_paths(const char *dir, const char *cmd);
+
+//builtins
+int	is_builtin(char *cmd_text);
+int	ft_strcmp(char *s1, char *s2);
+void	handle_builtin(char **cmd_array, int flag, char **envp_copy);
+int	remove_env_var(char **cmd_array, char **envp);
+void    ft_env(char **envp_copy);
 
 
 #endif
