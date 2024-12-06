@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 19:22:47 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/05 18:07:04 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2024/12/05 18:46:51 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,7 +133,6 @@ char	*get_command_path(const char *cmd, char **envp)
 {
 	char	*path_env;
 	char	**directories;
-	(void)envp;
 
 	if (ft_strchr(cmd, '/'))
 		return (check_command(cmd));
@@ -141,7 +140,7 @@ char	*get_command_path(const char *cmd, char **envp)
 	if (!path_env)
 	{
 		errno = ENOENT;
-		perror("cmd");
+		perror("127 path not found");
 		//px->exitcode = 127;
 		//display_error(px, cmd);
 		return (NULL);
