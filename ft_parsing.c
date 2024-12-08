@@ -6,64 +6,85 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 13:00:26 by llaakson          #+#    #+#             */
-/*   Updated: 2024/12/05 14:06:17 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2024/12/08 17:54:20 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	free_tokens(t_tokens **stack)
+t_cmd_table	*ft_find_last_parse(t_cmd_table *stack)
 {
-	t_tokens	*temp;
+	if (!stack)
+		return (NULL);
+	while (stack->next)
+		stack = stack->next;
+	return (stack);
+}
 
-	if (*stack == NULL)
-		return ;
-	while (*stack)
+void ft_add_new(t_mini *attributes, t_tokens *temp)
+{
+	t_cmd_table *new_node;
+	t_cmd_table *last_node;
+
+	new_node = malloc(sizeof(t_cmd_table)); // malloc here the list needs to be freed after parsing.
+	if (!new_node)
 	{
-		temp = (*stack)->next;
-		free((*stack)->str);
-		free(*stack);
-		*stack = temp;
+		printf("Error\n");
+		exit(1);
 	}
-	*stack = NULL;
+	new_node->next = NULL;
+	if (!attributes->commands)
+	{
+		//printf("Made first token\n");
+		attributes->commands = new_node;
+		new_node->prev = NULL;
+	}
+	else
+	{
+		//printf("Made additional token\n");
+		last_node = ft_find_last_parse(attributes->commands);
+		last_node->next = new_node;
+		new_node->prev = last_node;
+	}
+	new_node->str = ft_strdup(temp->str);
+	new_node->type = temp->type;
+	//return (new_node);
 }
 
-t_cmd_table *ft_new_table_node()
+void ft_command_merge(t_mini *attributes, t_tokens *temp)
 {
-	t_cmd_table *new_node;
+	t_cmd_table *temp_table;
 
-	new_node = malloc(sizeof(t_cmd_table)); // malloc
-	return (new_node);
+	temp_table = ft_find_last_parse(attributes->commands);
+	//printf("STR: %s TYPE: %s\n", attributes->commands->str, temp->str);
+	strcat(temp_table->str, temp->str); // system function
+	//attributes->commands->str = temp_str;
 }
 
-void ft_add_new(t_mini *attributes, int i,t_tokens *tokens)
+void ft_start_parsing(t_mini *attributes, t_tokens *temp)
 {
-	t_cmd_table *new_node;
-
-	new_node = ft_new_table_node();
-	attributes->commands[i].str = tokens->str;
-	attributes->commands[i].type = tokens->type;	
+	while (temp != NULL)
+	{
+		if (attributes->commands && temp->type == t_command && temp->prev->type == t_command)
+			ft_command_merge(attributes, temp);
+		else
+			ft_add_new(attributes, temp);
+		temp = temp->next;
+	}
 }
 
 void ft_parsing(t_mini *attributes)
 {	
 	t_tokens *temp;
 	temp = attributes->tokens;
-	int i = 0;
- 
-	while (temp != NULL)
+	
+	attributes->commands = NULL;
+	ft_start_parsing(attributes, temp);
+	printf("HERE\n");
+	t_cmd_table *print = attributes->commands;
+	while (print != NULL)
 	{
-		//printf("NODE type: %u STRING %s\n", temp->type, temp->str);
-		ft_add_new(attributes,i,temp);
-		i++;
-		temp = temp->next;
+		printf("STR: %s TYPE: %u\n", print->str, print->type);
+		print = print->next;
 	}
-	attributes->commands[i].str = NULL;
-	i = 0;
-	while (attributes->commands[i].str != NULL)
-	{
-		printf("STR: %s TYPE: %u\n", attributes->commands[i].str, attributes->commands[i].type);
-		i++;
-	}
-	//free_tokens(&attributes->tokens); // Can't free shit because the table array dissappears
 }

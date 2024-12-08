@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 15:00:53 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/05 14:12:31 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2024/12/08 16:18:39 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ void	ft_execution(t_mini *attributes)
 	cmd_array = NULL;
 	if (1)
 	{
-		cmd_array = check_if_valid_command(attributes->commands[0].str);
+		cmd_array = check_if_valid_command(attributes->commands->str);
 		if (cmd_array)
 		{
 			handle_simple_command(cmd_array, attributes->envp_copy);

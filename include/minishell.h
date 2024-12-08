@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:45:13 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/06 21:06:09 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2024/12/08 15:15:40 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,8 @@ typedef struct s_tokens {
 typedef struct s_cmd_table {
 	t_token_type	type;
 	char			*str;
+	struct s_cmd_table *next;
+	struct s_cmd_table *prev;
 } t_cmd_table;
 	
 typedef struct s_minishell
@@ -55,13 +57,14 @@ typedef struct s_minishell
 	int exitcode;
 	char *readret;
 	char **array;
-	struct s_cmd_table commands[6];
+	struct s_cmd_table *commands;
 	struct s_tokens *tokens;
 	char **envp_copy;
 }	t_mini;
 
 //ft_tokens.c
 void    ft_tokenization(t_mini *attributes);
+//t_tokens	*ft_find_last(t_tokens *stack);
 
 //ft_tokens_tools.c
 void ft_skip_whitespace(char **line);
