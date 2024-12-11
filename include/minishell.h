@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:45:13 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/08 15:15:40 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/11 18:15:10 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,8 @@ typedef struct s_tokens {
 typedef struct s_cmd_table {
 	t_token_type	type;
 	char			*str;
-	struct s_cmd_table *next;
-	struct s_cmd_table *prev;
+	struct s_cmd_table *right;
+	struct s_cmd_table *left;
 } t_cmd_table;
 	
 typedef struct s_minishell

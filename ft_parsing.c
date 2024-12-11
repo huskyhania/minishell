@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/03 13:00:26 by llaakson          #+#    #+#             */
-/*   Updated: 2024/12/08 17:54:20 by llaakson         ###   ########.fr       */
+/*   Created: 2024/12/11 18:12:26 by llaakson          #+#    #+#             */
+/*   Updated: 2024/12/11 21:54:19 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,75 +16,88 @@ t_cmd_table	*ft_find_last_parse(t_cmd_table *stack)
 {
 	if (!stack)
 		return (NULL);
-	while (stack->next)
-		stack = stack->next;
+	while (stack->right)
+		stack = stack->right;
 	return (stack);
 }
 
-void ft_add_new(t_mini *attributes, t_tokens *temp)
+t_cmd_table *ft_add_new(t_mini *attributes, t_tokens *token)
 {
 	t_cmd_table *new_node;
-	t_cmd_table *last_node;
 
-	new_node = malloc(sizeof(t_cmd_table)); // malloc here the list needs to be freed after parsing.
+	(void)attributes;
+	
+	new_node = malloc(sizeof(t_cmd_table));
 	if (!new_node)
 	{
 		printf("Error\n");
 		exit(1);
 	}
-	new_node->next = NULL;
-	if (!attributes->commands)
-	{
-		//printf("Made first token\n");
-		attributes->commands = new_node;
-		new_node->prev = NULL;
-	}
-	else
-	{
-		//printf("Made additional token\n");
-		last_node = ft_find_last_parse(attributes->commands);
-		last_node->next = new_node;
-		new_node->prev = last_node;
-	}
-	new_node->str = ft_strdup(temp->str);
-	new_node->type = temp->type;
-	//return (new_node);
+	new_node->right = NULL;
+	new_node->left = NULL;
+	new_node->str = ft_strdup(token->str);
+	new_node->type = (token->type);
+	return(new_node);
 }
 
-void ft_command_merge(t_mini *attributes, t_tokens *temp)
+void ft_merge_pipe(t_mini *attributes, t_tokens *token)
 {
-	t_cmd_table *temp_table;
+	t_cmd_table *new_pipe;
+	t_cmd_table *temp_last;
 
-	temp_table = ft_find_last_parse(attributes->commands);
-	//printf("STR: %s TYPE: %s\n", attributes->commands->str, temp->str);
-	strcat(temp_table->str, temp->str); // system function
-	//attributes->commands->str = temp_str;
-}
-
-void ft_start_parsing(t_mini *attributes, t_tokens *temp)
-{
-	while (temp != NULL)
-	{
-		if (attributes->commands && temp->type == t_command && temp->prev->type == t_command)
-			ft_command_merge(attributes, temp);
-		else
-			ft_add_new(attributes, temp);
-		temp = temp->next;
-	}
-}
-
-void ft_parsing(t_mini *attributes)
-{	
-	t_tokens *temp;
-	temp = attributes->tokens;
+	new_pipe = ft_add_new(attributes,token);
+	temp_last = ft_find_last_parse(attributes->commands);
+	temp_last->left = new_pipe;
+	//new_pipe->left = NULL;
 	
-	attributes->commands = NULL;
-	ft_start_parsing(attributes, temp);
-	printf("HERE\n");
-	t_cmd_table *print = attributes->commands;
-	while (print != NULL)
+}
+
+void	ft_merge_command(t_mini *attributes, t_tokens *token)
+{
+	t_cmd_table *new_node;
+	t_cmd_table *temp_last;
+	
+	while(token != NULL && token->type != t_pipe)
 	{
-		printf("STR: %s TYPE: %u\n", print->str, print->type);
-		print = print->next;
+		new_node = ft_add_new(attributes,token);
+		temp_last = ft_find_last_parse(attributes->commands);
+		temp_last->right = new_node;
+		//new_node->right = NULL;
+		token = token->next;
+	}
+}
+void ft_start_parsing(t_mini *attributes, t_tokens *token)
+{
+	if (attributes->commands == NULL)
+	{
+		attributes->commands = ft_add_new(attributes, token);
+		token = token->next;
+	}	
+	ft_merge_command(attributes, token);
+	while(token != NULL && token->type == t_pipe)
+	{
+		if (token->type == t_pipe)
+			ft_merge_pipe(attributes, token);
+		token = token->next;
+		ft_start_parsing(attributes, token);
+	}
+}
+
+void	ft_parsing(t_mini *attributes)
+{
+	t_tokens *token;
+	token = attributes->tokens;
+
+	attributes->commands = NULL;
+	ft_start_parsing(attributes, token);
+	printf("COMMAND TABLE:\n");
+	t_cmd_table *print = attributes->commands;
+	while	(print != NULL)
+	{
+			printf("TYPE: %u STR: %s\n", print->type, print->str);
+			if (print->right)
+				print = print->right;
+			else
+				print = print->left;
 	}
 }
