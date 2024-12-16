@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 16:00:04 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/16 13:29:46 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2024/12/16 19:18:31 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,9 +98,9 @@ void	ft_cd(char **cmd_array, t_mini *attributes)//needs to handle edge cases and
 			perror("cd");//needs to update exit code to 1
 	}
 	//test below - this shouldn't be necessary for when minishell actually keeps running
-	char cwd[1024];
-	if (getcwd(cwd, sizeof(cwd)) != NULL)
-    		printf("New directory: %s\n", cwd);
+	//char cwd[1024];
+	//if (getcwd(cwd, sizeof(cwd)) != NULL)
+    	//	printf("New directory: %s\n", cwd);
 }
 
 void	handle_builtin(char **cmd_array, int flag, t_mini *attributes)

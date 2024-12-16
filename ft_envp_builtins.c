@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 16:00:04 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/16 13:38:27 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2024/12/16 19:19:58 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,12 @@ int	remove_env_var(char **cmd_array, t_mini *attributes)
 				return (-1);
 			}
 			current->value[0] = '\0';
-			ft_env(attributes);
+			//ft_env(attributes); - test if unset worked
 			return (0);
 		}
 		current = current->next;
 	}
-	ft_env(attributes);//test for command line version
+	ft_env(attributes);//test for command line version - if unset failed
 	return (-1);
 }
 

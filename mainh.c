@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:37:20 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/16 15:19:49 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2024/12/16 19:16:16 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int main(int argc, char **argv, char **envp)
 		if (attributes.readret)
 		{
 			add_history(attributes.readret);
-			printf("\n your shitty input was %s\n", attributes.readret);
+			printf("\nyour shitty input was %s\n", attributes.readret);
 			ft_tokenization(&attributes);
 			ft_parsing(&attributes);
 			ft_execution(&attributes);

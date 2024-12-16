@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/07 16:18:06 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/16 13:39:15 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2024/12/16 19:24:09 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,6 @@ int	ft_export(char **cmd_array, t_mini *attributes)
 		}
 		i++;
 	}
-	print_export(attributes);
+	//print_export(attributes);test if export worked
 	return (ret);
 }

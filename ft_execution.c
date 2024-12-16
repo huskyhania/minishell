@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 15:00:53 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/16 15:20:28 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2024/12/16 18:05:28 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,12 @@ char	**check_if_valid_command(const char *cmd)
 void	execute_simple_command(char **cmd_arr, t_mini *attributes)
 {
 	char *cmd_path;
+	//if input was redirected
+	//dup2(input_place, STDIN_FILENO);
+	//if output was redirected
+	//dup2(output_place, STDOUT_FILENO);
+	//close(input_place);
+	//close(output_place);
 	cmd_path = get_command_path(cmd_arr[0], attributes);
 	if (cmd_path)
 	{
@@ -91,10 +97,6 @@ void	ft_execution(t_mini *attributes)
 	char	**cmd_array;
 	int	builtin_flag;
 	builtin_flag = 0;
-	//attributes->envp_heap = NULL;
-	//attributes->envp_heap = envp_to_list(envp);
-	//attributes->envp_arr = envp_to_array(attributes.envp_heap);
-	//cmd_array = attributes->commands;
 	if (1)
 	{
 		cmd_array = check_if_valid_command(attributes->commands->str);
@@ -115,23 +117,3 @@ void	ft_execution(t_mini *attributes)
 		}
 	}
 }
-/*
-int main(int argc, char **argv, char **envp)
-{
-	char	**cmd_arr;
-	cmd_arr = NULL;
-	if (argc == 2)
-		cmd_arr = check_if_valid_command(argv[1]);
-	if (cmd_arr)
-	{
-		handle_simple_command(cmd_arr, envp);
-		int i = 0;
-		while (cmd_arr[i] != NULL)
-		{
-			free(cmd_arr[i]);
-			i++;
-		}
-		free(cmd_arr);
-	}
-	return (0);
-}*/

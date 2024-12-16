@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 19:22:47 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/16 15:13:37 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2024/12/16 19:21:28 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,7 +137,6 @@ char	*get_command_path(const char *cmd, t_mini *attributes)
 	if (ft_strchr(cmd, '/'))
 		return (check_command(cmd));
 	path_env = get_env_value(attributes, "PATH");
-	printf("%s - string from get_env_value", path_env);
 	if (!path_env)
 	{
 		errno = ENOENT;
