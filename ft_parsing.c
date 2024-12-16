@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 18:12:26 by llaakson          #+#    #+#             */
-/*   Updated: 2024/12/12 20:09:20 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/16 13:40:26 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,26 +49,16 @@ void ft_merge_pipe(t_mini *attributes, t_cmd_table *old_table)
 	attributes->commands = new_pipe;
 }
 
-void	ft_new_root_node()
-{
-	
-}
 t_cmd_table	*ft_merge_command(t_mini *attributes, t_tokens **token)
 {
 	t_cmd_table *new_node;
-	//t_cmd_table *temp_last;
-	
-	//*token = (*token)->next;
 	new_node = ft_add_new(attributes, *token);
 	while(*token != NULL && (*token)->type != t_pipe)
 	{
 		printf("Merging\n");
-		new_node->str = ft_strjoin(new_node->str, (*token)->str);
-		/*new_node = ft_add_new(attributes,token);
-		temp_last = ft_find_last_parse(attributes->commands);
-		temp_last->right = new_node;
-		new_node->right = NULL;*/
 		*token = (*token)->next;
+		if (*token)
+			new_node->str = ft_strjoin(new_node->str, (*token)->str);
 	}
 	printf("Merging done\n");
 	//attributes->commands->right = NULL;
@@ -79,14 +69,11 @@ void ft_start_parsing(t_mini *attributes)
 	t_tokens *token;
 	token = attributes->tokens;
 
-	t_cmd_table *new_table;
 	//make the first table node
-	//new_table = ft_add_new(attributes, token);
-	//attributes->commands = new_table;
-	//merge the first command on right side
+	t_cmd_table *new_table;
+	//merge everything before the first pipe
 	attributes->commands = ft_merge_command(attributes, &token);
 	//continue if there are pipes
-	//printf("current token: %s\n", token->str);
 	while(token != NULL && token->type == t_pipe)
 	{
 		printf("hello\n");
@@ -101,4 +88,5 @@ void	ft_parsing(t_mini *attributes)
 	attributes->commands = NULL;
 	ft_start_parsing(attributes);
 	printf("COMMAND TABLE:\n");
+	printf("first node : %s\n", attributes->commands->str);
 }
