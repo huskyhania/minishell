@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 12:06:47 by llaakson          #+#    #+#             */
-/*   Updated: 2024/12/16 13:38:19 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/16 15:18:48 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ char	*ft_add_command(char *line, t_mini *attributes)
 		temp_line = line;
 		new_command = ft_add_token(attributes);
 		new_command->type = t_command;
-		while (!(ft_is_whitespace(&temp_line[i]))) //Might need to check different whitspaces && what if space in middle of string
+		while (!(ft_is_whitespace(&temp_line[i])) && !(ft_is_special(&temp_line[i]))) //Might need to check different whitspaces && what if space in middle of string
 		{
 			if (temp_line[i] == '\0')
 				break ;
@@ -137,7 +137,7 @@ void	ft_tokenization(t_mini *attributes)
 			ft_add_pipe(attributes, &line);
 		if (*line != ' ' && *line)
 			line = ft_add_command(line, attributes);
-		if (*line)
+		if (!ft_is_special(line))
 			line++;
 	}
 	print_tokens(attributes);
