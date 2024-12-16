@@ -6,74 +6,69 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/07 16:18:06 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/09 12:49:33 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2024/12/16 13:39:15 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	print_var(char *entry)
+int	is_valid_export(char *export)
 {
-	char *eq_sign;
-
-	ft_putstr_fd("declare -x", STDOUT_FILENO);
-	eq_sign = ft_strchr(entry, '=');
-	if (eq_sign)
+	int	i;
+	i = 0;
+	if (export[i] != '_' && !ft_isalpha(export[i]))
+		return (1);
+	i++;
+	while (export[i] != '+' && export[i] != '=' && export[i] != '\0')
 	{
-		write(STDOUT_FILENO, entry, (eq_sign - entry) + 1);
-		printf("\"%s\"\n", eq_sign + 1);
+		if (!ft_isalnum(export[i]) && export [i] != '_')
+			return (1);
+		i++;
 	}
-	else
-		printf("%s\n", entry);
+	if (export[i] == '+')
+	{
+		if (export[i + 1] != '=')
+			return (1);
+	}
+	if (export[i] == '=')
+		return (0);
+	return (0);
 }
 
-int	print_export(char **envp)
+int	export_single_var(t_mini *attributes, char *export)
 {
-	size_t	i;
-	//char	**sorted_env;
-
-	i = 0;
-	while (envp[i])
+	if (is_valid_export(export))
 	{
-		print_var(envp[i]);
-		i++;
+		printf("%s is not a valid identifier\n", export);
+		//exitcode 1;
+		return (1);
+	}
+	if (!create_node(export, &attributes->envp_heap))
+	{
+		printf("malloc fail in node creation\n");
+		return (1);
 	}
 	return (0);
 }
-/*
-void	remove_eq_sign(char **envp, char *arg)
-{
-	char	*ptr;
-	ptr = NULL;
 
-	ptr = find_in_env(envp, arg);
-	if (!ptr)
-		return ;
-	*(ptr - 1) = '\0';
+void	print_export(t_mini *attributes)
+{
+	t_envp	*helper;
+	helper = attributes->envp_heap;
+	while (helper)
+	{
+		if (helper->key && helper->key[0] != '\0')
+		{
+			ft_putstr_fd("declare -x ", STDOUT_FILENO);
+			ft_putstr_fd(helper->key, STDOUT_FILENO);
+			ft_putstr_fd("=", STDOUT_FILENO);
+			ft_putendl_fd(helper->value, STDOUT_FILENO);
+		}
+		helper = helper->next;
+	}
 }
 
-int	export_single_var(char **envp, char *arg)
-{
-	char	*value;
-	char	*entry_exist;
-	char	*new_entry;
-
-	if (!is_export_valid(arg))
-		return (1);
-	value = ft_strchr(arg, '=');
-	if (value)
-		*value++ = '\0';
-	entry_exist = find_in_envp(*envp, arg);
-	if (entry_exist)
-	{
-		if (value)
-		{
-			free(entry_exist);
-			new_entry = ft_strjoin(arg, '=');
-*/
-
-
-int	ft_export(char **cmd_array, char **envp_copy)
+int	ft_export(char **cmd_array, t_mini *attributes)
 {
 	int	i;
 	int	ret;
@@ -82,15 +77,16 @@ int	ft_export(char **cmd_array, char **envp_copy)
 	ret = 0;
 	//if export is called without any parameter - it should print similar to env
 	if (!cmd_array[i])
-		print_export(envp_copy);
-	//while (cmd_array[i] != NULL)
-	//{
-	//	if (export_single_var(envp_copy, cmd_array[i]) == 1)
-	//	{
-	//		printf("export error");
-	//		ret = 1;
-	//	}
-	//	i++;
-	//}
+		print_export(attributes);
+	while (cmd_array[i] != NULL)
+	{
+		if (export_single_var(attributes, cmd_array[i]) == 1)
+		{
+			printf("export error");
+			ret = 1;
+		}
+		i++;
+	}
+	print_export(attributes);
 	return (ret);
 }

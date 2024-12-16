@@ -1,4 +1,4 @@
-/* ************************************************************************** */
+///* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   mainh.c                                            :+:      :+:    :+:   */
@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:37:20 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/05 14:15:51 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2024/12/16 15:19:49 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,10 @@ int main(int argc, char **argv, char **envp)
 	(void)argv;
 	t_mini	attributes;
 	attributes.readret = NULL;
-	attributes.envp_copy = envp;
+	attributes.envp_heap = NULL;
+	attributes.envp_heap = envp_to_list(envp);
+	attributes.envp_arr = envp_to_array(attributes.envp_heap);
+	attributes.commands = NULL;
 	while (1)
 	{
 		attributes.readret = readline(PROMPT);

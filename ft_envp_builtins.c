@@ -6,55 +6,53 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 16:00:04 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/06 21:04:00 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2024/12/16 13:38:27 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*find_in_envp(char **envp, const char *key)
+int	remove_env_var(char **cmd_array, t_mini *attributes)
 {
-    size_t key_len;
-    int i = 0;
-    key_len = ft_strlen(key);
-    while (envp[i] != NULL)
-    {
-	    if (ft_strncmp(envp[i], key, key_len) == 0 && envp[i][key_len] == '=')
-		    return envp[i];
-	    i++;
-    }
-    return NULL;
-}
-
-static int find_env_index(char **envp, const char *key)
-{
-    size_t key_len = ft_strlen(key);
-
-    for (int i = 0; envp[i] != NULL; i++)
-    {
-        if (ft_strncmp(envp[i], key, key_len) == 0 && envp[i][key_len] == '=')
-        {
-            return i;
-        }
-    }
-    return -1;
-}
-
-int	remove_env_var(char **cmd_array, char **envp)
-{
-	int	index;
-	char	*key;
-
-	key = cmd_array[1];
-	index = find_env_index(envp, key);
-	if (index < 0)//for error handling
-		return (-1);
-	while (envp[index + 1] != NULL)
+	t_envp *current;
+	
+	if (!cmd_array[1] || !attributes || !attributes->envp_heap)
+		return (-1); //exit code?
+	current = attributes->envp_heap;
+	while (current)
 	{
-		envp[index] = envp[index + 1];
-		index++;
+		if (ft_strcmp(current->key, cmd_array[1]) == 0)
+		{
+			if (current->value)
+				free(current->value);
+			current->value = malloc(1);
+			if (!current->value)
+			{
+				printf("malloc fail");
+				return (-1);
+			}
+			current->value[0] = '\0';
+			ft_env(attributes);
+			return (0);
+		}
+		current = current->next;
 	}
-	envp[index] = NULL;
-	ft_env(envp);//test for command line version
-	return (0);
+	ft_env(attributes);//test for command line version
+	return (-1);
+}
+
+char	*get_env_value(t_mini *attributes, char *key)
+{
+	t_envp *current;
+
+	if (!attributes || !attributes->envp_heap || !key)
+		return (NULL);
+	current = attributes->envp_heap;
+	while (current)
+	{
+		if (ft_strcmp(current->key, key) == 0)
+			return (current->value);
+		current = current->next;
+	}
+	return (NULL);
 }

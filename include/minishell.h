@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:45:13 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/11 18:15:10 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/16 15:00:50 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,17 @@ typedef enum e_token_type {
 	t_quote, // ' "
 } t_token_type;
 
+// Builtin types
+typedef enum e_builtin_type {
+	BUILTIN_ECHO = 101,
+	BUILTIN_CD = 102,
+	BUILTIN_PWD = 103,
+	BUILTIN_EXPORT = 104,
+	BUILTIN_UNSET = 105,
+	BUILTIN_ENV = 106,
+	BUILTIN_EXIT = 107,
+} t_builtins;
+
 //Struct for tokens
 typedef struct s_tokens {
 	t_token_type	type;
@@ -51,7 +62,15 @@ typedef struct s_cmd_table {
 	struct s_cmd_table *right;
 	struct s_cmd_table *left;
 } t_cmd_table;
-	
+
+typedef struct s_envp
+{
+	char	*key;
+	char	*value;
+	struct s_envp	*prev;
+	struct s_envp	*next;
+}	t_envp;
+
 typedef struct s_minishell
 {
 	int exitcode;
@@ -59,11 +78,13 @@ typedef struct s_minishell
 	char **array;
 	struct s_cmd_table *commands;
 	struct s_tokens *tokens;
-	char **envp_copy;
+	t_envp	*envp_heap;
+	char	**envp_arr;
 }	t_mini;
 
 //ft_tokens.c
 void    ft_tokenization(t_mini *attributes);
+
 //t_tokens	*ft_find_last(t_tokens *stack);
 
 //ft_tokens_tools.c
@@ -77,22 +98,29 @@ int ft_is_whitespace(char *line);
 //ft_execution.c - executing simple commands
 int	is_empty_or_space(const char *cmd);
 char	**check_if_valid_command(const char *cmd);
-void	execute_simple_command(char **cmd_arr, char **envp);
-void	handle_simple_command(char **cmd_arr, char **envp);
+void	execute_simple_command(char **cmd_arr, t_mini *attributes);
+void	handle_simple_command(char **cmd_arr, t_mini *attributes);
 void	ft_execution(t_mini *attributes);
 
 //ft_path.c - checking for path in envp if necessary
-char	*get_command_path(const char *cmd, char **envp);
+char	*get_command_path(const char *cmd, t_mini *attributes);
 char	*check_command(const char *cmd);
-char	*find_path_in_envp(char *envp[]);
 char	*join_paths(const char *dir, const char *cmd);
+char	*find_path_in_envp(char *envp[]);
 
 //builtins
 int	is_builtin(char *cmd_text);
 int	ft_strcmp(char *s1, char *s2);
-void	handle_builtin(char **cmd_array, int flag, char **envp_copy);
-int	remove_env_var(char **cmd_array, char **envp);
-void    ft_env(char **envp_copy);
-
+void	handle_builtin(char **cmd_array, int flag, t_mini *attributes);
+int	remove_env_var(char **cmd_array, t_mini *attributes);
+char	*get_env_value(t_mini *attributes, char *key);
+void    ft_env(t_mini *attributes);
+char	*find_in_envp(char **envp, const char *key);
+int	ft_export(char **cmd_array, t_mini *attributes);
+t_envp	*envp_to_list(char **envp);
+void	print_env_value(t_mini *attributes, char *key);
+t_envp	*create_node(char *s, t_envp **envp_heap);
+char	**envp_to_array(t_envp *envp_heap);
+void	print_envp_list(t_envp *envp_heap);
 
 #endif

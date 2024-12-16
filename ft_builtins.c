@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 16:00:04 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/06 20:31:32 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2024/12/16 13:29:46 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,19 +33,21 @@ void	ft_pwd(void)
 	free(cwd);
 }
 
-void	ft_env(char **envp_copy)
+void	ft_env(t_mini *attributes)
 {
-	int	i;
+	char	*path_value;
 
-	i = 0;
-	while (envp_copy[i] != NULL)
+	path_value = get_env_value(attributes, "PATH");
+	if (!path_value || path_value[0] == '\0')
 	{
-		printf("%s\n", envp_copy[i]);
-		i++;
+		printf("exit 127: No such file or directory");
+		return ;
 	}
+	else
+		print_envp_list(attributes->envp_heap);
 }
 
-void	ft_echo(char **cmd_array)//should this be an int function? 
+void	ft_echo(char **cmd_array)//should this be an int function?
 {
 	//if no redirection
 	int	fd;
@@ -72,21 +74,7 @@ void	ft_echo(char **cmd_array)//should this be an int function?
 		ft_putstr_fd("\n", fd);
 }
 
-char	*find_home_in_envp(char **envp)
-{
-	int	i;
-
-	i = 0;
-	while (envp[i] != NULL)
-	{
-		if (ft_strncmp(envp[i], "HOME=", 5) == 0)
-			return (envp[i] + 5);
-		i++;
-	}
-	return (NULL);
-}
-
-void	ft_cd(char **cmd_array, char **envp_copy)//needs to handle edge cases and complicated relative paths
+void	ft_cd(char **cmd_array, t_mini *attributes)//needs to handle edge cases and complicated relative paths
 {
 	char	*home;
 	if (cmd_array[2] != NULL)
@@ -96,54 +84,57 @@ void	ft_cd(char **cmd_array, char **envp_copy)//needs to handle edge cases and c
 	}
 	if (cmd_array[1] == NULL)
 	{
-		home = find_home_in_envp(envp_copy);
-		if (!home)
+		home = get_env_value(attributes, "HOME");
+		if (!home || home[0] == '\0')
 		{
 			printf("cd: HOME not set\n");
 			return ;
 		}
 		chdir(home);
 	}
-	else 
-		chdir(cmd_array[1]);
+	else
+	{
+		if (chdir(cmd_array[1]) == -1)
+			perror("cd");//needs to update exit code to 1
+	}
 	//test below - this shouldn't be necessary for when minishell actually keeps running
 	char cwd[1024];
 	if (getcwd(cwd, sizeof(cwd)) != NULL)
     		printf("New directory: %s\n", cwd);
 }
 
-void	handle_builtin(char **cmd_array, int flag, char **envp_copy)
+void	handle_builtin(char **cmd_array, int flag, t_mini *attributes)
 {
-
-	(void)cmd_array;
-	if (flag == 101)
+	if (flag == BUILTIN_ECHO)
 		ft_echo(cmd_array);
-	if (flag == 102)
-		ft_cd(cmd_array, envp_copy);
-	if (flag == 103)
+	if (flag == BUILTIN_CD)
+		ft_cd(cmd_array, attributes);
+	if (flag == BUILTIN_PWD)
 		ft_pwd();
-	if (flag == 105)
-		remove_env_var(cmd_array, envp_copy);
-	if (flag == 106)
-		ft_env(envp_copy);
+	if (flag == BUILTIN_EXPORT)
+		ft_export(cmd_array, attributes);
+	if (flag == BUILTIN_UNSET)
+		remove_env_var(cmd_array, attributes);
+	if (flag == BUILTIN_ENV)
+		ft_env(attributes);
 }
 
 int	is_builtin(char *cmd_text)
 {
 	if (ft_strcmp(cmd_text, "echo") == 0)
-		return (101);
+		return (BUILTIN_ECHO);
 	if (ft_strcmp(cmd_text, "cd") == 0)
-		return (102);
+		return (BUILTIN_CD);
 	if (ft_strcmp(cmd_text, "pwd") == 0)
-		return (103);
+		return (BUILTIN_PWD);
 	if (ft_strcmp(cmd_text, "export") == 0)
-		return (104);
+		return (BUILTIN_EXPORT);
 	if (ft_strcmp(cmd_text, "unset") == 0)
-		return (105);
+		return (BUILTIN_UNSET);
 	if (ft_strcmp(cmd_text, "env") == 0)
-		return (106);
+		return (BUILTIN_ENV);
 	if (ft_strcmp(cmd_text, "exit") == 0)
-		return (107);
+		return (BUILTIN_EXIT);
 	else
 		return (0);
 }

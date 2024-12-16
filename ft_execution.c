@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 15:00:53 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/08 16:18:39 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/16 15:20:28 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,13 +50,13 @@ char	**check_if_valid_command(const char *cmd)
 	return (cmd_arr);
 }
 
-void	execute_simple_command(char **cmd_arr, char **envp)
+void	execute_simple_command(char **cmd_arr, t_mini *attributes)
 {
 	char *cmd_path;
-	cmd_path = get_command_path(cmd_arr[0], envp);
+	cmd_path = get_command_path(cmd_arr[0], attributes);
 	if (cmd_path)
 	{
-		if (execve(cmd_path, cmd_arr, envp) == -1)
+		if (execve(cmd_path, cmd_arr, NULL) == -1)
 		{
 			perror("execve error");
 			//free mallocs
@@ -65,7 +65,7 @@ void	execute_simple_command(char **cmd_arr, char **envp)
 	}
 }
 
-void	handle_simple_command(char **cmd_arr, char **envp)
+void	handle_simple_command(char **cmd_arr, t_mini *attributes)
 {
 	int	pid;
 	int	status;
@@ -77,7 +77,7 @@ void	handle_simple_command(char **cmd_arr, char **envp)
 		//might require closing file descriptors, freeing memory
 	}
 	if (pid == 0)
-		execute_simple_command(cmd_arr, envp);
+		execute_simple_command(cmd_arr, attributes);
 	else
 	{
 		waitpid(pid, &status, 0);
@@ -89,13 +89,22 @@ void	handle_simple_command(char **cmd_arr, char **envp)
 void	ft_execution(t_mini *attributes)
 {
 	char	**cmd_array;
-	cmd_array = NULL;
+	int	builtin_flag;
+	builtin_flag = 0;
+	//attributes->envp_heap = NULL;
+	//attributes->envp_heap = envp_to_list(envp);
+	//attributes->envp_arr = envp_to_array(attributes.envp_heap);
+	//cmd_array = attributes->commands;
 	if (1)
 	{
 		cmd_array = check_if_valid_command(attributes->commands->str);
 		if (cmd_array)
 		{
-			handle_simple_command(cmd_array, attributes->envp_copy);
+			builtin_flag = is_builtin(cmd_array[0]);
+			if (builtin_flag != 0)
+				handle_builtin(cmd_array, builtin_flag, attributes);
+			else
+				handle_simple_command(cmd_array, attributes);
 			int i = 0;
 			while (cmd_array[i] != NULL)
 			{
