@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 13:22:07 by llaakson          #+#    #+#             */
-/*   Updated: 2024/12/04 21:39:34 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/16 16:40:05 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,3 +32,9 @@ int	ft_is_whitespace(char *line)
 	return (0);
 }
 
+int ft_is_quote(char *line)
+{
+	if (*line == 34 || *line == 39)
+		return (1);
+	return (0);
+}

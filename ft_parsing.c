@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 18:12:26 by llaakson          #+#    #+#             */
-/*   Updated: 2024/12/16 13:40:26 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/16 19:03:26 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ t_cmd_table	*ft_merge_command(t_mini *attributes, t_tokens **token)
 	{
 		printf("Merging\n");
 		*token = (*token)->next;
-		if (*token)
+		if (*token && (*token)->type != t_pipe)
 			new_node->str = ft_strjoin(new_node->str, (*token)->str);
 	}
 	printf("Merging done\n");
@@ -88,5 +88,18 @@ void	ft_parsing(t_mini *attributes)
 	attributes->commands = NULL;
 	ft_start_parsing(attributes);
 	printf("COMMAND TABLE:\n");
-	printf("first node : %s\n", attributes->commands->str);
+	t_cmd_table *print = attributes->commands;
+	while(print)
+	{
+		printf("first node : %s\n", print->str);
+		if (print->type == t_command)
+			break ;
+		if (print->right->str)
+			printf("right node : %s\n", print->right->str);
+		//if (print->left == NULL || print->left->type != t_pipe)
+		//	break ;
+		if (print->left)
+			print = print->left;
+	}
+	printf("COMMAND TABLE:\n");
 }

@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:45:13 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/16 15:00:50 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2024/12/16 19:06:33 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ typedef enum e_builtin_type {
 typedef struct s_tokens {
 	t_token_type	type;
 	char 			*str;
+	int 			dir_flag;
 	struct s_tokens	*next;
 	struct s_tokens	*prev;
 } t_tokens;
@@ -91,6 +92,7 @@ void    ft_tokenization(t_mini *attributes);
 void ft_skip_whitespace(char **line);
 int ft_is_special(char *line);
 int ft_is_whitespace(char *line);
+int ft_is_quote(char *line);
 
 //ft_parsing.c
  void ft_parsing(t_mini *attributes);

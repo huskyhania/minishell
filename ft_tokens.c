@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 12:06:47 by llaakson          #+#    #+#             */
-/*   Updated: 2024/12/16 15:18:48 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/16 17:02:52 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,6 +123,26 @@ char	*ft_add_command(char *line, t_mini *attributes)
 		new_command->str = ft_strjoin(new_command->str, " ");
 		return (line+i);
 }
+
+char	*ft_add_quote(char *line, t_mini *attributes)
+{
+	t_tokens *new_command;
+	char *temp_line;
+	int i;
+
+	i = 1;
+	temp_line = line;
+	new_command = ft_add_token(attributes);
+	new_command->type = t_command;
+	// feels wrong
+	while (!ft_is_quote(&line[i]) && temp_line[i] != '\0')
+		i++;
+	i++;
+	new_command->str = ft_substr(line, 0, i);
+	new_command->str = ft_strjoin(new_command->str, " "); // This is shit ??
+	return (line+i);
+}
+
 void	ft_tokenization(t_mini *attributes)
 {
 	char		*line;
@@ -132,13 +152,14 @@ void	ft_tokenization(t_mini *attributes)
 	while (*line)
 	{
 		ft_skip_whitespace(&line); // function that skips whitespace
-		//ft_add_pipe(attributes, &line);
-		if	(ft_is_special(line))
+		if (ft_is_quote(line))
+			line = ft_add_quote(line, attributes);
+		if (ft_is_special(line))
 			ft_add_pipe(attributes, &line);
 		if (*line != ' ' && *line)
 			line = ft_add_command(line, attributes);
 		if (!ft_is_special(line))
-			line++;
+			line++; // Why do I need this ????????
 	}
 	print_tokens(attributes);
 }
