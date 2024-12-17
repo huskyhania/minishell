@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:37:20 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/16 19:16:16 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2024/12/17 12:11:05 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,14 @@
 
 int main(int argc, char **argv, char **envp)
 {
-	(void)argc;
 	(void)argv;
 	t_mini	attributes;
+
+	if (argc > 1)
+	{
+		ft_putstr_fd("minishell: No such file or directory\n", 2);
+		return (127);
+	}
 	attributes.readret = NULL;
 	attributes.envp_heap = NULL;
 	attributes.envp_heap = envp_to_list(envp);
