@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 18:12:26 by llaakson          #+#    #+#             */
-/*   Updated: 2024/12/16 19:03:26 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/17 14:19:27 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ t_cmd_table	*ft_find_last_parse(t_cmd_table *stack)
 t_cmd_table *ft_add_new(t_mini *attributes, t_tokens *token)
 {
 	t_cmd_table *new_node;
+
 	(void)attributes;
 	new_node = malloc(sizeof(t_cmd_table));
 	if (!new_node)
@@ -31,7 +32,8 @@ t_cmd_table *ft_add_new(t_mini *attributes, t_tokens *token)
 		printf("Error\n");
 		exit(1);
 	}
-	new_node->str = ft_strdup(token->str);
+	if (token->type == t_command)
+		new_node->str = ft_strdup(token->str);
 	new_node->type = (token->type);
 	return(new_node);
 }
@@ -43,7 +45,6 @@ void ft_merge_pipe(t_mini *attributes, t_cmd_table *old_table)
 	new_pipe = malloc(sizeof(t_cmd_table));
 	new_pipe->str = ft_strdup("|");
 	new_pipe->type = t_pipe;
-
 	new_pipe->right = old_table;
 	new_pipe->left = attributes->commands;
 	attributes->commands = new_pipe;
@@ -52,16 +53,25 @@ void ft_merge_pipe(t_mini *attributes, t_cmd_table *old_table)
 t_cmd_table	*ft_merge_command(t_mini *attributes, t_tokens **token)
 {
 	t_cmd_table *new_node;
+
 	new_node = ft_add_new(attributes, *token);
 	while(*token != NULL && (*token)->type != t_pipe)
 	{
 		printf("Merging\n");
+		if ((*token)->type == t_great || (*token)->type == t_less)
+		{
+			new_node->direction = (*token)->type;
+		}
 		*token = (*token)->next;
-		if (*token && (*token)->type != t_pipe)
-			new_node->str = ft_strjoin(new_node->str, (*token)->str);
+		if (*token && (*token)->type == t_command)
+		{
+			if (!new_node->str)
+				new_node->str = ft_strdup((*token)->str);
+			else
+				new_node->str = ft_strjoin(new_node->str, (*token)->str);
+		}
 	}
 	printf("Merging done\n");
-	//attributes->commands->right = NULL;
 	return (new_node);
 }
 void ft_start_parsing(t_mini *attributes)
@@ -91,11 +101,11 @@ void	ft_parsing(t_mini *attributes)
 	t_cmd_table *print = attributes->commands;
 	while(print)
 	{
-		printf("first node : %s\n", print->str);
+		printf("first node: %s redirection: %d\n", print->str, print->direction);
 		if (print->type == t_command)
 			break ;
 		if (print->right->str)
-			printf("right node : %s\n", print->right->str);
+			printf("right node : %s redireciton: %d\n", print->right->str, print->right->direction);
 		//if (print->left == NULL || print->left->type != t_pipe)
 		//	break ;
 		if (print->left)
