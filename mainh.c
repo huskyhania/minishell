@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:37:20 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/17 14:21:11 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2024/12/17 15:42:52 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	minishell_init(char **envp)
 	while (1)
 	{
 		attributes.readret = readline(PROMPT);
-		if (attributes.readret)
+		if (attributes.readret && attributes.readret[0] != '\0')
 		{
 			add_history(attributes.readret);
 			printf("\nyour shitty input was %s\n", attributes.readret);
