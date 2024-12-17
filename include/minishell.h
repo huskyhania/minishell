@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:45:13 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/17 14:34:35 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/17 18:06:07 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ typedef enum e_token_type {
 	t_bracketleft, // (
 	t_bracketrigth, // )
 	t_quote, // ' "
+	t_dollar // $
 } t_token_type;
 
 // Builtin types

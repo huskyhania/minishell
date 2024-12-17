@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 18:12:26 by llaakson          #+#    #+#             */
-/*   Updated: 2024/12/17 14:19:27 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/17 19:44:16 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ t_cmd_table	*ft_merge_command(t_mini *attributes, t_tokens **token)
 			new_node->direction = (*token)->type;
 		}
 		*token = (*token)->next;
-		if (*token && (*token)->type == t_command)
+		if (*token && (*token)->type != t_pipe) // something might be broken changed from command to pipe
 		{
 			if (!new_node->str)
 				new_node->str = ft_strdup((*token)->str);
@@ -93,8 +93,32 @@ void ft_start_parsing(t_mini *attributes)
 	}
 }
 
+void	ft_expand(t_mini *attributes)
+{
+		char *expansion;
+		
+		t_tokens *token;
+		token = attributes->tokens;
+		while (token)
+		{
+			if (token->type == t_dollar)
+			{
+				expansion = get_env_value(attributes, token->str);
+				if (!expansion)
+				{
+					printf("no value in env\n");
+					break ;
+				}	
+				token->str = ft_strdup(expansion);
+				printf("FOUND PATH: %s. \n", expansion);
+			}
+			token = token->next;
+		}
+}
+
 void	ft_parsing(t_mini *attributes)
 {
+	ft_expand(attributes);
 	attributes->commands = NULL;
 	ft_start_parsing(attributes);
 	printf("COMMAND TABLE:\n");

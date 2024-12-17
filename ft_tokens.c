@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 12:06:47 by llaakson          #+#    #+#             */
-/*   Updated: 2024/12/16 17:02:52 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/17 18:17:30 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,6 +143,26 @@ char	*ft_add_quote(char *line, t_mini *attributes)
 	return (line+i);
 }
 
+char *ft_add_expansion(t_mini *attributes, char *line)
+{
+	int i;
+	char *temp_line;
+	t_tokens *new_command;
+
+	new_command = ft_add_token(attributes);
+	temp_line = line;
+	i = 1;
+	new_command->type = t_dollar;
+	while (!(ft_is_whitespace(&temp_line[i])) && !(ft_is_special(&temp_line[i])))
+	{
+		if (temp_line[i] == '\0')
+			break ;
+		i++;
+	}
+	new_command->str = ft_substr(line, 1, i); // malloc here remeber to check and free after parsing
+	return (line + i);
+}
+
 void	ft_tokenization(t_mini *attributes)
 {
 	char		*line;
@@ -156,6 +176,8 @@ void	ft_tokenization(t_mini *attributes)
 			line = ft_add_quote(line, attributes);
 		if (ft_is_special(line))
 			ft_add_pipe(attributes, &line);
+		if (*line == '$')
+			line = ft_add_expansion(attributes, line);
 		if (*line != ' ' && *line)
 			line = ft_add_command(line, attributes);
 		if (!ft_is_special(line))
