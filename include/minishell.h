@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:45:13 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/17 13:36:13 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/17 14:34:35 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,8 @@ typedef struct s_minishell
 	struct s_tokens *tokens;
 	t_envp	*envp_heap;
 	char	**envp_arr;
+	int	input_fd;
+	int	output_fd;
 }	t_mini;
 
 //ft_tokens.c
