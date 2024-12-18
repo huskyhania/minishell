@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 16:00:04 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/16 19:19:58 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2024/12/18 17:13:48 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,9 @@
 
 int	remove_env_var(char **cmd_array, t_mini *attributes)
 {
-	t_envp *current;
-	
+	t_envp	*current;
+	t_envp	*to_delete;
+
 	if (!cmd_array[1] || !attributes || !attributes->envp_heap)
 		return (-1); //exit code?
 	current = attributes->envp_heap;
@@ -23,21 +24,22 @@ int	remove_env_var(char **cmd_array, t_mini *attributes)
 	{
 		if (ft_strcmp(current->key, cmd_array[1]) == 0)
 		{
-			if (current->value)
-				free(current->value);
-			current->value = malloc(1);
-			if (!current->value)
-			{
-				printf("malloc fail");
-				return (-1);
-			}
-			current->value[0] = '\0';
+			to_delete = current;
+			if (current->prev)
+				current->prev->next = current->next;
+			if (current->next)
+				current->next->prev = current->prev;
+			if (attributes->envp_heap == current)
+				attributes->envp_heap = current->next;
+			free(to_delete->key);
+			free(to_delete->value);
+			free(to_delete);
 			//ft_env(attributes); - test if unset worked
 			return (0);
 		}
 		current = current->next;
 	}
-	ft_env(attributes);//test for command line version - if unset failed
+	//ft_env(attributes);//test for command line version - if unset failed
 	return (-1);
 }
 
