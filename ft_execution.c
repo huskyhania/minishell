@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 15:00:53 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/16 18:05:28 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2024/12/18 16:15:37 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,11 @@ void	ft_execution(t_mini *attributes)
 			builtin_flag = is_builtin(cmd_array[0]);
 			if (builtin_flag != 0)
 				handle_builtin(cmd_array, builtin_flag, attributes);
+			//if << was found and there is something afterwards -otherwise parse error
+			//{
+			//	printf("call to heredoc function");
+			//	here_doc_handler(cmd_array);
+			//}
 			else
 				handle_simple_command(cmd_array, attributes);
 			int i = 0;

@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:45:13 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/17 18:06:07 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/18 16:11:57 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,5 +128,8 @@ void	print_env_value(t_mini *attributes, char *key);
 t_envp	*create_node(char *s, t_envp **envp_heap);
 char	**envp_to_array(t_envp *envp_heap);
 void	print_envp_list(t_envp *envp_heap);
+
+//heredoc
+int	here_doc_handler(char **cmd_array);
 
 #endif

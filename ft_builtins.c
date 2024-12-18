@@ -119,6 +119,7 @@ void	handle_builtin(char **cmd_array, int flag, t_mini *attributes)
 		ft_env(attributes);
 }
 
+// checks if command is one of the builtins and which one
 int	is_builtin(char *cmd_text)
 {
 	if (ft_strcmp(cmd_text, "echo") == 0)
