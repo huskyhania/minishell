@@ -6,37 +6,11 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 18:12:26 by llaakson          #+#    #+#             */
-/*   Updated: 2024/12/17 19:44:16 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/18 20:44:19 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-t_cmd_table	*ft_find_last_parse(t_cmd_table *stack)
-{
-	if (!stack)
-		return (NULL);
-	while (stack->right)
-		stack = stack->right;
-	return (stack);
-}
-
-t_cmd_table *ft_add_new(t_mini *attributes, t_tokens *token)
-{
-	t_cmd_table *new_node;
-
-	(void)attributes;
-	new_node = malloc(sizeof(t_cmd_table));
-	if (!new_node)
-	{
-		printf("Error\n");
-		exit(1);
-	}
-	if (token->type == t_command)
-		new_node->str = ft_strdup(token->str);
-	new_node->type = (token->type);
-	return(new_node);
-}
 
 void ft_merge_pipe(t_mini *attributes, t_cmd_table *old_table)
 {
@@ -50,6 +24,20 @@ void ft_merge_pipe(t_mini *attributes, t_cmd_table *old_table)
 	attributes->commands = new_pipe;
 }
 
+t_cmd_table *ft_merge_redirection(t_tokens **token, t_cmd_table *old_table)
+{
+	t_cmd_table *new_node;
+	
+	new_node = malloc(sizeof(t_cmd_table));
+	old_table->type = (*token)->type;
+	//new_node->str = ft_strdup((*token)->str);
+	*token = (*token)->next;
+	new_node->str = ft_strdup((*token)->str);
+	new_node->left = NULL;
+	old_table->left = new_node;
+	return (old_table);
+}
+
 t_cmd_table	*ft_merge_command(t_mini *attributes, t_tokens **token)
 {
 	t_cmd_table *new_node;
@@ -59,9 +47,7 @@ t_cmd_table	*ft_merge_command(t_mini *attributes, t_tokens **token)
 	{
 		printf("Merging\n");
 		if ((*token)->type == t_great || (*token)->type == t_less)
-		{
-			new_node->direction = (*token)->type;
-		}
+			new_node = ft_merge_redirection(token, new_node);
 		*token = (*token)->next;
 		if (*token && (*token)->type != t_pipe) // something might be broken changed from command to pipe
 		{
@@ -70,6 +56,7 @@ t_cmd_table	*ft_merge_command(t_mini *attributes, t_tokens **token)
 			else
 				new_node->str = ft_strjoin(new_node->str, (*token)->str);
 		}
+		//*token = (*token)->next;
 	}
 	printf("Merging done\n");
 	return (new_node);
@@ -93,27 +80,15 @@ void ft_start_parsing(t_mini *attributes)
 	}
 }
 
-void	ft_expand(t_mini *attributes)
+void print_helper(t_cmd_table *print)
 {
-		char *expansion;
-		
-		t_tokens *token;
-		token = attributes->tokens;
-		while (token)
-		{
-			if (token->type == t_dollar)
-			{
-				expansion = get_env_value(attributes, token->str);
-				if (!expansion)
-				{
-					printf("no value in env\n");
-					break ;
-				}	
-				token->str = ft_strdup(expansion);
-				printf("FOUND PATH: %s. \n", expansion);
-			}
-			token = token->next;
-		}
+	t_cmd_table *print_temp = print;
+	print_temp = print_temp->left;
+	while(print_temp)
+	{
+		printf("Redirection node: %s type: %d\n", print_temp->str, print_temp->type);
+		print_temp = print_temp->left;
+	}
 }
 
 void	ft_parsing(t_mini *attributes)
@@ -121,17 +96,19 @@ void	ft_parsing(t_mini *attributes)
 	ft_expand(attributes);
 	attributes->commands = NULL;
 	ft_start_parsing(attributes);
+
+
 	printf("COMMAND TABLE:\n");
 	t_cmd_table *print = attributes->commands;
 	while(print)
 	{
-		printf("first node: %s redirection: %d\n", print->str, print->direction);
-		if (print->type == t_command)
+		printf("first node: %s redirection: %d\n", print->str, print->type);
+		if (print->type != t_pipe)
 			break ;
 		if (print->right->str)
-			printf("right node : %s redireciton: %d\n", print->right->str, print->right->direction);
-		//if (print->left == NULL || print->left->type != t_pipe)
-		//	break ;
+			printf("right node : %s redireciton: %d\n", print->right->str, print->right->type);
+		if (print->right->type == 3 || print->right->type ==2)
+			print_helper(print->right);
 		if (print->left)
 			print = print->left;
 	}

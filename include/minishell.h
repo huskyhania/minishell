@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:45:13 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/17 18:06:07 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/18 15:12:39 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,8 +98,14 @@ int ft_is_special(char *line);
 int ft_is_whitespace(char *line);
 int ft_is_quote(char *line);
 
+//ft_expand.c
+void    ft_expand(t_mini *attributes);
 //ft_parsing.c
  void ft_parsing(t_mini *attributes);
+ 
+//ft_parsing_tools.c
+t_cmd_table *ft_find_last_parse(t_cmd_table *stack);
+t_cmd_table *ft_add_new(t_mini *attributes, t_tokens *token);
 
 //ft_execution.c - executing simple commands
 int	is_empty_or_space(const char *cmd);
