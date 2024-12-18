@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 18:12:26 by llaakson          #+#    #+#             */
-/*   Updated: 2024/12/18 20:44:19 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/18 21:44:52 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ t_cmd_table *ft_merge_redirection(t_tokens **token, t_cmd_table *old_table)
 	//new_node->str = ft_strdup((*token)->str);
 	*token = (*token)->next;
 	new_node->str = ft_strdup((*token)->str);
-	new_node->left = NULL;
+	new_node->left = old_table->left;
 	old_table->left = new_node;
 	return (old_table);
 }
@@ -48,15 +48,14 @@ t_cmd_table	*ft_merge_command(t_mini *attributes, t_tokens **token)
 		printf("Merging\n");
 		if ((*token)->type == t_great || (*token)->type == t_less)
 			new_node = ft_merge_redirection(token, new_node);
-		*token = (*token)->next;
-		if (*token && (*token)->type != t_pipe) // something might be broken changed from command to pipe
+		else
 		{
 			if (!new_node->str)
 				new_node->str = ft_strdup((*token)->str);
 			else
 				new_node->str = ft_strjoin(new_node->str, (*token)->str);
 		}
-		//*token = (*token)->next;
+		*token = (*token)->next;
 	}
 	printf("Merging done\n");
 	return (new_node);
@@ -103,14 +102,18 @@ void	ft_parsing(t_mini *attributes)
 	while(print)
 	{
 		printf("first node: %s redirection: %d\n", print->str, print->type);
-		if (print->type != t_pipe)
-			break ;
-		if (print->right->str)
+		if (print->type == 3 || print->type ==2)
+			printf("first node: %s redirection: %d\n", print->left->str, print->left->type);
+		if (print->type == t_pipe)
+		{
 			printf("right node : %s redireciton: %d\n", print->right->str, print->right->type);
-		if (print->right->type == 3 || print->right->type ==2)
-			print_helper(print->right);
-		if (print->left)
+			if (print->right->type == 3 || print->right->type ==2)
+				print_helper(print->right);
+		}
+		if (print->type == t_pipe)
 			print = print->left;
+		else
+			break ;
 	}
 	printf("COMMAND TABLE:\n");
 }
