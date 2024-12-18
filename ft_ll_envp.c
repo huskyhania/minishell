@@ -38,19 +38,19 @@ t_envp	*find_last(t_envp *envp_heap)
 	return (envp_heap);
 }
 
-static char	*get_key(char *s)
+char	*get_key(char *s)
 {
 	int	i;
 	char	*key;
 
 	i = 0;
-	while (s[i] != '=')
+	while (s[i] != '+' && s[i] != '=' && s[i] != '\0')
 		i++;
 	key = malloc((i + 1) * sizeof(char));
 	if (!key)
 		return (NULL);
 	i = 0;
-	while (s[i] != '=')
+	while (s[i] != '+' && s[i] != '=' && s[i] != '\0')
 	{
 		key[i] = s[i];
 		i++;
@@ -59,7 +59,7 @@ static char	*get_key(char *s)
 	return (key);
 }
 
-static char	*get_value(char *s)
+char	*get_value(char *s)
 {
 	char	*value;
 	int	i;

@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/07 16:18:06 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/16 19:24:09 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2024/12/18 20:35:38 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,82 @@ int	is_valid_export(char *export)
 	return (0);
 }
 
+int	env_var_exists(char *export, t_envp **envp_heap)
+{
+	char	*key;
+	t_envp	*current;
+
+	key = get_key(export);
+	current = *envp_heap;
+	if (!key)
+		return (0);
+	while (current)
+	{
+		if (ft_strcmp(key, current->key) == 0)
+			return (1);
+		current = current->next;
+	}
+	return (0);
+}
+
+int	export_mode(char *export)
+{
+	int	i;
+
+	i = 0;
+	while (export[i] != '\0')
+	{
+		if (export[i] == '+' && export[i + 1] == '=')
+			return (1);
+		if (export[i] == '=')
+			return (2);
+		i++;
+	}
+	return (2);
+}
+
+int	replace_append(char *export, t_envp **envp_heap)
+{
+	char	*key;
+	char	*value;
+	t_envp	*current;
+	char	*join;
+
+	current = *envp_heap;
+	key = get_key(export);
+	value = get_value(export);
+	if (!value) // should this include a check for key?
+		return (0);
+	while (current)
+	{
+		if (ft_strcmp(key, current->key) == 0)//maybe use strncmp with current key len?
+		{
+			if (export_mode(export) == 1)
+			{
+				join = ft_strjoin(current->value, value);
+				if (!join)
+				{
+					free(value);
+					return (0);
+				}
+				free(current->value);
+				free(value);
+				current->value = join;
+				return (1);
+			}
+			if (export_mode(export) == 2)
+			{
+				free(current->value);
+				current->value = ft_strdup(value);
+				free(value);
+				return (1);
+			}
+		}
+		current = current->next;
+	}
+	return (0);
+}
+
 int	export_single_var(t_mini *attributes, char *export)
 {
 	if (is_valid_export(export))
@@ -43,7 +119,15 @@ int	export_single_var(t_mini *attributes, char *export)
 		//exitcode 1;
 		return (1);
 	}
-	if (!create_node(export, &attributes->envp_heap))
+	if (env_var_exists(export, &attributes->envp_heap))
+	{
+		if (!replace_append(export, &attributes->envp_heap))
+		{
+			printf("var update fail\n");
+			return (1);
+		}
+	}
+	else if (!create_node(export, &attributes->envp_heap))
 	{
 		printf("malloc fail in node creation\n");
 		return (1);

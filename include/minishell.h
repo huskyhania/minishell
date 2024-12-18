@@ -128,6 +128,8 @@ void	print_env_value(t_mini *attributes, char *key);
 t_envp	*create_node(char *s, t_envp **envp_heap);
 char	**envp_to_array(t_envp *envp_heap);
 void	print_envp_list(t_envp *envp_heap);
+char	*get_key(char *s);
+char	*get_value(char *s);
 
 //heredoc
 int	here_doc_handler(char **cmd_array);
