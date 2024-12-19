@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 18:12:26 by llaakson          #+#    #+#             */
-/*   Updated: 2024/12/18 21:44:52 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/19 17:48:45 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ t_cmd_table *ft_merge_redirection(t_tokens **token, t_cmd_table *old_table)
 	old_table->type = (*token)->type;
 	//new_node->str = ft_strdup((*token)->str);
 	*token = (*token)->next;
+	new_node->type = (*token)->type;
 	new_node->str = ft_strdup((*token)->str);
 	new_node->left = old_table->left;
 	old_table->left = new_node;
@@ -45,7 +46,7 @@ t_cmd_table	*ft_merge_command(t_mini *attributes, t_tokens **token)
 	new_node = ft_add_new(attributes, *token);
 	while(*token != NULL && (*token)->type != t_pipe)
 	{
-		printf("Merging\n");
+		//printf("Merging\n");
 		if ((*token)->type == t_great || (*token)->type == t_less)
 			new_node = ft_merge_redirection(token, new_node);
 		else
@@ -57,7 +58,7 @@ t_cmd_table	*ft_merge_command(t_mini *attributes, t_tokens **token)
 		}
 		*token = (*token)->next;
 	}
-	printf("Merging done\n");
+	//printf("Merging done\n");
 	return (new_node);
 }
 void ft_start_parsing(t_mini *attributes)
@@ -72,7 +73,7 @@ void ft_start_parsing(t_mini *attributes)
 	//continue if there are pipes
 	while(token != NULL && token->type == t_pipe)
 	{
-		printf("hello\n");
+		//printf("hello\n");
 		token = token->next;
 		new_table = ft_merge_command(attributes, &token);
 		ft_merge_pipe(attributes, new_table);
@@ -115,5 +116,5 @@ void	ft_parsing(t_mini *attributes)
 		else
 			break ;
 	}
-	printf("COMMAND TABLE:\n");
+	printf("COMMAND TABLE FINITO:\n");
 }
