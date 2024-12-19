@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 15:00:53 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/18 16:15:37 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2024/12/19 15:29:57 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,14 +92,57 @@ void	handle_simple_command(char **cmd_arr, t_mini *attributes)
 	}
 }
 
+void	traverse_and_execute(t_cmd_table *node, t_mini *attributes)
+{
+	char **cmd_array;
+	int	builtin_flag;
+	if (!node)
+		return ; //is it necessary?
+	traverse_and_execute(node->left, attributes);
+	if (node->type == t_command)
+	{
+		cmd_array = check_if_valid_command(node->str);
+		if (cmd_array)
+		{
+			builtin_flag = is_builtin(cmd_array[0]);
+			if (builtin_flag != 0)
+				handle_builtin(cmd_array, builtin_flag, attributes);
+			else
+				handle_simple_command(cmd_array, attributes);
+			int i = 0;
+			while (cmd_array[i] != NULL)
+			{
+				free(cmd_array[i]);
+				i++;
+			}
+			free(cmd_array);
+		}
+	}
+	traverse_and_execute(node->right, attributes);
+}
+
 void	ft_execution(t_mini *attributes)
 {
+	if (!attributes || !attributes->commands)
+	{
+		printf("something went wrong\n");
+		return ;
+	}
+	traverse_and_execute(attributes->commands, attributes);
+}
+	/*{
 	char	**cmd_array;
 	int	builtin_flag;
+	t_cmd_table	*helper;
+	int	i;
 	builtin_flag = 0;
-	if (1)
+	i = 0;
+	helper = attributes->commands;
+	while (helper->type == t_pipe) // type for pipe 1
+		helper = helper->left;
+	if (helper->type == t_command)
 	{
-		cmd_array = check_if_valid_command(attributes->commands->str);
+		cmd_array = check_if_valid_command(helper->str);
 		if (cmd_array)
 		{
 			builtin_flag = is_builtin(cmd_array[0]);
@@ -121,4 +164,4 @@ void	ft_execution(t_mini *attributes)
 			free(cmd_array);
 		}
 	}
-}
+}*/

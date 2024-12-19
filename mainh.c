@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:37:20 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/17 15:42:52 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2024/12/19 14:30:52 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ void	minishell_init(char **envp)
 			printf("\nyour shitty input was %s\n", attributes.readret);
 			ft_tokenization(&attributes);
 			ft_parsing(&attributes);
+			//printf("node content %s\n", attributes.commands->str);
+			//printf("left node %s\n", attributes.commands->left->str);
 			ft_execution(&attributes);
 		}
  	}
