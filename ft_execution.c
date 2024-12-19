@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 15:00:53 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/19 15:29:57 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2024/12/19 19:39:34 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,14 +50,26 @@ char	**check_if_valid_command(const char *cmd)
 	return (cmd_arr);
 }
 
-void	execute_simple_command(char **cmd_arr, t_mini *attributes)
+void	execute_simple_command(char **cmd_arr, t_mini *attributes, t_cmd_table *node)
 {
 	char *cmd_path;
-	//if input was redirected
-	//dup2(input_place, STDIN_FILENO);
+	if (node->type == 3)
+	{
+		printf("Input redirection from %s\n", node->left->str);
+		char **input_arr = ft_split(node->left->str, ' ');//temp fix for extra space
+		int input = open(input_arr[0], O_RDONLY);//open check
+		if (input < 0)
+		{
+			printf("infile open err\n");
+			return ;
+		}
+		printf("%d input var\n", input);
+		dup2(input, STDIN_FILENO);
+		close(input);
+	}
 	//if output was redirected
 	//dup2(output_place, STDOUT_FILENO);
-	//close(input_place);
+	//close(input);
 	//close(output_place);
 	cmd_path = get_command_path(cmd_arr[0], attributes);
 	if (cmd_path)
@@ -71,7 +83,7 @@ void	execute_simple_command(char **cmd_arr, t_mini *attributes)
 	}
 }
 
-void	handle_simple_command(char **cmd_arr, t_mini *attributes)
+void	handle_simple_command(char **cmd_arr, t_mini *attributes, t_cmd_table *node)
 {
 	int	pid;
 	int	status;
@@ -83,7 +95,7 @@ void	handle_simple_command(char **cmd_arr, t_mini *attributes)
 		//might require closing file descriptors, freeing memory
 	}
 	if (pid == 0)
-		execute_simple_command(cmd_arr, attributes);
+		execute_simple_command(cmd_arr, attributes, node);
 	else
 	{
 		waitpid(pid, &status, 0);
@@ -98,9 +110,14 @@ void	traverse_and_execute(t_cmd_table *node, t_mini *attributes)
 	int	builtin_flag;
 	if (!node)
 		return ; //is it necessary?
-	traverse_and_execute(node->left, attributes);
-	if (node->type == t_command)
+	if (node->left && node->left->type == t_command)
+		traverse_and_execute(node->left, attributes);
+	printf("current node %s\n", node->str);
+	printf("current type %d\n", node->type);
+	if (node->type == 3)
 	{
+		if (node->left && node->left->type == 3)
+			printf("input redir\n");
 		cmd_array = check_if_valid_command(node->str);
 		if (cmd_array)
 		{
@@ -108,7 +125,7 @@ void	traverse_and_execute(t_cmd_table *node, t_mini *attributes)
 			if (builtin_flag != 0)
 				handle_builtin(cmd_array, builtin_flag, attributes);
 			else
-				handle_simple_command(cmd_array, attributes);
+				handle_simple_command(cmd_array, attributes, node);
 			int i = 0;
 			while (cmd_array[i] != NULL)
 			{

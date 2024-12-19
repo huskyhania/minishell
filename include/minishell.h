@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:45:13 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/19 17:17:33 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/19 18:16:14 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,8 +112,8 @@ t_cmd_table *ft_add_new(t_mini *attributes, t_tokens *token);
 //ft_execution.c - executing simple commands
 int	is_empty_or_space(const char *cmd);
 char	**check_if_valid_command(const char *cmd);
-void	execute_simple_command(char **cmd_arr, t_mini *attributes);
-void	handle_simple_command(char **cmd_arr, t_mini *attributes);
+void	execute_simple_command(char **cmd_arr, t_mini *attributes, t_cmd_table *node);
+void	handle_simple_command(char **cmd_arr, t_mini *attributes, t_cmd_table *node);
 void	ft_execution(t_mini *attributes);
 
 //ft_path.c - checking for path in envp if necessary
