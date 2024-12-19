@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 18:12:26 by llaakson          #+#    #+#             */
-/*   Updated: 2024/12/19 22:30:47 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/19 22:39:24 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,6 @@ t_cmd_table *ft_merge_redirection(t_tokens **token, t_cmd_table *old_table)
 	if ((*token)->type == 3)
 		old_table->infile = ft_strdup((*token)->next->str);
 	*token = (*token)->next;
-	old_table->type = 20;
-	return (old_table);
 }
 
 t_cmd_table	*ft_merge_command(t_mini *attributes, t_tokens **token)
