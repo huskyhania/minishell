@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 18:12:26 by llaakson          #+#    #+#             */
-/*   Updated: 2024/12/19 18:12:35 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2024/12/19 22:30:47 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,17 +26,15 @@ void ft_merge_pipe(t_mini *attributes, t_cmd_table *old_table)
 
 t_cmd_table *ft_merge_redirection(t_tokens **token, t_cmd_table *old_table)
 {
-	t_cmd_table *new_node;
+	//t_cmd_table *new_node;
 	
-	new_node = malloc(sizeof(t_cmd_table));
-	new_node->right = NULL;
-	old_table->type = (*token)->type;
-	//new_node->str = ft_strdup((*token)->str);
+	//new_node = malloc(sizeof(t_cmd_table));
+	if ((*token)->type == 2)
+		old_table->outfile = ft_strdup((*token)->next->str);
+	if ((*token)->type == 3)
+		old_table->infile = ft_strdup((*token)->next->str);
 	*token = (*token)->next;
-	new_node->type = 20;
-	new_node->str = ft_strdup((*token)->str);
-	new_node->left = old_table->left;
-	old_table->left = new_node;
+	old_table->type = 20;
 	return (old_table);
 }
 
@@ -48,7 +46,7 @@ t_cmd_table	*ft_merge_command(t_mini *attributes, t_tokens **token)
 	while(*token != NULL && (*token)->type != t_pipe)
 	{
 		//printf("Merging\n");
-		if ((*token)->type == t_great || (*token)->type == t_less)
+		if (*token && ((*token)->type == t_great || (*token)->type == t_less))
 			new_node = ft_merge_redirection(token, new_node);
 		else
 		{
@@ -59,6 +57,7 @@ t_cmd_table	*ft_merge_command(t_mini *attributes, t_tokens **token)
 		}
 		*token = (*token)->next;
 	}
+	//new_node->type = 20;
 	//printf("Merging done\n");
 	return (new_node);
 }
@@ -103,14 +102,14 @@ void	ft_parsing(t_mini *attributes)
 	t_cmd_table *print = attributes->commands;
 	while(print)
 	{
-		printf("first node: %s redirection: %d\n", print->str, print->type);
-		if (print->type == 3 || print->type ==2)
-			printf("first node: %s redirection: %d\n", print->left->str, print->left->type);
+		printf("first node: %s type: %d\n", print->str, print->type);
+		if (print->type == 20)
+			printf("Infile: %s Outfile: %s\n", print->infile, print->outfile);
 		if (print->type == t_pipe)
 		{
-			printf("right node : %s redireciton: %d\n", print->right->str, print->right->type);
-			if (print->right->type == 3 || print->right->type ==2)
-				print_helper(print->right);
+			printf("right node : %s type: %d\n", print->right->str, print->right->type);
+			if (print->right->type == 20)
+				printf("Infile: %s Outfile: %s\n", print->right->infile, print->right->outfile);
 		}
 		if (print->type == t_pipe)
 			print = print->left;

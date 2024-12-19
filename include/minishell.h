@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:45:13 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/19 18:16:14 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2024/12/19 21:17:39 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,8 @@ typedef struct s_tokens {
 typedef struct s_cmd_table {
 	t_token_type	type;
 	char			*str;
-	int 			direction;
+	char 			*infile;
+	char			*outfile;
 	struct s_cmd_table *right;
 	struct s_cmd_table *left;
 } t_cmd_table;
