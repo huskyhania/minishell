@@ -6,61 +6,12 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 12:06:47 by llaakson          #+#    #+#             */
-/*   Updated: 2024/12/17 18:17:30 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/19 17:14:20 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_tokens	*ft_find_last(t_tokens *stack)
-{
-	if (!stack)
-		return (NULL);
-	while (stack->next)
-		stack = stack->next;
-	return (stack);
-}
-
-void	print_tokens(t_mini *attributes)
-{
-	//helper fucntion will be deleted from final product
-	t_tokens *temp;
-	temp = attributes->tokens;
- 
-	while (temp != NULL)
-	{
-		printf("node type: %u string %s\n", temp->type, temp->str);
-		temp = temp->next;
-	}
-}
-
-t_tokens	*ft_add_token(t_mini *attributes)
-{
-		t_tokens *new_token;
-		t_tokens *last_token;
-		
-		new_token = malloc(sizeof(t_tokens)); // malloc here the list needs to be freed after parsing.
-		if (!new_token)
-		{
-			printf("Error\n");
-			exit(1);
-		}
-		new_token->next = NULL;
-		if (!attributes->tokens)
-		{
-			//printf("Made first token\n");
-			attributes->tokens = new_token;
-			new_token->prev = NULL;
-		}
-		else
-		{
-			//printf("Made additional token\n");
-			last_token = ft_find_last(attributes->tokens);
-			last_token->next = new_token;
-			new_token->prev = last_token;
-		}
-		return (new_token);
-}
 void	ft_add_token_type(t_tokens *new_command, char **line, int size)
 {
 	new_command->str = ft_substr(*line, 0, size);
@@ -172,15 +123,15 @@ void	ft_tokenization(t_mini *attributes)
 	while (*line)
 	{
 		ft_skip_whitespace(&line); // function that skips whitespace
-		if (ft_is_quote(line))
+		if (*line && ft_is_quote(line))
 			line = ft_add_quote(line, attributes);
-		if (ft_is_special(line))
+		if (*line && ft_is_special(line))
 			ft_add_pipe(attributes, &line);
-		if (*line == '$')
+		if (*line && *line == '$')
 			line = ft_add_expansion(attributes, line);
-		if (*line != ' ' && *line)
+		if (*line && *line != ' ')
 			line = ft_add_command(line, attributes);
-		if (!ft_is_special(line))
+		if (*line && !ft_is_special(line))
 			line++; // Why do I need this ????????
 	}
 	print_tokens(attributes);

@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:45:13 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/18 20:50:45 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/19 17:17:33 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,9 @@ typedef struct s_minishell
 //ft_tokens.c
 void    ft_tokenization(t_mini *attributes);
 
-//t_tokens	*ft_find_last(t_tokens *stack);
+//ft_tokens_memory.c
+void    print_tokens(t_mini *attributes);
+t_tokens    *ft_add_token(t_mini *attributes);
 
 //ft_tokens_tools.c
 void ft_skip_whitespace(char **line);
