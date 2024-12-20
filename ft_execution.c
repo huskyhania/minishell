@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 15:00:53 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/19 19:39:34 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2024/12/20 20:38:50 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,10 +53,10 @@ char	**check_if_valid_command(const char *cmd)
 void	execute_simple_command(char **cmd_arr, t_mini *attributes, t_cmd_table *node)
 {
 	char *cmd_path;
-	if (node->type == 3)
+	if (node->infile)
 	{
-		printf("Input redirection from %s\n", node->left->str);
-		char **input_arr = ft_split(node->left->str, ' ');//temp fix for extra space
+		printf("Input redirection from %s\n", node->infile);
+		char **input_arr = ft_split(node->infile, ' ');//temp fix for extra space
 		int input = open(input_arr[0], O_RDONLY);//open check
 		if (input < 0)
 		{
@@ -67,10 +67,20 @@ void	execute_simple_command(char **cmd_arr, t_mini *attributes, t_cmd_table *nod
 		dup2(input, STDIN_FILENO);
 		close(input);
 	}
-	//if output was redirected
-	//dup2(output_place, STDOUT_FILENO);
-	//close(input);
-	//close(output_place);
+	if (node->outfile)
+	{
+		printf("Output redirection from %s\n", node->outfile);
+		char **output_arr = ft_split(node->outfile, ' ');
+		int output = open(output_arr[0], O_WRONLY | O_CREAT | O_TRUNC);
+		if (output < 0)
+		{
+			printf("outfile open err\n");
+			return ;
+		}
+		printf("output var %d\n", output);
+		dup2(output, STDOUT_FILENO);
+		close(output);
+	}
 	cmd_path = get_command_path(cmd_arr[0], attributes);
 	if (cmd_path)
 	{
@@ -114,7 +124,7 @@ void	traverse_and_execute(t_cmd_table *node, t_mini *attributes)
 		traverse_and_execute(node->left, attributes);
 	printf("current node %s\n", node->str);
 	printf("current type %d\n", node->type);
-	if (node->type == 3)
+	if (node->type == 20 || node->type == 0)
 	{
 		if (node->left && node->left->type == 3)
 			printf("input redir\n");
