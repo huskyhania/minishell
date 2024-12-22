@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:45:13 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/19 21:17:39 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/22 16:43:08 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,5 +142,8 @@ char	*get_value(char *s);
 
 //heredoc
 int	here_doc_handler(char **cmd_array);
+
+//other general utils
+void	free_array(char **array);
 
 #endif

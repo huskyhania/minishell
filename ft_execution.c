@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 15:00:53 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/20 20:38:50 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2024/12/22 18:30:53 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,19 +67,29 @@ void	execute_simple_command(char **cmd_arr, t_mini *attributes, t_cmd_table *nod
 		dup2(input, STDIN_FILENO);
 		close(input);
 	}
+	else if (attributes->input_fd != STDIN_FILENO)
+	{
+		dup2(attributes->input_fd, STDIN_FILENO);
+		close(attributes->input_fd);
+	}
 	if (node->outfile)
 	{
 		printf("Output redirection from %s\n", node->outfile);
 		char **output_arr = ft_split(node->outfile, ' ');
-		int output = open(output_arr[0], O_WRONLY | O_CREAT | O_TRUNC);
+		int output = open(output_arr[0], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		if (output < 0)
 		{
-			printf("outfile open err\n");
+			printf("outfile open err\n\n\n\n");
 			return ;
 		}
 		printf("output var %d\n", output);
 		dup2(output, STDOUT_FILENO);
 		close(output);
+	}
+	else if (attributes->output_fd != STDOUT_FILENO)
+	{
+		dup2(attributes->output_fd, STDOUT_FILENO);
+		close(attributes->output_fd);
 	}
 	cmd_path = get_command_path(cmd_arr[0], attributes);
 	if (cmd_path)
@@ -118,16 +128,23 @@ void	traverse_and_execute(t_cmd_table *node, t_mini *attributes)
 {
 	char **cmd_array;
 	int	builtin_flag;
+	int	pipe_fd[2];
 	if (!node)
-		return ; //is it necessary?
-	if (node->left && node->left->type == t_command)
-		traverse_and_execute(node->left, attributes);
-	printf("current node %s\n", node->str);
-	printf("current type %d\n", node->type);
-	if (node->type == 20 || node->type == 0)
+		return ;
+	if (pipe(pipe_fd) == -1)
+		perror("piping issue");//return to minishell prompt
+	if (node->type == t_pipe && node->left)
 	{
-		if (node->left && node->left->type == 3)
-			printf("input redir\n");
+		attributes->output_fd = pipe_fd[1];
+		traverse_and_execute(node->left, attributes);
+		attributes->input_fd = pipe_fd[0];
+		close(pipe_fd[1]);
+		traverse_and_execute(node->right, attributes);
+		close(pipe_fd[0]);
+	}
+	else
+	{
+		printf("node content %s\n", node->str);
 		cmd_array = check_if_valid_command(node->str);
 		if (cmd_array)
 		{
@@ -145,50 +162,28 @@ void	traverse_and_execute(t_cmd_table *node, t_mini *attributes)
 			free(cmd_array);
 		}
 	}
-	traverse_and_execute(node->right, attributes);
 }
 
 void	ft_execution(t_mini *attributes)
 {
+	int	builtin_flag;
 	if (!attributes || !attributes->commands)
 	{
 		printf("something went wrong\n");
 		return ;
 	}
-	traverse_and_execute(attributes->commands, attributes);
-}
-	/*{
-	char	**cmd_array;
-	int	builtin_flag;
-	t_cmd_table	*helper;
-	int	i;
-	builtin_flag = 0;
-	i = 0;
-	helper = attributes->commands;
-	while (helper->type == t_pipe) // type for pipe 1
-		helper = helper->left;
-	if (helper->type == t_command)
+	if (attributes->commands->type == t_command)
 	{
-		cmd_array = check_if_valid_command(helper->str);
+		char **cmd_array = check_if_valid_command(attributes->commands->str);
 		if (cmd_array)
 		{
 			builtin_flag = is_builtin(cmd_array[0]);
 			if (builtin_flag != 0)
 				handle_builtin(cmd_array, builtin_flag, attributes);
-			//if << was found and there is something afterwards -otherwise parse error
-			//{
-			//	printf("call to heredoc function");
-			//	here_doc_handler(cmd_array);
-			//}
 			else
-				handle_simple_command(cmd_array, attributes);
-			int i = 0;
-			while (cmd_array[i] != NULL)
-			{
-				free(cmd_array[i]);
-				i++;
-			}
-			free(cmd_array);
+				handle_simple_command(cmd_array, attributes, attributes->commands);
+			free_array(cmd_array);
 		}
 	}
-}*/
+	traverse_and_execute(attributes->commands, attributes);
+}
