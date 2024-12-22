@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 15:11:35 by llaakson          #+#    #+#             */
-/*   Updated: 2024/12/22 08:27:45 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/22 13:34:28 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,11 @@ char	*ft_replace_expansion(char *token, char *path, char *expansion)
 	start = ft_strnstr(token, path, ft_strlen(token));
 	temp = ft_substr(token, 0, (start - token));
 	ft_strlcat(temp2, temp, len+1);
-	printf("TEMP2 %s\n", temp2);
+	//printf("TEMP2 %s\n", temp2);
 	ft_strlcat(temp2, expansion, len+1);
-	printf("TEMP2 %s\n", temp2);
+	//printf("TEMP2 %s\n", temp2);
 	ft_strlcat(temp2, start + ft_strlen(path), len+1);
-	printf("TEMP2 %s\n", temp2);
+	//printf("TEMP2 %s\n", temp2);
 	return (temp2);
 
 }
@@ -53,7 +53,7 @@ void	ft_expand_word(t_mini *attributes, t_tokens *token)
 			path = ft_substr(token->str, j, i);
 			//if (!path)
 			//	return (NULL);
-			printf("path }%s{\n", path);
+			//printf("path }%s{\n", path);
 			expansion = get_env_value(attributes, &path[1]);
 			if (!expansion)
 			{
@@ -73,6 +73,7 @@ void	ft_expand_word(t_mini *attributes, t_tokens *token)
 void	ft_expand(t_mini *attributes)
 {
 		char *expansion;
+		char *exitcode;
 		
 		t_tokens *token;
 		token = attributes->tokens;
@@ -80,14 +81,27 @@ void	ft_expand(t_mini *attributes)
 		{
 			if (token->type == t_dollar)
 			{
-				expansion = get_env_value(attributes, token->str);
-				if (!expansion)
+				if (token->str[0] == '?'  && (ft_strlen(token->str) == 1))
 				{
-					printf("no value in env\n");
-					break ;
-				}	
-				token->str = ft_strdup(expansion);
-				printf("FOUND PATH: %s. \n", expansion);
+					exitcode = ft_itoa(attributes->exitcode);
+					printf("Exitcode %d\n", attributes->exitcode);
+					token->str = exitcode;
+				}
+				else
+				{
+					expansion = get_env_value(attributes, token->str);
+					if (!expansion)
+					{
+						printf("no value in env\n");
+						token->str = "";
+						break ;
+					}
+					else
+					{
+						token->str = ft_strdup(expansion);
+						printf("FOUND PATH: %s. \n", expansion);
+					}
+				}
 			}
 			else if (token->type == t_command)
 				ft_expand_word(attributes, token);
