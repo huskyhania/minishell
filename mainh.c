@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:37:20 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/23 17:37:16 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/23 19:13:53 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	minishell_init(char **envp)
 			//printf("left node %s and type %d\n", attributes.commands->left->str, attributes.commands->left->type);
 			//printf("left of left %s and type %d\n", attributes.commands->left->left->str, attributes.commands->left->left->type);
 			//printf("left of the left of the left %s and type %d\n", attributes.commands->left->left->left->str, attributes.commands->left->left->left->type);
-			//ft_execution(&attributes);
+			ft_execution(&attributes);
 		}
  	}
 	//clean history after breaking the loop???

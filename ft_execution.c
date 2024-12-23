@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 15:00:53 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/23 14:38:41 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2024/12/23 18:09:36 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	execute_simple_command(char **cmd_arr, t_mini *attributes, t_cmd_table *nod
 	cmd_path = get_command_path(cmd_arr[0], attributes);
 	if (cmd_path)
 	{
-		if (execve(cmd_path, cmd_arr, NULL) == -1)
+		if (execve(cmd_path, cmd_arr, NULL) == -1)//change the null here
 		{
 			perror("execve error");
 			//free mallocs
@@ -128,25 +128,15 @@ void	traverse_and_execute(t_cmd_table *node, t_mini *attributes)
 
 void	ft_execution(t_mini *attributes)
 {
-	int	builtin_flag;
 	if (!attributes || !attributes->commands)
 	{
 		printf("something went wrong\n");
 		return ;
 	}
-	if (attributes->commands->type == t_command)
+	if (attributes->commands->type != t_pipe)
 	{
-		attributes->array = check_if_valid_command(attributes->commands->str);
-		if (attributes->array)
-		{
-			builtin_flag = is_builtin(attributes->array[0]);
-			if (builtin_flag != 0)
-				handle_builtin(attributes->array, builtin_flag, attributes);
-			else
-				handle_simple_command(attributes->array, attributes, attributes->commands);
-			free_array(attributes->array);
-			attributes->array = NULL;
-		}
+		printf("entering single command execution\n");
+		single_command(attributes->commands, attributes); 
 	}
 	else
 		traverse_and_execute(attributes->commands, attributes);
