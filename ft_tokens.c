@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 12:06:47 by llaakson          #+#    #+#             */
-/*   Updated: 2024/12/23 19:36:42 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/23 19:51:32 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ char	*ft_add_command(char *line, t_mini *attributes)
 		}
 		new_command->str = ft_substr(line, 0, i); // malloc here remeber to check and free after parsing
 		//new_command->str = ft_strjoin(new_command->str, " ");
-		attributes->cmd_index += 1;
+		//attributes->cmd_index += 1;
 		return (line+i);
 }
 

@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 18:12:26 by llaakson          #+#    #+#             */
-/*   Updated: 2024/12/23 17:49:16 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/23 19:50:57 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,12 +54,14 @@ t_cmd_table	*ft_merge_command(t_mini *attributes, t_tokens **token)
 	}
 	//new_node->type = 20;
 	printf("Merging done\n");
+	attributes->cmd_index += 1;
 	return (new_node);
 }
 void ft_start_parsing(t_mini *attributes)
 {
 	t_tokens *token;
 	token = attributes->tokens;
+	attributes->cmd_index = 0;
 
 	//make the first table node
 	t_cmd_table *new_table;
@@ -105,6 +107,7 @@ void	ft_parsing(t_mini *attributes)
 
 	printf("COMMAND TABLE:\n");
 	t_cmd_table *print = attributes->commands;
+	printf("CMD COUNT %d\n",attributes->cmd_index);
 	while(print)
 	{
 		if (print->type == t_command)
