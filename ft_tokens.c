@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 12:06:47 by llaakson          #+#    #+#             */
-/*   Updated: 2024/12/22 10:01:01 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/23 17:43:54 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,8 @@ char	*ft_add_command(char *line, t_mini *attributes)
 			i++;
 		}
 		new_command->str = ft_substr(line, 0, i); // malloc here remeber to check and free after parsing
-		new_command->str = ft_strjoin(new_command->str, " ");
+		//new_command->str = ft_strjoin(new_command->str, " ");
+		attributes->cmd_index += 1;
 		return (line+i);
 }
 
@@ -118,6 +119,7 @@ void	ft_tokenization(t_mini *attributes)
 {
 	char		*line;
 
+	attributes->cmd_index = 0;
 	attributes->tokens = NULL;
 	line = attributes->readret;
 	while (*line)

@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:45:13 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/23 13:44:28 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2024/12/23 16:50:30 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ typedef struct s_tokens {
 typedef struct s_cmd_table {
 	t_token_type	type;
 	char			*str;
+	char			**cmd_arr;
 	char 			*infile;
 	char			*outfile;
 	struct s_cmd_table *right;
@@ -86,6 +87,7 @@ typedef struct s_minishell
 	char	**envp_arr;
 	int	input_fd;
 	int	output_fd;
+	int cmd_index;
 }	t_mini;
 
 //ft_tokens.c
@@ -109,6 +111,7 @@ void    ft_expand(t_mini *attributes);
 //ft_parsing_tools.c
 t_cmd_table *ft_find_last_parse(t_cmd_table *stack);
 t_cmd_table *ft_add_new(t_mini *attributes, t_tokens *token);
+char **ft_add_command_array(char **old_array, char *str);
 
 //ft_execution.c - executing simple commands
 int	is_empty_or_space(const char *cmd);
