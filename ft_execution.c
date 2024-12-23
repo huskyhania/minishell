@@ -6,49 +6,11 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 15:00:53 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/22 18:30:53 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2024/12/23 14:38:41 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	is_empty_or_space(const char *cmd)
-{
-	if (!cmd || cmd[0] == '\0')
-		return (1);
-	while (*cmd)
-	{
-		if (*cmd != ' ')
-			return (0);
-		cmd++;
-	}
-	return (1);
-}
-
-char	**check_if_valid_command(const char *cmd)
-{
-	char **cmd_arr; // to be in struct
-	if (is_empty_or_space(cmd))
-	{
-		write(2, cmd, ft_strlen(cmd));
-		write(2, ": command not found\n", 21);
-		//exitcode 127, possibly error flag?
-		return (NULL);
-	}
-	cmd_arr = ft_split(cmd, ' ');
-	if (!cmd_arr)
-	{
-		perror("cmd split error");
-		return (NULL); // make sure to close fds if necessary, free cmd-related memory
-	}
-	int i = 0;
-	while (cmd_arr[i] != NULL)
-	{
-		printf("cmd_arr[%d]: %s\n", i, cmd_arr[i]);
-		i++;
-	}
-	return (cmd_arr);
-}
 
 void	execute_simple_command(char **cmd_arr, t_mini *attributes, t_cmd_table *node)
 {
@@ -174,16 +136,18 @@ void	ft_execution(t_mini *attributes)
 	}
 	if (attributes->commands->type == t_command)
 	{
-		char **cmd_array = check_if_valid_command(attributes->commands->str);
-		if (cmd_array)
+		attributes->array = check_if_valid_command(attributes->commands->str);
+		if (attributes->array)
 		{
-			builtin_flag = is_builtin(cmd_array[0]);
+			builtin_flag = is_builtin(attributes->array[0]);
 			if (builtin_flag != 0)
-				handle_builtin(cmd_array, builtin_flag, attributes);
+				handle_builtin(attributes->array, builtin_flag, attributes);
 			else
-				handle_simple_command(cmd_array, attributes, attributes->commands);
-			free_array(cmd_array);
+				handle_simple_command(attributes->array, attributes, attributes->commands);
+			free_array(attributes->array);
+			attributes->array = NULL;
 		}
 	}
-	traverse_and_execute(attributes->commands, attributes);
+	else
+		traverse_and_execute(attributes->commands, attributes);
 }

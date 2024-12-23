@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:45:13 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/22 16:43:08 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2024/12/23 13:44:28 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 # include <readline/history.h>
 # include "../complete_Libft/libft.h"
 
-#define PROMPT "minishell~$"
+#define PROMPT "minishell~$ "
 
 // Token types
 typedef enum e_token_type {
