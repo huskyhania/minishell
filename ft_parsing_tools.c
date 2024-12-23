@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 15:06:34 by llaakson          #+#    #+#             */
-/*   Updated: 2024/12/19 17:58:20 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2024/12/23 18:00:48 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,63 @@ t_cmd_table *ft_add_new(t_mini *attributes, t_tokens *token)
 	//new_node->str = ft_strdup(token->str);
 	new_node->right = NULL;
 	new_node->left = NULL;
+	new_node->cmd_arr= NULL;
 	new_node->type = (token->type);
 	return(new_node);
+}
+void	ft_free_cmd_array(char **arr)
+{
+	int i;
+
+	if (!arr)
+		return ;
+	i = 0;
+	while (arr && arr[i])
+	{
+		if (arr[i])
+		{
+			free(arr[i]);
+			arr[i] = NULL;
+		}
+		i++;
+	}
+	if (arr)
+	{
+		free(arr);
+		arr = NULL;
+	}
+}
+
+int	ft_count_array(char **old_array)
+{
+	int i;
+
+	i = 0;
+	if (!old_array)
+		return (0);
+	while (old_array[i])
+		i++;
+	return (i);
+}
+	
+char **ft_add_command_array(char **old_array, char *str)
+{
+	char **new_array;
+	int size;
+	int i;
+	
+	size = ft_count_array(old_array);
+	printf("Counting done size %d\n",size);
+	new_array = malloc((size + 2) * sizeof(char *));
+	printf("Malloc done\n");
+	i = 0;
+	while (old_array && old_array[i])
+	{
+		new_array[i] = ft_strdup(old_array[i]);
+		i++;
+	}
+	printf("array done\n");
+	new_array[i] = str;
+	free_array(old_array);
+	return (new_array);
 }

@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 18:12:26 by llaakson          #+#    #+#             */
-/*   Updated: 2024/12/19 22:46:43 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/23 17:49:16 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,20 +45,15 @@ t_cmd_table	*ft_merge_command(t_mini *attributes, t_tokens **token)
 	new_node = ft_add_new(attributes, *token);
 	while(*token != NULL && (*token)->type != t_pipe)
 	{
-		//printf("Merging\n");
+		printf("Merging\n");
 		if (*token && ((*token)->type == t_great || (*token)->type == t_less))
 			new_node = ft_merge_redirection(token, new_node);
 		else
-		{
-			if (!new_node->str)
-				new_node->str = ft_strdup((*token)->str);
-			else
-				new_node->str = ft_strjoin(new_node->str, (*token)->str);
-		}
+			new_node->cmd_arr = ft_add_command_array(new_node->cmd_arr, (*token)->str);
 		*token = (*token)->next;
 	}
 	//new_node->type = 20;
-	//printf("Merging done\n");
+	printf("Merging done\n");
 	return (new_node);
 }
 void ft_start_parsing(t_mini *attributes)
@@ -73,7 +68,7 @@ void ft_start_parsing(t_mini *attributes)
 	//continue if there are pipes
 	while(token != NULL && token->type == t_pipe)
 	{
-		//printf("hello\n");
+		printf("hello\n");
 		token = token->next;
 		new_table = ft_merge_command(attributes, &token);
 		ft_merge_pipe(attributes, new_table);
@@ -91,6 +86,16 @@ void print_helper(t_cmd_table *print)
 	}
 }
 
+void print_array(t_cmd_table *print)
+{
+	int i = 0;
+	while (print && print->cmd_arr[i])
+	{
+		printf("Index %d string %s\n", i, print->cmd_arr[i]);
+		i++;
+	}
+}
+
 void	ft_parsing(t_mini *attributes)
 {
 	ft_expand(attributes);
@@ -102,12 +107,15 @@ void	ft_parsing(t_mini *attributes)
 	t_cmd_table *print = attributes->commands;
 	while(print)
 	{
-		printf("first node: %s type: %d\n", print->str, print->type);
+		if (print->type == t_command)
+			print_array(print);
+		//printf("first node: %s type: %d\n", print->str, print->type);
 		if (print->type == 20)
 			printf("Infile: %s Outfile: %s\n", print->infile, print->outfile);
 		if (print->type == t_pipe)
 		{
-			printf("right node : %s type: %d\n", print->right->str, print->right->type);
+			print_array(print->right);
+			//printf("right node : %s type: %d\n", print->right->str, print->right->type);
 			if (print->right->type == 20)
 				printf("Infile: %s Outfile: %s\n", print->right->infile, print->right->outfile);
 		}
