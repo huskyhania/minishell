@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:45:13 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/23 13:44:28 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2024/12/23 17:00:40 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,7 @@ char	**check_if_valid_command(const char *cmd);
 void	execute_simple_command(char **cmd_arr, t_mini *attributes, t_cmd_table *node);
 void	handle_simple_command(char **cmd_arr, t_mini *attributes, t_cmd_table *node);
 void	ft_execution(t_mini *attributes);
+void	single_command(t_cmd_table *node, t_mini *attributes);
 
 //ft_path.c - checking for path in envp if necessary
 char	*get_command_path(const char *cmd, t_mini *attributes);
