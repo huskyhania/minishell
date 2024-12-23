@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 12:06:47 by llaakson          #+#    #+#             */
-/*   Updated: 2024/12/23 17:43:54 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/23 19:36:42 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,10 +89,10 @@ char	*ft_add_quote(char *line, t_mini *attributes)
 	// feels wrong
 	while (!ft_is_quote(&line[i]) && temp_line[i] != '\0')
 		i++;
-	i++;
-	new_command->str = ft_substr(line, 0, i);
+	//i++;
+	new_command->str = ft_substr(line, 1, i-1);
 	new_command->str = ft_strjoin(new_command->str, " "); // This is shit ??
-	return (line+i);
+	return (line+i+1);
 }
 
 char *ft_add_expansion(t_mini *attributes, char *line)
