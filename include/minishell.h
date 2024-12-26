@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 19:03:54 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/23 19:03:58 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2024/12/26 16:12:03 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,9 @@ void ft_skip_whitespace(char **line);
 int ft_is_special(char *line);
 int ft_is_whitespace(char *line);
 int ft_is_quote(char *line);
+
+//ft_syntax.c
+int ft_syntax_check(t_mini *attributes);
 
 //ft_expand.c
 void    ft_expand(t_mini *attributes);

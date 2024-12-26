@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:37:20 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/23 21:41:19 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/26 19:02:03 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,8 @@ void	minishell_init(char **envp)
 			add_history(attributes.readret);
 			printf("\nyour shitty input was %s\n", attributes.readret);
 			ft_tokenization(&attributes);
-			ft_parsing(&attributes);
+			if(ft_syntax_check(&attributes))
+				ft_parsing(&attributes);
 			//printf("node content %s and type %d\n", attributes.commands->str, attributes.commands->type);
 			//printf("left node %s and type %d\n", attributes.commands->left->str, attributes.commands->left->type);
 			//printf("left of left %s and type %d\n", attributes.commands->left->left->str, attributes.commands->left->left->type);

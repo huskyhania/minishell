@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 12:06:47 by llaakson          #+#    #+#             */
-/*   Updated: 2024/12/23 21:06:05 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/26 16:49:43 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,7 @@ void	ft_tokenization(t_mini *attributes)
 			ft_add_pipe(attributes, &line);
 		if (*line && *line == '"')
 			line = ft_add_expansion(attributes, line);
-		if (*line && *line != ' ') // change this to else?
+		if (*line && *line != ' ' && !ft_is_special(line)) // change this to else?
 			line = ft_add_command(line, attributes);
 		if (*line && !ft_is_special(line))
 			line++; // Why do I need this ????????

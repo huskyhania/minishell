@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 18:12:26 by llaakson          #+#    #+#             */
-/*   Updated: 2024/12/23 19:50:57 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/23 21:55:37 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ t_cmd_table	*ft_merge_command(t_mini *attributes, t_tokens **token)
 	new_node = ft_add_new(attributes, *token);
 	while(*token != NULL && (*token)->type != t_pipe)
 	{
-		printf("Merging\n");
+		//printf("Merging\n");
 		if (*token && ((*token)->type == t_great || (*token)->type == t_less))
 			new_node = ft_merge_redirection(token, new_node);
 		else
@@ -53,7 +53,7 @@ t_cmd_table	*ft_merge_command(t_mini *attributes, t_tokens **token)
 		*token = (*token)->next;
 	}
 	//new_node->type = 20;
-	printf("Merging done\n");
+	//printf("Merging done\n");
 	attributes->cmd_index += 1;
 	return (new_node);
 }
@@ -70,7 +70,7 @@ void ft_start_parsing(t_mini *attributes)
 	//continue if there are pipes
 	while(token != NULL && token->type == t_pipe)
 	{
-		printf("hello\n");
+		//printf("hello\n");
 		token = token->next;
 		new_table = ft_merge_command(attributes, &token);
 		ft_merge_pipe(attributes, new_table);
