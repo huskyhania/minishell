@@ -1,14 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/23 19:03:54 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/26 16:12:03 by llaakson         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
@@ -87,7 +76,8 @@ typedef struct s_minishell
 	char	**envp_arr;
 	int	input_fd;
 	int	output_fd;
-	int cmd_index;
+	int	cmd_index;
+	int	pipe_fd[2];
 }	t_mini;
 
 //ft_tokens.c
