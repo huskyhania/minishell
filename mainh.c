@@ -6,12 +6,20 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:37:20 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/26 19:02:03 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/26 19:35:13 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
+int ft_check_everything(t_mini *attributes)
+{
+	ft_tokenization(attributes);
+	if (!(ft_syntax_check(attributes)))
+		return (0);
+	ft_expand(attributes);
+	ft_parsing(attributes);
+	return (1);
+}
 void	minishell_init(char **envp)
 {
 	t_mini	attributes;
@@ -22,21 +30,16 @@ void	minishell_init(char **envp)
 	attributes.commands = NULL;
 	attributes.input_fd = STDIN_FILENO;
 	attributes.output_fd = STDOUT_FILENO;
+	attributes.exitcode = 0;
 	while (1)
 	{
 		attributes.readret = readline(PROMPT);
 		if (attributes.readret && attributes.readret[0] != '\0')
 		{
 			add_history(attributes.readret);
-			printf("\nyour shitty input was %s\n", attributes.readret);
-			ft_tokenization(&attributes);
-			if(ft_syntax_check(&attributes))
-				ft_parsing(&attributes);
-			//printf("node content %s and type %d\n", attributes.commands->str, attributes.commands->type);
-			//printf("left node %s and type %d\n", attributes.commands->left->str, attributes.commands->left->type);
-			//printf("left of left %s and type %d\n", attributes.commands->left->left->str, attributes.commands->left->left->type);
-			//printf("left of the left of the left %s and type %d\n", attributes.commands->left->left->left->str, attributes.commands->left->left->left->type);
-			ft_execution(&attributes);
+			//printf("\nyour shitty input was %s\n", attributes.readret);
+			if (ft_check_everything(&attributes))
+				ft_execution(&attributes);
 		}
  	}
 	//clean history after breaking the loop???

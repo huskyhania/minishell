@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/26 14:59:32 by llaakson          #+#    #+#             */
-/*   Updated: 2024/12/26 18:59:14 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/26 20:11:22 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ int ft_check_pipe(t_tokens *token, t_mini *attributes)
 	{
 		printf("syntax error near unexpected token `|'\n");
 		attributes->exitcode = 2;
+		ft_free_tokens(attributes);
 		return (0);
 	}
 	return (1);

@@ -6,11 +6,27 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/19 17:11:35 by llaakson          #+#    #+#             */
-/*   Updated: 2024/12/19 17:13:25 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/26 20:07:42 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	ft_free_tokens(t_mini *attributes)
+{
+	t_tokens *token;
+	t_tokens *temp;
+
+	token = attributes->tokens;
+	while (token)
+	{
+		temp = token->next;
+		if (token->str)
+			free(token->str);
+		free(token);
+		token = temp;
+	}
+}
 
 t_tokens	*ft_find_last(t_tokens *stack) //tokens and parsing have same function ?? (remove one)
 {

@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 18:12:26 by llaakson          #+#    #+#             */
-/*   Updated: 2024/12/23 21:55:37 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/26 19:32:40 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,6 @@ void print_array(t_cmd_table *print)
 
 void	ft_parsing(t_mini *attributes)
 {
-	ft_expand(attributes);
 	attributes->commands = NULL;
 	ft_start_parsing(attributes);
 
