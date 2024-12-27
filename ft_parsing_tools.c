@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 15:06:34 by llaakson          #+#    #+#             */
-/*   Updated: 2024/12/27 16:17:20 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/27 16:57:01 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,8 @@ char **ft_add_command_array(char **old_array, char *str)
 	size = ft_count_array(old_array);
 	//printf("Counting done size %d\n",size);
 	new_array = malloc((size + 2) * sizeof(char *));
+	if (!new_array)
+		printf("no new array");//add malloc check
 	//printf("Malloc done\n");
 	i = 0;
 	while (old_array && old_array[i])

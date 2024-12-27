@@ -11,6 +11,8 @@
 # include "../complete_Libft/libft.h"
 
 #define PROMPT "minishell~$ "
+#define READ 0
+#define WRITE 1
 
 // Token types
 typedef enum e_token_type {

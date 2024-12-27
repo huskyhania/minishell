@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 16:51:14 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/23 19:12:32 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2024/12/26 21:01:23 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,9 @@ static void	execute_single(char **cmd_array, t_mini *attributes, t_cmd_table *no
 		dup2(output, STDOUT_FILENO);
 		close(output);
 	}
+	perror("after redirs check");
 	cmd_path = get_command_path(cmd_array[0], attributes);
+	perror("we got to path");
 	if (cmd_path)
 	{
 		if (execve(cmd_path, cmd_array, NULL) == -1)
@@ -65,7 +67,10 @@ static void	handle_single(char **cmd_array, t_mini *attributes, t_cmd_table *nod
 		return ; // might require closing fds, freeing memory
 	}
 	if (pid == 0)
+	{
+		perror("child process");
 		execute_single(cmd_array, attributes, node);
+	}
 	else
 	{
 		waitpid(pid, &status, 0);
