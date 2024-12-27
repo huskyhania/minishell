@@ -6,13 +6,15 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:37:20 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/26 19:35:13 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/27 21:00:36 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 int ft_check_everything(t_mini *attributes)
 {
+	if(!(ft_check_quotes(attributes->readret)))
+		return (0);
 	ft_tokenization(attributes);
 	if (!(ft_syntax_check(attributes)))
 		return (0);

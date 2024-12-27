@@ -6,27 +6,35 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/26 14:59:32 by llaakson          #+#    #+#             */
-/*   Updated: 2024/12/27 16:39:58 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/27 21:58:48 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-/*int ft_check_quotes(char *line)
+
+int ft_check_quotes(char *line)
 {
 	int i;
-	int count;
+	char c;
+	int ret;
 
-	count = 0;
+	ret = 1;
 	i = 0;
 	while (line[i] != '\0')
 	{
-		if (line[i] == '"')
-
-
-		else if (line[i] ==
+		if (ret && (line[i] == '\'' || line[i] == '"'))
+		{
+			c = line[i];
+			ret = 0;
+		}
+		else if (!ret && line[i] == c)
+			ret = 1;
 		i++;
 	}
-}*/
+	if (!ret)
+		printf("syntax error unclosed quotes\n");
+	return (ret);
+}
 
 int ft_check_redirection(t_tokens *token, t_mini *attributes)
 {
