@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 15:11:35 by llaakson          #+#    #+#             */
-/*   Updated: 2024/12/23 21:32:40 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/27 17:00:17 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	ft_expand_word(t_mini *attributes, t_tokens *token)
 	{
 		if (token->str[j] == '$')
 		{
-			if (token->str[j+1] == '?'  && (token->str[j+2] == ' ' || token->str[j+2] == '\0'))
+			if (token->str[j+1] == '?')
 			{
 					exitcode = ft_itoa(attributes->exitcode);
 					printf("Exitcode %d\n", attributes->exitcode);
@@ -74,7 +74,7 @@ void	ft_expand_word(t_mini *attributes, t_tokens *token)
 		}
 		j++;
 	}
-	if(ft_strchr(token->str,36))
+	if(ft_strchr(token->str,36)) // 36 = $
 		ft_expand_word(attributes, token);
 	//free(path);
 }

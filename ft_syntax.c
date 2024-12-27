@@ -6,11 +6,27 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/26 14:59:32 by llaakson          #+#    #+#             */
-/*   Updated: 2024/12/27 16:19:04 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/27 16:39:58 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+/*int ft_check_quotes(char *line)
+{
+	int i;
+	int count;
+
+	count = 0;
+	i = 0;
+	while (line[i] != '\0')
+	{
+		if (line[i] == '"')
+
+
+		else if (line[i] ==
+		i++;
+	}
+}*/
 
 int ft_check_redirection(t_tokens *token, t_mini *attributes)
 {

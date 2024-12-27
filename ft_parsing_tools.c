@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 15:06:34 by llaakson          #+#    #+#             */
-/*   Updated: 2024/12/27 16:57:01 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2024/12/27 17:52:10 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,9 +70,9 @@ int	ft_count_array(char **old_array)
 	int i;
 
 	i = 0;
-	if (!old_array)
+	if (!old_array || !old_array[i])
 		return (0);
-	while (old_array[i])
+	while (old_array && old_array[i])
 		i++;
 	return (i);
 }
@@ -88,15 +88,16 @@ char **ft_add_command_array(char **old_array, char *str)
 	new_array = malloc((size + 2) * sizeof(char *));
 	if (!new_array)
 		printf("no new array");//add malloc check
-	//printf("Malloc done\n");
+	printf("Malloc done\n");
 	i = 0;
 	while (old_array && old_array[i])
 	{
 		new_array[i] = ft_strdup(old_array[i]);
 		i++;
 	}
-	//printf("array done\n");
-	new_array[i] = str;
-	free_array(old_array);
+	printf("array done\n");
+	new_array[i] = ft_strdup(str);
+	new_array[i+1] = NULL;
+	//free_array(old_array);
 	return (new_array);
 }

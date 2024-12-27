@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 18:12:26 by llaakson          #+#    #+#             */
-/*   Updated: 2024/12/26 19:32:40 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/27 17:34:24 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ t_cmd_table	*ft_merge_command(t_mini *attributes, t_tokens **token)
 	new_node = ft_add_new(attributes, *token);
 	while(*token != NULL && (*token)->type != t_pipe)
 	{
-		//printf("Merging\n");
+		printf("Merging\n");
 		if (*token && ((*token)->type == t_great || (*token)->type == t_less))
 			new_node = ft_merge_redirection(token, new_node);
 		else
@@ -53,7 +53,7 @@ t_cmd_table	*ft_merge_command(t_mini *attributes, t_tokens **token)
 		*token = (*token)->next;
 	}
 	//new_node->type = 20;
-	//printf("Merging done\n");
+	printf("Merging done\n");
 	attributes->cmd_index += 1;
 	return (new_node);
 }
@@ -104,7 +104,7 @@ void	ft_parsing(t_mini *attributes)
 	ft_start_parsing(attributes);
 
 
-	printf("COMMAND TABLE:\n");
+	/*printf("COMMAND TABLE:\n");
 	t_cmd_table *print = attributes->commands;
 	printf("CMD COUNT %d\n",attributes->cmd_index);
 	while(print)
@@ -126,5 +126,5 @@ void	ft_parsing(t_mini *attributes)
 		else
 			break ;
 	}
-	printf("COMMAND TABLE FINITO:\n");
+	printf("COMMAND TABLE FINITO:\n");*/
 }
