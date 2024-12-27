@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 15:11:35 by llaakson          #+#    #+#             */
-/*   Updated: 2024/12/27 17:00:17 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/27 20:27:03 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,18 +18,21 @@ char	*ft_replace_expansion(char *token, char *path, char *expansion)
 	char *start;
 	int len;
 
-	len = ft_strlen(token) + ft_strlen(expansion) - ft_strlen(path);
+	len = ft_strlen(token) + ft_strlen(expansion) - ft_strlen(path) + 1;
 	printf("len %d\n", len);
-	temp2 = malloc((len + 1)* sizeof(char));
+	temp2 = ft_calloc(len + 1,(sizeof(char)));
 	if (!temp2)
 		printf("poop\n");
+	printf("token: %s< path: %s<\n",token,path);
 	start = ft_strnstr(token, path, ft_strlen(token));
+	printf("token: %s< start: %s<\n",token,start);
 	temp = ft_substr(token, 0, (start - token));
-	ft_strlcat(temp2, temp, len+1);
+	printf("temp2: %s< temp: %s<\n",temp2,temp);
+	ft_strlcat(temp2, temp, len);
 	//printf("TEMP2 %s\n", temp2);
-	ft_strlcat(temp2, expansion, len+1);
+	ft_strlcat(temp2, expansion, len);
 	//printf("TEMP2 %s\n", temp2);
-	ft_strlcat(temp2, start + ft_strlen(path), len+1);
+	ft_strlcat(temp2, start + ft_strlen(path), len);
 	//printf("TEMP2 %s\n", temp2);
 	return (temp2);
 
@@ -44,7 +47,7 @@ void	ft_expand_word(t_mini *attributes, t_tokens *token)
 	char *exitcode;
 
 	j = 0;
-	i = 1;
+	i = 0;
 	while (token->str[j] != '\0')
 	{
 		if (token->str[j] == '$')
@@ -56,20 +59,20 @@ void	ft_expand_word(t_mini *attributes, t_tokens *token)
 					token->str = ft_replace_expansion(token->str,ft_substr(token->str,j,2),exitcode);
 					break ;
 			}
-			while (token->str[j+i] != '\0' && token->str[j+i] != ' ') // more whitespace?
+			while (token->str[j+i] != '\0' && (token->str[j+i] == '$' || token->str[j+i] == '_' || ft_isalpha(token->str[j+i])))
 				i++;
 			path = ft_substr(token->str, j, i);
-			//if (!path)
-			//	return (NULL);
 			printf("path }%s{\n", path);
 			expansion = get_env_value(attributes, &path[1]);
 			if (!expansion)
 			{
 				//printf("no value in env\n");
-				token->str = ft_replace_expansion(token->str,path," ");
+				token->str = ft_replace_expansion(token->str,path,"");
+				free(path);
 				break ;
 			}
 			token->str = ft_replace_expansion(token->str,path,expansion);
+			free(path);
 			break ;
 		}
 		j++;
