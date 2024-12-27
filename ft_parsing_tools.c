@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 15:06:34 by llaakson          #+#    #+#             */
-/*   Updated: 2024/12/23 21:55:13 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/27 16:17:20 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ t_cmd_table *ft_add_new(t_mini *attributes, t_tokens *token)
 	new_node->right = NULL;
 	new_node->left = NULL;
 	new_node->cmd_arr= NULL;
+	new_node->outfile = NULL;
+	new_node->infile = NULL;
 	new_node->type = (token->type);
 	return(new_node);
 }

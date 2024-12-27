@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/26 14:59:32 by llaakson          #+#    #+#             */
-/*   Updated: 2024/12/26 20:11:22 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/27 16:19:04 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int ft_syntax_check(t_mini *attributes)
 	token = attributes->tokens;
 	while (token)
 	{
-		puts("checking token");
+		//puts("checking token");
 		if (token->type == t_pipe)
 			if(!(ft_check_pipe(token, attributes)))
 				return (0);
@@ -64,6 +64,6 @@ int ft_syntax_check(t_mini *attributes)
 				return (0);
 		token = token->next;
 	}
-	puts("checks done");
+	//puts("checks done");
 	return (1);
 }
