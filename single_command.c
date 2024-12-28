@@ -6,51 +6,60 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 16:51:14 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/26 21:01:23 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2024/12/28 17:38:44 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	execute_single(char **cmd_array, t_mini *attributes, t_cmd_table *node)
+int	check_redirs(t_cmd_table *node, t_mini *attributes)
 {
-	char	*cmd_path;
+	int	input;
+	int	output;
 	if (node->infile)
 	{
-		printf("input redir from %stest", node->infile);
-		char **input_arr = ft_split(node->infile, ' ');
-		int input = open(input_arr[0], O_RDONLY);
+		input = open(node->infile, O_RDONLY);
 		if (input < 0)
 		{
-			printf("infile open err\n");//exitcode?
-			exit(EXIT_FAILURE);
+			perror(node->infile);
+			attributes->exitcode = 1;
+			return (1);
 		}
-		dup2(input, STDIN_FILENO);
-		close(input);
+		else
+		{
+			dup2(input, STDIN_FILENO);
+			close(input);
+		}
 	}
 	if (node->outfile)
 	{
-		printf("output redir from %stest", node->outfile);
-		char **output_arr = ft_split(node->outfile, ' ');
-		int output = open(output_arr[0], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		output = open(node->outfile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		if (output < 0)
 		{
-			printf("outfile open err\n"); //exitcode??
-			exit(EXIT_FAILURE);
+			perror(node->outfile);
+			attributes->exitcode = 1;
+			return (1);
 		}
-		dup2(output, STDOUT_FILENO);
-		close(output);
+		else
+		{
+			dup2(output, STDOUT_FILENO);
+			close(output);
+		}
 	}
-	perror("after redirs check");
+	return (0);
+}
+
+static void	execute_single(char **cmd_array, t_mini *attributes, t_cmd_table *node)
+{
+	char	*cmd_path;
+	if (check_redirs(node, attributes))
+		exit(EXIT_FAILURE);
 	cmd_path = get_command_path(cmd_array[0], attributes);
-	perror("we got to path");
 	if (cmd_path)
 	{
 		if (execve(cmd_path, cmd_array, NULL) == -1)
 		{
 			perror("execve error");
-			//free mallocs;
-			printf("fail from execve call");
 			exit(EXIT_FAILURE);
 		}
 	}
@@ -88,6 +97,7 @@ void	single_command(t_cmd_table *node, t_mini *attributes)
 
 	//attributes->array = check_if_valid_command(node->cmd_arr[0]);
 	printf("%s command string", node->cmd_arr[0]);
+	printf("%sinfile str", node->infile);
 	if (attributes->commands->cmd_arr)
 	{
 		builtin_flag = is_builtin(node->cmd_arr[0]);
