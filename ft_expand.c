@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 15:11:35 by llaakson          #+#    #+#             */
-/*   Updated: 2024/12/27 20:27:03 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/28 17:28:35 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	ft_expand_word(t_mini *attributes, t_tokens *token)
 	i = 0;
 	while (token->str[j] != '\0')
 	{
-		if (token->str[j] == '$')
+		if (token->str[j] == '$' && (ft_isalpha(token->str[j+1]) || token->str[j+1] == '_' || token->str[j+1] == '?' || token->str[j+1] == '$'))
 		{
 			if (token->str[j+1] == '?')
 			{
@@ -58,6 +58,13 @@ void	ft_expand_word(t_mini *attributes, t_tokens *token)
 					printf("Exitcode %d\n", attributes->exitcode);
 					token->str = ft_replace_expansion(token->str,ft_substr(token->str,j,2),exitcode);
 					break ;
+			}
+			if (token->str[j+1] == '$')
+			{
+				expansion = get_env_value(attributes, "SYSTEMD_EXEC_PID");
+				printf("Case $$ %s\n", expansion);
+				token->str = ft_replace_expansion(token->str,ft_substr(token->str,j,2),expansion);
+				break ;
 			}
 			while (token->str[j+i] != '\0' && (token->str[j+i] == '$' || token->str[j+i] == '_' || ft_isalpha(token->str[j+i])))
 				i++;
@@ -77,7 +84,7 @@ void	ft_expand_word(t_mini *attributes, t_tokens *token)
 		}
 		j++;
 	}
-	if(ft_strchr(token->str,36)) // 36 = $
+	if(ft_strchr(token->str+j,36)) // 36 = $
 		ft_expand_word(attributes, token);
 	//free(path);
 }

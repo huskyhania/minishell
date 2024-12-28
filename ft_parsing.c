@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 18:12:26 by llaakson          #+#    #+#             */
-/*   Updated: 2024/12/27 17:34:24 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/28 16:07:37 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,8 @@ void print_array(t_cmd_table *print)
 	int i = 0;
 	while (print && print->cmd_arr[i])
 	{
-		printf("Index %d string %s\n", i, print->cmd_arr[i]);
+		printf("Index %d string|%s|\n", i, print->cmd_arr[i]);
+		printf("Infile:|%s| Outfile:|%s|\n", print->infile, print->outfile);
 		i++;
 	}
 }
@@ -103,8 +104,7 @@ void	ft_parsing(t_mini *attributes)
 	attributes->commands = NULL;
 	ft_start_parsing(attributes);
 
-
-	/*printf("COMMAND TABLE:\n");
+	printf("COMMAND TABLE:\n");
 	t_cmd_table *print = attributes->commands;
 	printf("CMD COUNT %d\n",attributes->cmd_index);
 	while(print)
@@ -113,18 +113,22 @@ void	ft_parsing(t_mini *attributes)
 			print_array(print);
 		//printf("first node: %s type: %d\n", print->str, print->type);
 		if (print->type == 20)
-			printf("Infile: %s Outfile: %s\n", print->infile, print->outfile);
+		{
+			printf("string|%s|\n", print->cmd_arr[0]);
+			printf("Infile:|%s| Outfile:|%s|\n", print->infile, print->outfile);
+		}
 		if (print->type == t_pipe)
 		{
 			print_array(print->right);
 			//printf("right node : %s type: %d\n", print->right->str, print->right->type);
-			if (print->right->type == 20)
-				printf("Infile: %s Outfile: %s\n", print->right->infile, print->right->outfile);
 		}
 		if (print->type == t_pipe)
+		{
+			printf("PIPE\n");
 			print = print->left;
+		}
 		else
 			break ;
 	}
-	printf("COMMAND TABLE FINITO:\n");*/
+	printf("COMMAND TABLE FINITO:\n");
 }
