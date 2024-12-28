@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/26 14:59:32 by llaakson          #+#    #+#             */
-/*   Updated: 2024/12/27 21:58:48 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/29 00:08:44 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ int ft_syntax_check(t_mini *attributes)
 	token = attributes->tokens;
 	while (token)
 	{
-		//puts("checking token");
+		printf("Token can merge %d\n",token->merge);
 		if (token->type == t_pipe)
 			if(!(ft_check_pipe(token, attributes)))
 				return (0);

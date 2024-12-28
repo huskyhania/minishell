@@ -6,16 +6,20 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 13:22:07 by llaakson          #+#    #+#             */
-/*   Updated: 2024/12/23 20:52:59 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/29 00:01:49 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void ft_skip_whitespace(char **line)
+int ft_skip_whitespace(char *line)
 {
-	while (**line == ' ' || **line == '\t' || **line == '\n' || **line == '\v' || **line == '\f' || **line == '\r')
-		line++;	
+	int i;
+
+	i = 0;
+	while (line[i] == ' ' || line[i] == '\t' || line[i] == '\n' || line[i] == '\v' || line[i] == '\f' || line[i] == '\r')
+		i++;
+	return (i);
 }
 
 int	ft_is_special(char *line)

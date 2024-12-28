@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/19 17:11:35 by llaakson          #+#    #+#             */
-/*   Updated: 2024/12/26 20:07:42 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/28 23:53:43 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ t_tokens	*ft_add_token(t_mini *attributes)
 			exit(1);
 		}
 		new_token->next = NULL;
+		new_token->merge = 0;
 		if (!attributes->tokens)
 		{
 			//printf("Made first token\n");

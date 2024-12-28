@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 12:06:47 by llaakson          #+#    #+#             */
-/*   Updated: 2024/12/28 18:45:33 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/29 00:30:02 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,15 +64,15 @@ char	*ft_add_command(char *line, t_mini *attributes)
 		temp_line = line;
 		new_command = ft_add_token(attributes);
 		new_command->type = t_command;
-		while (!(ft_is_whitespace(&temp_line[i])) && !(ft_is_special(&temp_line[i]))) //Might need to check different whitspaces && what if space in middle of string
+		while (!(ft_is_whitespace(&temp_line[i])) && !(ft_is_special(&temp_line[i])) && temp_line[i] != '"')
 		{
 			if (temp_line[i] == '\0')
 				break ;
 			i++;
 		}
+		if (!ft_is_whitespace(&temp_line[i]))
+			new_command->merge = 1;
 		new_command->str = ft_substr(line, 0, i); // malloc here remeber to check and free after parsing
-		//new_command->str = ft_strjoin(new_command->str, " ");
-		//attributes->cmd_index += 1;
 		return (line+i);
 }
 
@@ -103,14 +103,27 @@ char *ft_add_expansion(t_mini *attributes, char *line)
 
 	new_command = ft_add_token(attributes);
 	temp_line = line;
-	i = 1;
+	i = 0;
+	i++;
 	new_command->type = t_command;
-	while (temp_line[i] != '"' && temp_line[i] != '\0')
+	while (temp_line[i] != '"') // removed line check trust in the syntax check
 		i++;
+	if (!ft_is_whitespace(&temp_line[i+1]))
+		new_command->merge = 1;
 	new_command->str = ft_substr(line, 1, i-1); // malloc here remeber to check and free after parsing
 	return (line + i + 1);
 }
 
+char *ft_com(t_mini *attributes, char *line)
+{
+	if (*line && ft_is_quote(line))
+			line = ft_add_quote(line, attributes);
+	if (*line && *line == '"')
+			line = ft_add_expansion(attributes, line);
+	if (*line && *line != ' ' && !ft_is_special(line)) // change this to else?
+			line = ft_add_command(line, attributes);
+	return (line);
+}
 void	ft_tokenization(t_mini *attributes)
 {
 	char		*line;
@@ -120,15 +133,10 @@ void	ft_tokenization(t_mini *attributes)
 	line = attributes->readret;
 	while (*line)
 	{
-		ft_skip_whitespace(&line); // function that skips whitespace
-		if (*line && ft_is_quote(line))
-			line = ft_add_quote(line, attributes);
+		line += ft_skip_whitespace(line); // function that skips whitespace
 		if (*line && ft_is_special(line))
 			ft_add_pipe(attributes, &line);
-		if (*line && *line == '"')
-			line = ft_add_expansion(attributes, line);
-		if (*line && *line != ' ' && !ft_is_special(line)) // change this to else?
-			line = ft_add_command(line, attributes);
+		line = ft_com(attributes, line);
 		if (*line && !ft_is_special(line))
 			line++; // Why do I need this ????????
 	}

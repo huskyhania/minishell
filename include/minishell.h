@@ -44,6 +44,7 @@ typedef struct s_tokens {
 	t_token_type	type;
 	char 			*str;
 	int 			dir_flag;
+	int				merge;
 	struct s_tokens	*next;
 	struct s_tokens	*prev;
 } t_tokens;
@@ -91,7 +92,7 @@ void    print_tokens(t_mini *attributes);
 t_tokens    *ft_add_token(t_mini *attributes);
 
 //ft_tokens_tools.c
-void ft_skip_whitespace(char **line);
+int ft_skip_whitespace(char *line);
 int ft_is_special(char *line);
 int ft_is_whitespace(char *line);
 int ft_is_quote(char *line);
