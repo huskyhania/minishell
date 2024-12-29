@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 15:00:53 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/29 19:50:30 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2024/12/29 20:41:03 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@
 
 int	check_redirections(t_cmd_table *node, t_mini *attributes)
 {
-	int	input;//are these redundant? should i maybe use the structs ones from the beginning?
+	int	input;
 	int	output;
 	
-	attributes->input_fd = STDIN_FILENO;
+	attributes->input_fd = STDIN_FILENO;//reseting fds
 	attributes->output_fd = STDOUT_FILENO;
 	if (node->infile)
 	{
@@ -85,6 +85,7 @@ void	execute_command(t_cmd_table *node, t_mini *attributes)
 	fprintf(stderr, "Command %s: STDIN = %d, STDOUT = %d\n", node->cmd_arr[0], STDIN_FILENO, STDOUT_FILENO);
 	if (cmd_path)
 	{
+		perror("before execve test");
 		if (execve(cmd_path, node->cmd_arr, attributes->envp_arr) == -1)
 		{
 			perror("execve error");
@@ -128,6 +129,7 @@ void	handle_command(t_cmd_table *node, t_mini *attributes)
 void	handle_command_or_pipe(t_cmd_table *node, t_mini *attributes)
 {
 	//int	builtin_flag;
+	puts("ASASD");
 	if (!node)
 		return ; //is it necessary?
 	handle_command_or_pipe(node->left, attributes);
@@ -154,6 +156,7 @@ void	ft_execution(t_mini *attributes)
 		printf("entering single command execution\n");
 		single_command(attributes->commands, attributes);
 	}
+	else
 	{
 		printf("entering new command execution\n");
 		printf("creating pipes array");
