@@ -80,7 +80,9 @@ typedef struct s_minishell
 	int	input_fd;
 	int	output_fd;
 	int	cmd_index;
-	int	pipe_fd[2];
+	int	**pipe_arr;
+	int	num_pipes;
+	int	i;
 }	t_mini;
 
 //ft_tokens.c
@@ -119,6 +121,9 @@ void	execute_simple_command(char **cmd_arr, t_mini *attributes, t_cmd_table *nod
 void	handle_simple_command(char **cmd_arr, t_mini *attributes, t_cmd_table *node);
 void	ft_execution(t_mini *attributes);
 void	single_command(t_cmd_table *node, t_mini *attributes);
+
+//pipes
+int	create_pipes(t_mini *attributes);
 
 //ft_path.c - checking for path in envp if necessary
 char	*get_command_path(const char *cmd, t_mini *attributes);
