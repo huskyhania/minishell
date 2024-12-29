@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/26 14:59:32 by llaakson          #+#    #+#             */
-/*   Updated: 2024/12/29 00:08:44 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/29 19:26:01 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,41 @@ int ft_check_pipe(t_tokens *token, t_mini *attributes)
 	return (1);
 }
 
+void ft_delete_token(t_tokens *token)
+{
+	t_tokens *temp;
+
+	temp = token->next;
+	token->next = token->next->next;
+	free(temp);
+}
+void ft_merge_tokens(t_mini *attributes)
+{
+    t_tokens *token;
+
+    token = attributes->tokens;
+    while (token && token->next)
+	{
+		printf("String %s Merge %d type %d\n",token->str, token->merge, token->type);
+		if (token->next && token->merge == 1 && (token->next->type == t_command || token->next->type == t_quote))
+		{
+			char *new_str;
+			new_str = ft_strjoin(token->str, token->next->str);
+			if (!new_str)
+			{
+				perror("ft_strjoin failed");
+				exit(1);
+			}
+			free(token->str);
+			token->str = new_str;
+			token->merge = token->next->merge;
+			ft_delete_token(token);
+		}
+		else
+            token = token->next;
+    }
+}
+
 int ft_syntax_check(t_mini *attributes)
 {
 	t_tokens *token;
@@ -79,7 +114,6 @@ int ft_syntax_check(t_mini *attributes)
 	token = attributes->tokens;
 	while (token)
 	{
-		printf("Token can merge %d\n",token->merge);
 		if (token->type == t_pipe)
 			if(!(ft_check_pipe(token, attributes)))
 				return (0);
@@ -88,6 +122,5 @@ int ft_syntax_check(t_mini *attributes)
 				return (0);
 		token = token->next;
 	}
-	//puts("checks done");
 	return (1);
 }

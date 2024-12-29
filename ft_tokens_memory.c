@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/19 17:11:35 by llaakson          #+#    #+#             */
-/*   Updated: 2024/12/28 23:53:43 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/29 16:52:21 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	print_tokens(t_mini *attributes)
 
 	while (temp != NULL)
 	{
-		printf("node type: %u string %s\n", temp->type, temp->str);
+		printf("Node type: %u Merge %d String %s \n", temp->type, temp->merge, temp->str);
 		temp = temp->next;
 	}
 }

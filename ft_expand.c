@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 15:11:35 by llaakson          #+#    #+#             */
-/*   Updated: 2024/12/28 17:28:35 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/29 19:57:46 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,8 @@ void	ft_expand_word(t_mini *attributes, t_tokens *token)
 				token->str = ft_replace_expansion(token->str,ft_substr(token->str,j,2),expansion);
 				break ;
 			}
-			while (token->str[j+i] != '\0' && (token->str[j+i] == '$' || token->str[j+i] == '_' || ft_isalpha(token->str[j+i])))
+			i++;
+			while (token->str[j+i] != '\0' && (token->str[j+i] == '_' || ft_isalpha(token->str[j+i])))
 				i++;
 			path = ft_substr(token->str, j, i);
 			printf("path }%s{\n", path);
@@ -93,9 +94,11 @@ void	ft_expand(t_mini *attributes)
 {		
 		t_tokens *token;
 		token = attributes->tokens;
-		while (token && token->type == t_command)
+		while (token)
 		{
+			if (token->type == t_command)
 				ft_expand_word(attributes, token);
 			token = token->next;
 		}
+		ft_merge_tokens(attributes);
 }

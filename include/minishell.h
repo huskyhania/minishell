@@ -100,6 +100,7 @@ int ft_is_quote(char *line);
 //ft_syntax.c
 int ft_check_quotes(char *line);
 int ft_syntax_check(t_mini *attributes);
+void ft_merge_tokens(t_mini *attributes);
 
 //ft_expand.c
 void    ft_expand(t_mini *attributes);

@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 12:06:47 by llaakson          #+#    #+#             */
-/*   Updated: 2024/12/29 00:30:02 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/29 19:32:40 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ char	*ft_add_command(char *line, t_mini *attributes)
 		temp_line = line;
 		new_command = ft_add_token(attributes);
 		new_command->type = t_command;
-		while (!(ft_is_whitespace(&temp_line[i])) && !(ft_is_special(&temp_line[i])) && temp_line[i] != '"')
+		while (!(ft_is_whitespace(&temp_line[i])) && !(ft_is_special(&temp_line[i])) && temp_line[i] != '"' && temp_line[i] != '\'')
 		{
 			if (temp_line[i] == '\0')
 				break ;
@@ -90,6 +90,8 @@ char	*ft_add_quote(char *line, t_mini *attributes)
 	while (!ft_is_quote(&line[i]) && temp_line[i] != '\0')
 		i++;
 	i++;
+	if (!ft_is_whitespace(&temp_line[i]))
+		new_command->merge = 1;
 	new_command->str = ft_substr(line, 1, i-2);
 	//new_command->str = ft_strjoin(new_command->str, " "); // This is shit ??
 	return (line+i);
@@ -108,6 +110,7 @@ char *ft_add_expansion(t_mini *attributes, char *line)
 	new_command->type = t_command;
 	while (temp_line[i] != '"') // removed line check trust in the syntax check
 		i++;
+	//printf("char %c char %c char %c\n",temp_line[i],temp_line[i+1],temp_line[i+2]); 
 	if (!ft_is_whitespace(&temp_line[i+1]))
 		new_command->merge = 1;
 	new_command->str = ft_substr(line, 1, i-1); // malloc here remeber to check and free after parsing
@@ -120,7 +123,7 @@ char *ft_com(t_mini *attributes, char *line)
 			line = ft_add_quote(line, attributes);
 	if (*line && *line == '"')
 			line = ft_add_expansion(attributes, line);
-	if (*line && *line != ' ' && !ft_is_special(line)) // change this to else?
+	if (*line && *line != ' ' && !ft_is_special(line) && *line != '"' && *line != '\'') // change this to else?
 			line = ft_add_command(line, attributes);
 	return (line);
 }
@@ -137,8 +140,8 @@ void	ft_tokenization(t_mini *attributes)
 		if (*line && ft_is_special(line))
 			ft_add_pipe(attributes, &line);
 		line = ft_com(attributes, line);
-		if (*line && !ft_is_special(line))
-			line++; // Why do I need this ????????
+		//if (*line && !ft_is_special(line))
+		//	line++; // Why do I need this ????????
 	}
 	print_tokens(attributes);
 }
