@@ -6,53 +6,85 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 15:00:53 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/27 16:59:27 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2024/12/29 19:50:30 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-void    handle_command_or_pipe(t_cmd_table *node, t_mini *attributes);
 
-void	execute_command(t_cmd_table *node, t_mini *attributes, int output_fd)
+int	check_redirections(t_cmd_table *node, t_mini *attributes)
 {
-	char	*cmd_path;
+	int	input;//are these redundant? should i maybe use the structs ones from the beginning?
+	int	output;
+	
+	attributes->input_fd = STDIN_FILENO;
+	attributes->output_fd = STDOUT_FILENO;
+	if (node->infile)
+	{
+		input = open(node->infile, O_RDONLY);
+		if (input == -1)
+		{
+			perror(node->infile);
+			return (1);
+		}
+		else
+			attributes->input_fd = input;
+	}
+	if (node->outfile)
+	{
+		output = open(node->outfile, O_WRONLY | O_CREAT | O_APPEND, 0644);
+		if (output == -1)
+		{
+			perror(node->outfile);
+			return (1);
+		}
+		else
+			attributes->output_fd = output;
+	}
+	return (0);
+}
 
+void	execute_command(t_cmd_table *node, t_mini *attributes)
+{
+	if (attributes->i == 1)
+	{
+		perror("test1");
+		dup2(attributes->pipe_arr[attributes->i - 1][WRITE], STDOUT_FILENO);
+		close(attributes->pipe_arr[attributes->i - 1][WRITE]);
+	}
+	else if (attributes->i > 1 && attributes->i < attributes->cmd_index)
+	{
+		perror("test2");
+		dup2(attributes->pipe_arr[attributes->i - 2][READ], STDIN_FILENO);
+		close(attributes->pipe_arr[attributes->i - 2][READ]);
+		dup2(attributes->pipe_arr[attributes->i - 1][WRITE], STDOUT_FILENO);
+		close(attributes->pipe_arr[attributes->i - 1][WRITE]);
+	}
+	else if (attributes->i == attributes->cmd_index)
+	{
+		perror("test3");
+		dup2(attributes->pipe_arr[attributes->i - 2][READ], STDIN_FILENO);
+		close(attributes->pipe_arr[attributes->i - 2][READ]);
+	}
+	if (check_redirections(node, attributes))
+	{
+		attributes->exitcode = 1;
+		exit (1);
+	}
 	if (attributes->input_fd != STDIN_FILENO)
 	{
 		dup2(attributes->input_fd, STDIN_FILENO);
 		close(attributes->input_fd);
 	}
-	if (node->infile)
+	if (attributes->output_fd != STDOUT_FILENO)
 	{
-		int infile_fd = open(node->infile, O_RDONLY);
-		if (infile_fd == -1)
-		{
-			printf("infile err\n");
-			exit(EXIT_FAILURE);
-		}
-		dup2(infile_fd, STDIN_FILENO);
-		close(infile_fd);
+		dup2(attributes->output_fd, STDOUT_FILENO);
+		close(attributes->output_fd);
 	}
-	if (output_fd != STDOUT_FILENO)
-	{
-		dup2(output_fd, STDOUT_FILENO);
-		close(output_fd);
-	}
-	if (node->outfile)
-	{
-		int outfile_fd = open(node->outfile, O_WRONLY | O_CREAT | O_APPEND, 0644);
-		if (outfile_fd == -1)
-		{
-			perror("outfile err\n");
-			exit(EXIT_FAILURE);
-		}
-		dup2(outfile_fd, STDOUT_FILENO);
-	}
-	cmd_path = get_command_path(node->cmd_arr[0], attributes);
+	char *cmd_path = get_command_path(node->cmd_arr[0], attributes);
+	fprintf(stderr, "Command %s: STDIN = %d, STDOUT = %d\n", node->cmd_arr[0], STDIN_FILENO, STDOUT_FILENO);
 	if (cmd_path)
 	{
-		printf("test for execve cmd arr %p\n", node->cmd_arr);
-		printf("test for execve cmd arr 0 %s \n", node->cmd_arr[0]);
 		if (execve(cmd_path, node->cmd_arr, attributes->envp_arr) == -1)
 		{
 			perror("execve error");
@@ -66,65 +98,48 @@ void	execute_command(t_cmd_table *node, t_mini *attributes, int output_fd)
 	}
 }
 
-void	handle_pipe(t_cmd_table *node, t_mini *attributes)
+void	handle_command(t_cmd_table *node, t_mini *attributes)
 {
-	int	pipe_fd[2];
+	//check path
+	//check command
 	int	pid;
-	if (pipe(pipe_fd) == -1)
-	{
-		perror("pipe error");
-		exit(EXIT_FAILURE);
-	}
+	int	status;
+	attributes->i++;
+	printf("handling command %d and its %s\n", attributes->i, node->cmd_arr[0]);
 	pid = fork();
-	if (pid == -1)
+	if (pid < 0)
 	{
 		perror("fork error");
-		exit(EXIT_FAILURE);
+		exit(EXIT_FAILURE);//might require closing fds, freeing memory)
 	}
 	if (pid == 0)
-	{
-		close(pipe_fd[READ]);
-		execute_command(node->left, attributes, pipe_fd[WRITE]);
-	}
+		execute_command(node, attributes);
 	else
 	{
-		close(pipe_fd[WRITE]);
-		if (attributes->input_fd != STDIN_FILENO)
-			close(attributes->input_fd);
-		attributes->input_fd = pipe_fd[READ];
-		if (node->right)
-			handle_command_or_pipe(node->right, attributes);
-		waitpid(pid, NULL, 0);
-		close(pipe_fd[READ]);
+		waitpid(pid, &status, 0);
+		if (WIFEXITED(status))
+		{
+			printf("child exited with status %d\n", WEXITSTATUS(status));
+			attributes->exitcode = status;
+		}
 	}
-}
-
+}	
 
 void	handle_command_or_pipe(t_cmd_table *node, t_mini *attributes)
 {
-	int	pid;
+	//int	builtin_flag;
 	if (!node)
-		return ;
-	if (node->type == t_pipe)
-		handle_pipe(node, attributes);
-	else if (node->type != t_pipe)
+		return ; //is it necessary?
+	handle_command_or_pipe(node->left, attributes);
+	if (node->type != t_pipe)
 	{
-		pid = fork();
-		if (pid == -1)
-		{
-			perror("fork err");
-			return;
-		}
-		if (pid == 0)
-			execute_command(node, attributes, STDOUT_FILENO);
-		else
-		{
-			if (attributes->input_fd != STDIN_FILENO)
-				close(attributes->input_fd);
-			waitpid(pid, NULL, 0);
-		}
+		printf("executing command %s\n", node->cmd_arr[0]);
+		handle_command(node, attributes);
+		//attributes->cmd_index--;
+		//printf("commands left to execute: %d\n", attributes->cmd_index);
 	}
-}
+	handle_command_or_pipe(node->right, attributes);
+}	
 
 void	ft_execution(t_mini *attributes)
 {
@@ -139,9 +154,14 @@ void	ft_execution(t_mini *attributes)
 		printf("entering single command execution\n");
 		single_command(attributes->commands, attributes);
 	}
-	else
 	{
 		printf("entering new command execution\n");
+		printf("creating pipes array");
+		if (create_pipes(attributes) == -1)
+		{
+			printf("pipe creation error\n");//clean up;
+			return ;
+		}
 		handle_command_or_pipe(attributes->commands, attributes);
 	}
 }

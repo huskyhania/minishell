@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:37:20 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/29 00:34:05 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/29 16:37:19 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ void	minishell_init(char **envp)
 	attributes.commands = NULL;
 	attributes.input_fd = STDIN_FILENO;
 	attributes.output_fd = STDOUT_FILENO;
+	attributes.i = 0;
 	attributes.exitcode = 0;
 	while (1)
 	{
