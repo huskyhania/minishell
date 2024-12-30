@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 15:00:53 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/29 20:41:03 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2024/12/30 18:56:41 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,10 +82,9 @@ void	execute_command(t_cmd_table *node, t_mini *attributes)
 		close(attributes->output_fd);
 	}
 	char *cmd_path = get_command_path(node->cmd_arr[0], attributes);
-	fprintf(stderr, "Command %s: STDIN = %d, STDOUT = %d\n", node->cmd_arr[0], STDIN_FILENO, STDOUT_FILENO);
+	fprintf(stderr, "about to execute command %s\n", node->cmd_arr[0]);
 	if (cmd_path)
 	{
-		perror("before execve test");
 		if (execve(cmd_path, node->cmd_arr, attributes->envp_arr) == -1)
 		{
 			perror("execve error");
@@ -117,6 +116,11 @@ void	handle_command(t_cmd_table *node, t_mini *attributes)
 		execute_command(node, attributes);
 	else
 	{
+		if (attributes->i > 1)
+			close(attributes->pipe_arr[attributes->i - 2][READ]);
+		if (attributes->i < attributes->cmd_index)
+			close(attributes->pipe_arr[attributes->i - 1][WRITE]);
+		//close(attributes->pipe_arr[attributes->i - 1][WRITE]);
 		waitpid(pid, &status, 0);
 		if (WIFEXITED(status))
 		{
@@ -129,7 +133,6 @@ void	handle_command(t_cmd_table *node, t_mini *attributes)
 void	handle_command_or_pipe(t_cmd_table *node, t_mini *attributes)
 {
 	//int	builtin_flag;
-	puts("ASASD");
 	if (!node)
 		return ; //is it necessary?
 	handle_command_or_pipe(node->left, attributes);
@@ -166,5 +169,6 @@ void	ft_execution(t_mini *attributes)
 			return ;
 		}
 		handle_command_or_pipe(attributes->commands, attributes);
+		free_pipes(attributes);
 	}
 }
