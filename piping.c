@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/22 13:52:07 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/30 19:21:54 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2024/12/30 19:39:09 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,8 +68,8 @@ void	free_pipes(t_mini *attributes)
 	{
 		if (attributes->pipe_arr[i])
 		{
-			close(attributes->pipe_arr[i][0]);
-			close(attributes->pipe_arr[i][1]);
+			//close(attributes->pipe_arr[i][0]);
+			//close(attributes->pipe_arr[i][1]);
 			free(attributes->pipe_arr[i]);
 		}
 		i++;
