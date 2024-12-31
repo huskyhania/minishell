@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/22 13:52:07 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/30 19:39:09 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2024/12/31 15:41:44 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,4 +76,5 @@ void	free_pipes(t_mini *attributes)
 	}
 	free(attributes->pipe_arr);
 	attributes->pipe_arr = NULL;
+	attributes->i = 0;
 }
