@@ -6,21 +6,11 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 16:00:04 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/17 19:51:02 by llaakson         ###   ########.fr       */
+/*   Updated: 2024/12/31 16:09:17 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	ft_strcmp(char *s1, char *s2)
-{
-	int	i;
-
-	i = 0;
-	while (s1[i] == s2[i] && (s1[i] != '\0' || s2[i] != '\0'))
-		i++;
-	return (s1[i] - s2[i]);
-}
 
 void	ft_pwd(void)
 {
@@ -41,6 +31,7 @@ void	ft_env(t_mini *attributes)
 	if (!path_value || path_value[0] == '\0')
 	{
 		printf("exit 127: No such file or directory");
+		attributes->exitcode = 127;
 		return ;
 	}
 	else

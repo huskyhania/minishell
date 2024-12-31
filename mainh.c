@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:37:20 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/29 16:37:19 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2024/12/31 17:19:58 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,8 @@ void	minishell_init(char **envp)
 		}
  	}
 	//clean history after breaking the loop???
- }
+	envp_cleanup(&attributes);
+}
 
 int main(int argc, char **argv, char **envp)
 {

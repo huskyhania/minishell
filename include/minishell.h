@@ -134,7 +134,6 @@ char	*find_path_in_envp(char *envp[]);
 
 //builtins
 int	is_builtin(char *cmd_text);
-int	ft_strcmp(char *s1, char *s2);
 void	handle_builtin(char **cmd_array, int flag, t_mini *attributes);
 int	remove_env_var(char **cmd_array, t_mini *attributes);
 char	*get_env_value(t_mini *attributes, char *key);
@@ -152,7 +151,12 @@ char	*get_value(char *s);
 //heredoc
 int	here_doc_handler(char **cmd_array);
 
+//cleanup
+void	envp_cleanup(t_mini *attributes);
+void	clean_envp_ll(t_envp **envp_heap);
+
 //other general utils
 void	free_array(char **array);
+int     ft_strcmp(char *s1, char *s2);
 
 #endif
