@@ -6,6 +6,7 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <sys/wait.h>
+# include <signal.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "../complete_Libft/libft.h"
@@ -84,6 +85,10 @@ typedef struct s_minishell
 	int	num_pipes;
 	int	i;
 }	t_mini;
+
+//ft_signal.c
+void ft_sigint(void);
+
 
 //ft_tokens.c
 void    ft_tokenization(t_mini *attributes);
