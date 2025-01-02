@@ -60,7 +60,7 @@ static void	execute_single(char **cmd_array, t_mini *attributes, t_cmd_table *no
 		if (execve(cmd_path, cmd_array, NULL) == -1)
 		{
 			perror("execve error");
-			exit(EXIT_FAILURE);
+			exit(attributes->exitcode);
 		}
 	}
 }

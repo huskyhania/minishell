@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 15:00:53 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/30 18:56:41 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2025/01/02 20:11:58 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,8 @@ void	execute_command(t_cmd_table *node, t_mini *attributes)
 	if (check_redirections(node, attributes))
 	{
 		attributes->exitcode = 1;
-		exit (1);
+		perror("redirection check is failed\n");
+		exit (1);//temporary fix
 	}
 	if (attributes->input_fd != STDIN_FILENO)
 	{
@@ -83,20 +84,18 @@ void	execute_command(t_cmd_table *node, t_mini *attributes)
 	}
 	char *cmd_path = get_command_path(node->cmd_arr[0], attributes);
 	fprintf(stderr, "about to execute command %s\n", node->cmd_arr[0]);
+	printf("exitcode in after path check %d\n", attributes->exitcode);
+	printf("%s was path found\n", cmd_path);
 	if (cmd_path)
 	{
 		if (execve(cmd_path, node->cmd_arr, attributes->envp_arr) == -1)
 		{
-			perror("execve error");
-			exit(EXIT_FAILURE);
+			free(cmd_path);
+			exit(attributes->exitcode);//exitfailure?
 		}
 	}
-	else
-	{
-		ft_putstr_fd(node->cmd_arr[0], 2);
-		ft_putstr_fd(": no such file or directory", 2);
-		exit(EXIT_FAILURE);
-	}
+	else if (!cmd_path)
+		exit(127); // exitfailure??
 }
 
 void	handle_command(t_cmd_table *node, t_mini *attributes)
@@ -126,7 +125,7 @@ void	handle_command(t_cmd_table *node, t_mini *attributes)
 		if (WIFEXITED(status))
 		{
 			printf("child exited with status %d\n", WEXITSTATUS(status));
-			attributes->exitcode = status;
+			attributes->exitcode = WEXITSTATUS(status);
 		}
 	}
 }	
