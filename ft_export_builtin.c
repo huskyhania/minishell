@@ -116,14 +116,13 @@ int	export_single_var(t_mini *attributes, char *export)
 	if (is_valid_export(export))
 	{
 		printf("%s is not a valid identifier\n", export);
-		//exitcode 1;
 		return (1);
 	}
 	if (env_var_exists(export, &attributes->envp_heap))
 	{
 		if (!replace_append(export, &attributes->envp_heap))
 		{
-			printf("var update fail\n");
+			printf("variable update fail\n");
 			return (1);
 		}
 	}
@@ -151,7 +150,7 @@ void	print_export(t_mini *attributes)
 		helper = helper->next;
 	}
 }
-
+//export without parameters prints out variables similar to env, otherwise adds/appends
 int	ft_export(char **cmd_array, t_mini *attributes)
 {
 	int	i;
@@ -159,7 +158,7 @@ int	ft_export(char **cmd_array, t_mini *attributes)
 
 	i = 1;
 	ret = 0;
-	//if export is called without any parameter - it should print similar to env
+	attributes->exitcode = 0;
 	if (!cmd_array[i])
 		print_export(attributes);
 	while (cmd_array[i] != NULL)
@@ -167,10 +166,10 @@ int	ft_export(char **cmd_array, t_mini *attributes)
 		if (export_single_var(attributes, cmd_array[i]) == 1)
 		{
 			printf("export error");
+			attributes->exitcode = 1;
 			ret = 1;
 		}
 		i++;
 	}
-	//print_export(attributes);test if export worked
 	return (ret);
 }

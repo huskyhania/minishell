@@ -20,7 +20,7 @@ HEADERS	:= -I ./include -I $(LIBLIBFT)
 
 LIBS := -L$(LIBLIBFT) -lreadline -lft -fsanitize=address,undefined -g
 
-SRCS 	:= mainh.c ft_tokens.c ft_parsing.c ft_execution.c ft_path.c ft_tokens_tools.c ft_builtins.c ft_envp_builtins.c ft_export_builtin.c ft_ll_envp.c ft_parsing_tools.c ft_expand.c ft_heredoc.c ft_tokens_memory.c ft_utils.c single_command.c ft_syntax.c piping.c ft_cleanup.c ft_signal.c\
+SRCS 	:= mainh.c ft_tokens.c ft_parsing.c ft_execution.c ft_path.c ft_tokens_tools.c ft_builtins.c ft_envp_builtins.c ft_export_builtin.c ft_ll_envp.c ft_parsing_tools.c ft_expand.c ft_heredoc.c ft_tokens_memory.c ft_utils.c single_command.c ft_syntax.c piping.c ft_cleanup.c ft_signal.c error_check.c\
 
 OBJS	:= ${SRCS:.c=.o}
 

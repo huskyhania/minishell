@@ -93,7 +93,8 @@ void	execute_command(t_cmd_table *node, t_mini *attributes)
 	}
 	else
 	{
-		perror("command not found");
+		ft_putstr_fd(node->cmd_arr[0], 2);
+		ft_putstr_fd(": no such file or directory", 2);
 		exit(EXIT_FAILURE);
 	}
 }

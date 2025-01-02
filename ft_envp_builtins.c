@@ -18,7 +18,8 @@ int	remove_env_var(char **cmd_array, t_mini *attributes)
 	t_envp	*to_delete;
 
 	if (!cmd_array[1] || !attributes || !attributes->envp_heap)
-		return (-1); //exit code?
+		return (-1);
+	attributes->exitcode = 0;
 	current = attributes->envp_heap;
 	while (current)
 	{
@@ -34,12 +35,10 @@ int	remove_env_var(char **cmd_array, t_mini *attributes)
 			free(to_delete->key);
 			free(to_delete->value);
 			free(to_delete);
-			//ft_env(attributes); - test if unset worked
 			return (0);
 		}
 		current = current->next;
 	}
-	//ft_env(attributes);//test for command line version - if unset failed
 	return (-1);
 }
 

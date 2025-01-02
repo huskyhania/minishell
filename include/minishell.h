@@ -133,7 +133,7 @@ void	free_pipes(t_mini *attributes);
 
 //ft_path.c - checking for path in envp if necessary
 char	*get_command_path(const char *cmd, t_mini *attributes);
-char	*check_command(const char *cmd);
+char	*check_command(const char *cmd, t_mini *attributes);
 char	*join_paths(const char *dir, const char *cmd);
 char	*find_path_in_envp(char *envp[]);
 
@@ -163,5 +163,6 @@ void	clean_envp_ll(t_envp **envp_heap);
 //other general utils
 void	free_array(char **array);
 int     ft_strcmp(char *s1, char *s2);
+void	set_error_and_display(int error_code, t_mini *attributes, const char *cmd);
 
 #endif

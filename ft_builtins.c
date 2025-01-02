@@ -12,15 +12,21 @@
 
 #include "minishell.h"
 
-void	ft_pwd(void)
+void	ft_pwd(t_mini *attributes)
 {
 	char	*cwd;
 
 	cwd = NULL;
 	cwd = getcwd(NULL, 0);
-	//add a malloc check
+	if (!cwd)
+	{
+		ft_putstr_fd("pwd: error retrieving current directory", 2);
+		attributes->exitcode = 1;
+		return ;
+	}
 	printf("%s\n", cwd);
 	free(cwd);
+	attributes->exitcode = 0;
 }
 
 void	ft_env(t_mini *attributes)
@@ -30,15 +36,18 @@ void	ft_env(t_mini *attributes)
 	path_value = get_env_value(attributes, "PATH");
 	if (!path_value || path_value[0] == '\0')
 	{
-		printf("exit 127: No such file or directory");
+		ft_putstr_fd("env: No such file or directory", 2);
 		attributes->exitcode = 127;
 		return ;
 	}
 	else
+	{
 		print_envp_list(attributes->envp_heap);
+		attributes->exitcode = 0;
+	}
 }
 
-void	ft_echo(char **cmd_array)//should this be an int function?
+void	ft_echo(char **cmd_array, t_mini *attributes)//should this be an int function?
 {
 	//if no redirection
 	int	fd;
@@ -63,14 +72,18 @@ void	ft_echo(char **cmd_array)//should this be an int function?
 	}
 	if (newline)
 		ft_putstr_fd("\n", fd);
+	attributes->exitcode = 0;
 }
 
 void	ft_cd(char **cmd_array, t_mini *attributes)//needs to handle edge cases and complicated relative paths
 {
 	char	*home;
+
+	attributes->exitcode = 0;
 	if (cmd_array[2] != NULL)
 	{
 		printf("too many arguments for cd\n");
+		attributes->exitcode = 1;
 		return ;
 	}
 	if (cmd_array[1] == NULL)
@@ -79,6 +92,7 @@ void	ft_cd(char **cmd_array, t_mini *attributes)//needs to handle edge cases and
 		if (!home || home[0] == '\0')
 		{
 			printf("cd: HOME not set\n");
+			attributes->exitcode = 1;
 			return ;
 		}
 		chdir(home);
@@ -86,22 +100,21 @@ void	ft_cd(char **cmd_array, t_mini *attributes)//needs to handle edge cases and
 	else
 	{
 		if (chdir(cmd_array[1]) == -1)
-			perror("cd");//needs to update exit code to 1
+		{	
+			perror("cd");
+			attributes->exitcode = 1;
+		}
 	}
-	//test below - this shouldn't be necessary for when minishell actually keeps running
-	//char cwd[1024];
-	//if (getcwd(cwd, sizeof(cwd)) != NULL)
-    	//	printf("New directory: %s\n", cwd);
 }
 
 void	handle_builtin(char **cmd_array, int flag, t_mini *attributes)
 {
 	if (flag == BUILTIN_ECHO)
-		ft_echo(cmd_array);
+		ft_echo(cmd_array, attributes);
 	if (flag == BUILTIN_CD)
 		ft_cd(cmd_array, attributes);
 	if (flag == BUILTIN_PWD)
-		ft_pwd();
+		ft_pwd(attributes);
 	if (flag == BUILTIN_EXPORT)
 		ft_export(cmd_array, attributes);
 	if (flag == BUILTIN_UNSET)

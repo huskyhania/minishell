@@ -43,25 +43,23 @@ char	*find_path_in_envp(char *envp[])
 	return (NULL);
 }
 
-char	*check_command(const char *cmd)
+char	*check_command(const char *cmd, t_mini *attributes)
 {
 	if (access(cmd, X_OK) == 0)
 	{
-		//px->exitcode = 0;
+		attributes->exitcode = 0;
 		return (ft_strdup(cmd));
 	}
 	if (access(cmd, F_OK) == 0)
 	{
 		errno = EACCES;
 		perror(cmd);
-		//px->exitcode = 126;
-		//display_error(px, cmd);
+		attributes->exitcode = 126;
 	}
 	else
 	{
 		errno = ENOENT;
-		//px->exitcode = 127;
-		//display_error(px, cmd);
+		attributes->exitcode = 127;
 		perror(cmd);
 	}
 	return (NULL);
@@ -97,7 +95,7 @@ static char	*check_full_path(const char *cmd, const char *dir, int *found)
 	return (NULL);
 }
 
-static char	*search_in_path(const char *cmd, char **directories)
+static char	*search_in_path(const char *cmd, char **directories, t_mini *attributes)
 {
 	int		i;
 	int		found;
@@ -110,22 +108,16 @@ static char	*search_in_path(const char *cmd, char **directories)
 		result = check_full_path(cmd, directories[i], &found);
 		if (result)
 		{
-			//free_array(&directories);
+			free_array(directories);
 			return (result);
 		}
 		i++;
 	}
-	//free_array(&directories);
-	if (found)
-	{
-		perror("126");
-		//set_error_and_display(126, px, cmd);
-	}
+	free_array(directories);
+	if (found)//lack of permissions
+		set_error_and_display(126, attributes, cmd);
 	else
-	{
-		perror("127");
-		//set_error_and_display(127, px, cmd);
-	}
+		set_error_and_display(127, attributes, cmd);
 	return (NULL);
 }
 
@@ -135,18 +127,17 @@ char	*get_command_path(const char *cmd, t_mini *attributes)
 	char	**directories;
 
 	if (ft_strchr(cmd, '/'))
-		return (check_command(cmd));
+		return (check_command(cmd, attributes));
 	path_env = get_env_value(attributes, "PATH");
 	if (!path_env)
 	{
-		errno = ENOENT;
-		perror("127 path not found");
-		//px->exitcode = 127;
-		//display_error(px, cmd);
+		ft_putstr_fd((char *)cmd, 2);
+		ft_putstr_fd(": No such file or directory\n", 2);
+		attributes->exitcode = 127;
 		return (NULL);
 	}
 	directories = ft_split(path_env, ':');
 	if (!directories)
 		return (NULL);
-	return (search_in_path(cmd, directories));
+	return (search_in_path(cmd, directories, attributes));
 }
