@@ -6,36 +6,38 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 15:00:53 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/03 18:36:13 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/03 20:32:03 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*int	check_redirections(t_cmd_table *node, t_mini *attributes)
+//while outfile and infile are not NULL - iterate through the array to find the last outfile/infile
+
+int	check_redirections(t_cmd_table *node, t_mini *attributes)
 {
 	int	input;
 	int	output;
 	
 	attributes->input_fd = STDIN_FILENO;//reseting fds
 	attributes->output_fd = STDOUT_FILENO;
-	if (node->infile)
+	if (node->infile[0])
 	{
-		input = open(node->infile, O_RDONLY);
+		input = open(node->infile[0], O_RDONLY);
 		if (input == -1)
 		{
-			perror(node->infile);
+			perror(node->infile[0]);
 			return (1);
 		}
 		else
 			attributes->input_fd = input;
 	}
-	if (node->outfile)
+	if (node->outfile[0])
 	{
-		output = open(node->outfile, O_WRONLY | O_CREAT | O_APPEND, 0644);
+		output = open(node->outfile[0], O_WRONLY | O_CREAT | O_APPEND, 0644);
 		if (output == -1)
 		{
-			perror(node->outfile);
+			perror(node->outfile[0]);
 			return (1);
 		}
 		else
@@ -155,7 +157,8 @@ void	ft_execution(t_mini *attributes)
 	}
 	if (attributes->commands->type != t_pipe)
 	{
-		printf("%sc command str\n", attributes->commands->cmd_arr[0]);
+		if (attributes->commands->cmd_arr && attributes->commands->cmd_arr[0])
+			printf("%sc command str\n", attributes->commands->cmd_arr[0]);
 		printf("entering single command execution\n");
 		single_command(attributes->commands, attributes);
 	}
@@ -171,4 +174,4 @@ void	ft_execution(t_mini *attributes)
 		handle_command_or_pipe(attributes->commands, attributes);
 		free_pipes(attributes);
 	}
-}*/
+}

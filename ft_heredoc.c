@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 19:56:10 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/03 18:29:59 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2025/01/03 20:13:44 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	here_doc_handler(t_cmd_table *node, t_mini *attributes)
 		line = get_next_line(0);//or here?
 		if (!line)
 			break ;
-		if (ft_strncmp(node->here, line, ft_strlen(node->here)) == 0 && line[ft_strlen(node->here)] == '\n')
+		if (ft_strncmp(node->here[0], line, ft_strlen(node->here[0])) == 0 && line[ft_strlen(node->here[0])] == '\n')
 			break ;
 		write(temp_fd, line, ft_strlen(line));
 		free(line);

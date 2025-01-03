@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 20:07:20 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/03 20:07:32 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2025/01/03 20:38:22 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,12 @@ int	check_redirs(t_cmd_table *node, t_mini *attributes)
 	int	input;
 	int	output;
 	int	here_doc_fd;
-	if (node->infile)
+	if (node->infile && node->infile[0])
 	{
-		input = open(node->infile, O_RDONLY);
+		input = open(node->infile[0], O_RDONLY);
 		if (input < 0)
 		{
-			perror(node->infile);
+			perror(node->infile[0]);
 			attributes->exitcode = 1;
 			return (1);
 		}
@@ -32,7 +32,7 @@ int	check_redirs(t_cmd_table *node, t_mini *attributes)
 			close(input);
 		}
 	}
-	if (node->here)
+	if (node->here && node->here[0])
 	{
 		here_doc_fd = here_doc_handler(node, attributes);
 		if (here_doc_fd < 0)
@@ -45,12 +45,12 @@ int	check_redirs(t_cmd_table *node, t_mini *attributes)
 			perror("dup2 error");
 		close(here_doc_fd);
 	}
-	if (node->outfile)
+	if (node->outfile && node->outfile[0])
 	{
-		output = open(node->outfile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		output = open(node->outfile[0], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		if (output < 0)
 		{
-			perror(node->outfile);
+			perror(node->outfile[0]);
 			attributes->exitcode = 1;
 			return (1);
 		}
@@ -115,8 +115,10 @@ void	single_command(t_cmd_table *node, t_mini *attributes)
 	int	builtin_flag;
 
 	//attributes->array = check_if_valid_command(node->cmd_arr[0]);
-	printf("%s command string\n", node->cmd_arr[0]);
-	printf("%sinfile str", node->infile);
+	if (node->cmd_arr && node->cmd_arr[0])	
+		printf("%s command string\n", node->cmd_arr[0]);
+	if (node->infile && node->infile[0])
+		printf("%sinfile str", node->infile[0]);
 	if (attributes->commands->cmd_arr)
 	{
 		builtin_flag = is_builtin(node->cmd_arr[0]);
