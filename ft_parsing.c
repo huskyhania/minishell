@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 18:12:26 by llaakson          #+#    #+#             */
-/*   Updated: 2024/12/28 23:27:18 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/03 17:31:18 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ t_cmd_table *ft_merge_redirection(t_tokens **token, t_cmd_table *old_table)
 		old_table->outfile = ft_strdup((*token)->next->str);
 	if ((*token)->type == 3)
 		old_table->infile = ft_strdup((*token)->next->str);
+	if ((*token)->type == t_lessless)
+		old_table->here = ft_strdup((*token)->next->str);
 	*token = (*token)->next;
 	old_table->type = 20;
 	return (old_table);
@@ -48,7 +50,7 @@ t_cmd_table	*ft_merge_command(t_mini *attributes, t_tokens **token)
 	while(*token != NULL && (*token)->type != t_pipe)
 	{
 		printf("Merging\n");
-		if (*token && ((*token)->type == t_great || (*token)->type == t_less))
+		if (*token && ((*token)->type == t_great || (*token)->type == t_less || (*token)->type == t_lessless))
 			new_node = ft_merge_redirection(token, new_node);
 		else
 			new_node->cmd_arr = ft_add_command_array(new_node->cmd_arr, (*token)->str);
@@ -117,7 +119,7 @@ void	ft_parsing(t_mini *attributes)
 		if (print->type == 20)
 		{
 			printf("string|%s|\n", print->cmd_arr[0]);
-			printf("Infile:|%s| Outfile:|%s|\n", print->infile, print->outfile);
+			printf("Type: %d Infile:|%s| Outfile:|%s|\n Deli:|%s|\n", print->type, print->infile, print->outfile, print->here);
 		}
 		if (print->type == t_pipe)
 		{
