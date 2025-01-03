@@ -57,6 +57,7 @@ typedef struct s_cmd_table {
 	char			**cmd_arr;
 	char 			*infile;
 	char			*outfile;
+	char			*here;
 	struct s_cmd_table *right;
 	struct s_cmd_table *left;
 } t_cmd_table;

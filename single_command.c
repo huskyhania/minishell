@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 16:51:14 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/28 17:38:44 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2025/01/03 17:14:25 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,11 @@ static void	execute_single(char **cmd_array, t_mini *attributes, t_cmd_table *no
 			perror("execve error");
 			exit(attributes->exitcode);
 		}
+	}
+	else
+	{
+	//	perror("command not found- path");
+		exit(attributes->exitcode);
 	}
 }
 
