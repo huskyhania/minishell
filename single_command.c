@@ -6,13 +6,13 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 16:51:14 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/03 17:14:25 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/03 18:37:59 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	check_redirs(t_cmd_table *node, t_mini *attributes)
+/*int	check_redirs(t_cmd_table *node, t_mini *attributes)
 {
 	int	input;
 	int	output;
@@ -113,4 +113,4 @@ void	single_command(t_cmd_table *node, t_mini *attributes)
 		free_array(node->cmd_arr);
 		node->cmd_arr = NULL;
 	}
-}
+}*/

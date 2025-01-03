@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:37:20 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/01 21:28:57 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/03 18:41:30 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,8 @@ void	minishell_init(char **envp)
 			add_history(attributes.readret);
 			printf("\nyour shitty input was %s\n", attributes.readret);
 			if (ft_check_everything(&attributes))
-				ft_execution(&attributes);
+				puts("exe");
+				//ft_execution(&attributes);
 		}
  	}
 	//clean history after breaking the loop???
