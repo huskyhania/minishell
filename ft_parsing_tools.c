@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_parsing_tools.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/18 15:06:34 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/03 19:40:33 by hskrzypi         ###   ########.fr       */
+/*   Created: 2025/01/03 20:07:51 by hskrzypi          #+#    #+#             */
+/*   Updated: 2025/01/03 20:08:35 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,11 @@ t_cmd_table *ft_add_new(t_mini *attributes, t_tokens *token)
 	new_node->outfile = NULL;
 	new_node->infile = NULL;
 	new_node->here = NULL;
+	new_node->append = NULL;
 	new_node->type = (token->type);
 	return(new_node);
 }
+
 void	ft_free_cmd_array(char **arr)
 {
 	int i;

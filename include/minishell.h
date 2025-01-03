@@ -55,9 +55,10 @@ typedef struct s_cmd_table {
 	t_token_type	type;
 	char			*str;
 	char			**cmd_arr;
-	char 			*infile;
-	char			*outfile;
-	char			*here;
+	char 			**infile;
+	char			**outfile;
+	char			**here;
+	char			**append;
 	struct s_cmd_table *right;
 	struct s_cmd_table *left;
 } t_cmd_table;

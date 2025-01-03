@@ -6,13 +6,13 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 15:00:53 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/02 20:11:58 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2025/01/03 18:36:13 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	check_redirections(t_cmd_table *node, t_mini *attributes)
+/*int	check_redirections(t_cmd_table *node, t_mini *attributes)
 {
 	int	input;
 	int	output;
@@ -171,4 +171,4 @@ void	ft_execution(t_mini *attributes)
 		handle_command_or_pipe(attributes->commands, attributes);
 		free_pipes(attributes);
 	}
-}
+}*/
