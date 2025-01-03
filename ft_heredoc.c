@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 19:56:10 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/18 16:23:53 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2025/01/03 18:29:59 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 //open temporary file with flags O_CREAT | O_WRONLY | O_TRUNCT, 0644
 //int here_doc_fd should it be in attributes?
 
-int	here_doc_handler(char **cmd_array)
+int	here_doc_handler(t_cmd_table *node, t_mini *attributes)
 {
 	int	temp_fd;
 	char	*line;
@@ -26,8 +26,8 @@ int	here_doc_handler(char **cmd_array)
 	if (temp_fd < 0)
 	{
 		ft_putendl_fd("cannot create temp file", 2);
-		ft_putendl_fd("exitcode should be 1", 2); //to udpate in struct and delete
-		return (1);//or exit
+		attributes->exitcode = 1; //to udpate in struct and delete
+		exit(1);
 	}
 	while (1)
 	{
@@ -35,7 +35,7 @@ int	here_doc_handler(char **cmd_array)
 		line = get_next_line(0);//or here?
 		if (!line)
 			break ;
-		if (ft_strncmp(cmd_array[1], line, ft_strlen(cmd_array[1])) == 0 && line[ft_strlen(cmd_array[1])] == '\n')
+		if (ft_strncmp(node->here, line, ft_strlen(node->here)) == 0 && line[ft_strlen(node->here)] == '\n')
 			break ;
 		write(temp_fd, line, ft_strlen(line));
 		free(line);
@@ -48,7 +48,5 @@ int	here_doc_handler(char **cmd_array)
 	}
 	if (line)
 		free(line);
-	close(temp_fd);
-	//this might need to use unlink to delete the file
-	return (0);
+	return (temp_fd);
 }

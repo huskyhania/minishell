@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 16:51:14 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/03 17:14:25 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/03 20:02:14 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ int	check_redirs(t_cmd_table *node, t_mini *attributes)
 {
 	int	input;
 	int	output;
+	int	here_doc_fd;
 	if (node->infile)
 	{
 		input = open(node->infile, O_RDONLY);
@@ -30,6 +31,19 @@ int	check_redirs(t_cmd_table *node, t_mini *attributes)
 			dup2(input, STDIN_FILENO);
 			close(input);
 		}
+	}
+	if (node->here)
+	{
+		here_doc_fd = here_doc_handler(node, attributes);
+		if (here_doc_fd < 0)
+		{
+			perror("here doc function fail");
+			exit (1);
+		}
+		printf("%d here doc fd\n", here_doc_fd);
+		if (dup2(here_doc_fd, STDIN_FILENO) < 0)
+			perror("dup2 error");
+		close(here_doc_fd);
 	}
 	if (node->outfile)
 	{
@@ -101,7 +115,7 @@ void	single_command(t_cmd_table *node, t_mini *attributes)
 	int	builtin_flag;
 
 	//attributes->array = check_if_valid_command(node->cmd_arr[0]);
-	printf("%s command string", node->cmd_arr[0]);
+	printf("%s command string\n", node->cmd_arr[0]);
 	printf("%sinfile str", node->infile);
 	if (attributes->commands->cmd_arr)
 	{

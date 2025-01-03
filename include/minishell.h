@@ -155,7 +155,7 @@ char	*get_key(char *s);
 char	*get_value(char *s);
 
 //heredoc
-int	here_doc_handler(char **cmd_array);
+int	here_doc_handler(t_cmd_table *node, t_mini *attributes);
 
 //cleanup
 void	envp_cleanup(t_mini *attributes);
