@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 18:12:26 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/03 17:31:18 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/03 17:34:56 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,4 +135,5 @@ void	ft_parsing(t_mini *attributes)
 			break ;
 	}
 	printf("COMMAND TABLE FINITO:\n");
+	ft_free_tokens(attributes);
 }
