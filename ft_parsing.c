@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 18:12:26 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/03 19:58:46 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/03 20:26:09 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,38 +105,42 @@ void print_array(t_cmd_table *print)
 void print_file(t_cmd_table *print)
 {
 	int i = 0;
-	while (print && print->outfile)
+	while (print->cmd_arr && print->cmd_arr[0])
 	{
-		if (!print->infile[i])
+		if (!print->cmd_arr[i])
 			break ;
-		printf("string|%s|\n",print->cmd_arr[0]);
+		printf("string|%s|\n",print->cmd_arr[i]);
+		i++;
+	}
+	i=0;
+	while (print && print->outfile && print->infile[0])
+	{
+		if (!print->outfile[i])
+			break ;
 		printf("Type: %d Index %d Outfile:|%s|\n", print->type ,i, print->outfile[i]);
 		i++;
 	}
 	i=0;
-	while (print && print->infile)
+	while (print && print->infile && print->infile[0])
 	{
 		if (!print->infile[i])
 			break ;
-		printf("string|%s|\n",print->cmd_arr[0]);
 		printf("Type: %d Index %d Infile:|%s|\n", print->type ,i, print->infile[i]);
 		i++;
 	}
 	i=0;
-	while (print && print->here)
+	while (print && print->here && print->here[0])
 	{
 		if (!print->here[i])
 			break ;
-		printf("string|%s|\n",print->cmd_arr[0]);
 		printf("Type: %d Index %d Here:|%s|\n", print->type ,i, print->here[i]);
 		i++;
 	}
 	i=0;
-	while (print && print->append)
+	while (print && print->append && print->append[0])
 	{
 		if (!print->append[i])
 			break ;
-		printf("string|%s|\n",print->cmd_arr[0]);
 		printf("Type: %d Index %d Append:|%s|\n", print->type ,i, print->append[i]);
 		i++;
 	}
@@ -161,9 +165,9 @@ void	ft_parsing(t_mini *attributes)
 			//printf("string|%s|\n", print->cmd_arr[0]);
 			//printf("Type: %d Infile:|%s| Outfile:|%s|\n Deli:|%s|\n", print->type, print->infile, print->outfile[0], print->here);
 		}
-		if (print->type == t_pipe)
+		if (print->type == t_pipe && print->right)
 		{
-			print_array(print->right);
+			print_file(print->right);
 			//printf("right node : %s type: %d\n", print->right->str, print->right->type);
 		}
 		if (print->type == t_pipe)
