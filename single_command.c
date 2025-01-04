@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 20:07:20 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/04 13:50:44 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2025/01/04 17:52:52 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,24 +53,36 @@ static void	handle_single(char **cmd_array, t_mini *attributes, t_cmd_table *nod
 	}
 	else
 	{
+		//close(attributes->here_fd);
 		waitpid(pid, &status, 0);
 		if (WIFEXITED(status))
 		{
 			printf("child exited with status %d\n", WEXITSTATUS(status));
 			attributes->exitcode = WEXITSTATUS(status);
 		}
+		if (access("here_doc", F_OK))
+			unlink("here_doc");
 	}
 }
 
 void	single_command(t_cmd_table *node, t_mini *attributes)
 {
 	int	builtin_flag;
-
 	//attributes->array = check_if_valid_command(node->cmd_arr[0]);
 	if (node->cmd_arr && node->cmd_arr[0])	
 		printf("%s command string\n", node->cmd_arr[0]);
 	if (node->infile && node->infile[0])
 		printf("%sinfile str", node->infile[0]);
+	if (node->here && node->here[0])
+	{
+		attributes->here_fd = here_doc_handler(node, attributes);
+		if (attributes->here_fd < 0)
+		{
+			perror("heredoc error");
+			attributes->exitcode = 1;
+			return ; 
+		}
+	}
 	if (attributes->commands->cmd_arr)
 	{
 		builtin_flag = is_builtin(node->cmd_arr[0]);

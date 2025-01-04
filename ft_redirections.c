@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 13:41:36 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/04 14:04:16 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2025/01/04 17:59:06 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,33 +56,46 @@ int	check_outfile(t_cmd_table *node, t_mini *attributes)
 	return (0);
 }
 
-//int	check_heredoc(t_cmd_table *node, t_mini *attributes)
+int	check_heredoc(t_cmd_table *node, t_mini *attributes)
+{
+	(void)node;
+	attributes->here_fd = open("here_doc", O_RDONLY);
+	if (attributes->here_fd < 0)
+	{
+		perror("failed to open heredoc file");
+		return (1);
+	}
+	if (dup2(attributes->here_fd, STDIN_FILENO) < 0)
+	{
+		perror("dup2 error");
+		return (1);
+	}
+	close(attributes->here_fd);
+	return (0);
+}
 
 int	check_redirs(t_cmd_table *node, t_mini *attributes)
 {
-	//int	here_doc_fd;
 	if (node->infile && node->infile[0])
 	{
+		perror("got into infile check");
 		if (check_infile(node, attributes))
-			exit(1);
+			exit (1);
 	}
-	/*if (node->here && node->here[0])
+	if (node->here && node->here[0])
 	{
-		here_doc_fd = here_doc_handler(node, attributes);
-		if (here_doc_fd < 0)
+		perror("got into heredoc check");
+		if (check_heredoc(node, attributes))
 		{
-			perror("here doc function fail");
+			perror("heredoc check fail");
 			exit (1);
 		}
-		printf("%d here doc fd\n", here_doc_fd);
-		if (dup2(here_doc_fd, STDIN_FILENO) < 0)
-			perror("dup2 error");
-		close(here_doc_fd);
-	}*/
+	}
 	if (node->outfile && node->outfile[0])
 	{
+		perror("got into outfile check");
 		if (check_outfile(node, attributes))
-			exit(1);
+			exit (1);
 	}
 	return (0);
 }
