@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 18:12:26 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/04 18:39:36 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/04 19:02:05 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void ft_merge_pipe(t_mini *attributes, t_cmd_table *old_table)
 	t_cmd_table *new_pipe;
 	
 	new_pipe = malloc(sizeof(t_cmd_table));
-	new_pipe->str = ft_strdup("|");
+	//new_pipe->str = ft_strdup("|");
 	new_pipe->infile = NULL;
 	new_pipe->outfile = NULL;
 	new_pipe->type = t_pipe;

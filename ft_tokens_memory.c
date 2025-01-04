@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/19 17:11:35 by llaakson          #+#    #+#             */
-/*   Updated: 2024/12/29 16:52:21 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/04 19:23:34 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,10 @@ void	ft_free_tokens(t_mini *attributes)
 	{
 		temp = token->next;
 		if (token->str)
+		{
 			free(token->str);
+			token->str = NULL;
+		}
 		free(token);
 		token = temp;
 	}

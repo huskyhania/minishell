@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 12:06:47 by llaakson          #+#    #+#             */
-/*   Updated: 2024/12/29 19:32:40 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/04 19:47:38 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ char *ft_add_expansion(t_mini *attributes, char *line)
 	new_command->type = t_command;
 	while (temp_line[i] != '"') // removed line check trust in the syntax check
 		i++;
-	//printf("char %c char %c char %c\n",temp_line[i],temp_line[i+1],temp_line[i+2]); 
+	printf("char\n"); 
 	if (!ft_is_whitespace(&temp_line[i+1]))
 		new_command->merge = 1;
 	new_command->str = ft_substr(line, 1, i-1); // malloc here remeber to check and free after parsing

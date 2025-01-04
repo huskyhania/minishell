@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 17:07:16 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/04 18:24:09 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/04 19:10:47 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,15 @@
 
 void ft_check_ast_array(t_cmd_table *print)
 {
-	if (print->cmd_arr && print->cmd_arr[0])
+	if (print->cmd_arr)
 		ft_free_cmd_array(print->cmd_arr);
-	if (print && print->outfile && print->outfile[0])
+	if (print && print->outfile)
 		ft_free_cmd_array(print->outfile);
-	if (print && print->infile && print->infile[0])
+	if (print && print->infile)
 		ft_free_cmd_array(print->infile);
-	if (print && print->here && print->here[0])
+	if (print && print->here)
 		ft_free_cmd_array(print->here);
-	if (print && print->append && print->append[0])
+	if (print && print->append)
 		ft_free_cmd_array(print->append);
 }
 
@@ -43,11 +43,13 @@ void	ft_free_ast(t_mini *attributes)
 			free(table->right);
 		}
 		temp = table->left;
-		if (table)
+		if (table->type != t_pipe)
 		{
 			ft_check_ast_array(table);
 			free(table);
 		}
+		else
+			free(table);
 		table = temp;
 	}
 }

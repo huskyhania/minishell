@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 15:11:35 by llaakson          #+#    #+#             */
-/*   Updated: 2024/12/29 19:57:46 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/04 19:37:41 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,21 +19,24 @@ char	*ft_replace_expansion(char *token, char *path, char *expansion)
 	int len;
 
 	len = ft_strlen(token) + ft_strlen(expansion) - ft_strlen(path) + 1;
-	printf("len %d\n", len);
+	//printf("len %d\n", len);
 	temp2 = ft_calloc(len + 1,(sizeof(char)));
 	if (!temp2)
 		printf("poop\n");
-	printf("token: %s< path: %s<\n",token,path);
+
 	start = ft_strnstr(token, path, ft_strlen(token));
-	printf("token: %s< start: %s<\n",token,start);
+
 	temp = ft_substr(token, 0, (start - token));
-	printf("temp2: %s< temp: %s<\n",temp2,temp);
+
 	ft_strlcat(temp2, temp, len);
-	//printf("TEMP2 %s\n", temp2);
+
 	ft_strlcat(temp2, expansion, len);
-	//printf("TEMP2 %s\n", temp2);
+
 	ft_strlcat(temp2, start + ft_strlen(path), len);
-	//printf("TEMP2 %s\n", temp2);
+
+	free(token);
+	free(temp);
+
 	return (temp2);
 
 }
@@ -70,7 +73,6 @@ void	ft_expand_word(t_mini *attributes, t_tokens *token)
 			while (token->str[j+i] != '\0' && (token->str[j+i] == '_' || ft_isalpha(token->str[j+i])))
 				i++;
 			path = ft_substr(token->str, j, i);
-			printf("path }%s{\n", path);
 			expansion = get_env_value(attributes, &path[1]);
 			if (!expansion)
 			{
@@ -81,6 +83,7 @@ void	ft_expand_word(t_mini *attributes, t_tokens *token)
 			}
 			token->str = ft_replace_expansion(token->str,path,expansion);
 			free(path);
+			free(expansion);
 			break ;
 		}
 		j++;

@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 20:07:51 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/03 20:08:35 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2025/01/04 19:10:10 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,6 @@ char **ft_add_command_array(char **old_array, char *str)
 	printf("array done\n");
 	new_array[i] = ft_strdup(str);
 	new_array[i+1] = NULL;
-	//free_array(old_array);
+	free_array(old_array);
 	return (new_array);
 }

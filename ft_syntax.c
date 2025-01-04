@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/26 14:59:32 by llaakson          #+#    #+#             */
-/*   Updated: 2024/12/29 19:26:01 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/04 20:02:15 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,8 @@ void ft_merge_tokens(t_mini *attributes)
 				exit(1);
 			}
 			free(token->str);
+			free(token->next->str); // Last addition remove if shit is broken
+			token->str = NULL;
 			token->str = new_str;
 			token->merge = token->next->merge;
 			ft_delete_token(token);
