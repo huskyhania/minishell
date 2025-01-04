@@ -6,13 +6,15 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:37:20 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/04 16:50:38 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2025/01/04 20:54:56 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 int ft_check_everything(t_mini *attributes)
 {
+	if(is_empty_or_space(attributes->readret))
+		return (0);
 	if(!(ft_check_quotes(attributes->readret)))
 		return (0);
 	ft_tokenization(attributes);
@@ -40,6 +42,7 @@ void	minishell_init(char **envp)
 		if(!(attributes.readret = readline(PROMPT)))
 		{
 			printf("CTRL+D found");
+			envp_cleanup(&attributes);
 			exit(0); // check that the exit number is correct for ctrl+d, also million things need to be freed here??
 		}
 		if (attributes.readret && attributes.readret[0] != '\0')

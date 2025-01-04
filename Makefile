@@ -6,19 +6,19 @@
 #    By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/02 14:41:28 by hskrzypi          #+#    #+#              #
-#    Updated: 2025/01/04 18:00:18 by llaakson         ###   ########.fr        #
+#    Updated: 2025/01/04 20:11:26 by llaakson         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME	:= minishell
 
-CFLAGS	:= -Wextra -Wall -Werror -fsanitize=address,undefined -g
+CFLAGS	:= -Wextra -Wall -Werror
 
 LIBLIBFT	:= ./complete_Libft
 
 HEADERS	:= -I ./include -I $(LIBLIBFT)
 
-LIBS := -L$(LIBLIBFT) -lreadline -lft -fsanitize=address,undefined -g
+LIBS := -L$(LIBLIBFT) -lreadline -lft
 
 SRCS 	:= mainh.c ft_tokens.c ft_parsing.c ft_execution.c ft_path.c ft_tokens_tools.c ft_builtins.c ft_envp_builtins.c ft_export_builtin.c ft_ll_envp.c ft_parsing_tools.c ft_expand.c ft_heredoc.c ft_tokens_memory.c ft_utils.c single_command.c ft_syntax.c piping.c ft_cleanup.c ft_signal.c error_check.c ft_redirections.c ft_free_ast.c\
 

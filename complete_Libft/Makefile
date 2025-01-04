@@ -6,7 +6,7 @@
 #    By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/22 17:00:36 by hskrzypi          #+#    #+#              #
-#    Updated: 2024/12/29 20:25:03 by hskrzypi         ###   ########.fr        #
+#    Updated: 2025/01/04 20:11:48 by llaakson         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,7 @@ RM		= rm -f
 
 CC		= cc
 
-CFLAGS	= -Wall -Wextra -Werror -fsanitize=address,undefined -g
+CFLAGS	= -Wall -Wextra -Werror
 
 all: ${NAME}
 

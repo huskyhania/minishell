@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 15:11:35 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/04 19:37:41 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/04 20:46:23 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ void	ft_expand_word(t_mini *attributes, t_tokens *token)
 			}
 			token->str = ft_replace_expansion(token->str,path,expansion);
 			free(path);
-			free(expansion);
+			//free(expansion); dont free expansion shit
 			break ;
 		}
 		j++;

@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 12:06:47 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/04 19:47:38 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/04 20:49:43 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,6 +134,7 @@ void	ft_tokenization(t_mini *attributes)
 	attributes->cmd_index = 0;
 	attributes->tokens = NULL;
 	line = attributes->readret;
+	printf("line |%s|\n",line);
 	while (*line)
 	{
 		line += ft_skip_whitespace(line); // function that skips whitespace
@@ -143,5 +144,5 @@ void	ft_tokenization(t_mini *attributes)
 		//if (*line && !ft_is_special(line))
 		//	line++; // Why do I need this ????????
 	}
-	print_tokens(attributes);
+	//print_tokens(attributes);
 }
