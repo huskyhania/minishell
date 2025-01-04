@@ -120,6 +120,10 @@ void    ft_expand(t_mini *attributes);
 t_cmd_table *ft_find_last_parse(t_cmd_table *stack);
 t_cmd_table *ft_add_new(t_mini *attributes, t_tokens *token);
 char **ft_add_command_array(char **old_array, char *str);
+void	ft_free_cmd_array(char **arr);
+
+//ft_free_ast.c
+void    ft_free_ast(t_mini *attributes);
 
 //ft_execution.c - executing simple commands
 int	is_empty_or_space(const char *cmd);
