@@ -6,45 +6,11 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 15:00:53 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/03 20:32:03 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2025/01/04 14:36:35 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-//while outfile and infile are not NULL - iterate through the array to find the last outfile/infile
-
-int	check_redirections(t_cmd_table *node, t_mini *attributes)
-{
-	int	input;
-	int	output;
-	
-	attributes->input_fd = STDIN_FILENO;//reseting fds
-	attributes->output_fd = STDOUT_FILENO;
-	if (node->infile[0])
-	{
-		input = open(node->infile[0], O_RDONLY);
-		if (input == -1)
-		{
-			perror(node->infile[0]);
-			return (1);
-		}
-		else
-			attributes->input_fd = input;
-	}
-	if (node->outfile[0])
-	{
-		output = open(node->outfile[0], O_WRONLY | O_CREAT | O_APPEND, 0644);
-		if (output == -1)
-		{
-			perror(node->outfile[0]);
-			return (1);
-		}
-		else
-			attributes->output_fd = output;
-	}
-	return (0);
-}
 
 void	execute_command(t_cmd_table *node, t_mini *attributes)
 {
@@ -68,21 +34,10 @@ void	execute_command(t_cmd_table *node, t_mini *attributes)
 		dup2(attributes->pipe_arr[attributes->i - 2][READ], STDIN_FILENO);
 		close(attributes->pipe_arr[attributes->i - 2][READ]);
 	}
-	if (check_redirections(node, attributes))
+	if (node->type != t_command)
 	{
-		attributes->exitcode = 1;
-		perror("redirection check is failed\n");
-		exit (1);//temporary fix
-	}
-	if (attributes->input_fd != STDIN_FILENO)
-	{
-		dup2(attributes->input_fd, STDIN_FILENO);
-		close(attributes->input_fd);
-	}
-	if (attributes->output_fd != STDOUT_FILENO)
-	{
-		dup2(attributes->output_fd, STDOUT_FILENO);
-		close(attributes->output_fd);
+		if (check_redirs(node, attributes))
+			exit(EXIT_FAILURE);	
 	}
 	char *cmd_path = get_command_path(node->cmd_arr[0], attributes);
 	fprintf(stderr, "about to execute command %s\n", node->cmd_arr[0]);

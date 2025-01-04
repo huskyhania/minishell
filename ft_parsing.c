@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 18:12:26 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/03 20:26:09 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/04 14:42:48 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ void print_file(t_cmd_table *print)
 		i++;
 	}
 	i=0;
-	while (print && print->outfile && print->infile[0])
+	while (print && print->outfile && print->outfile[0])
 	{
 		if (!print->outfile[i])
 			break ;
