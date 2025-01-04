@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 18:12:26 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/04 14:42:48 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2025/01/04 18:39:36 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,10 @@ t_cmd_table *ft_merge_redirection(t_tokens **token, t_cmd_table *old_table)
 	if ((*token)->type == t_greatgreat)
 		old_table->append = ft_add_command_array(old_table->append, (*token)->next->str);
 	*token = (*token)->next;
+	if ((*token)->prev->type == t_great || (*token)->prev->type == t_greatgreat)
+		old_table->last_outfile = (*token)->prev->type;
+	if ((*token)->prev->type == t_less || (*token)->prev->type == t_lessless)
+		old_table->last_infile = (*token)->prev->type;
 	old_table->type = (*token)->prev->type;
 	return (old_table);
 }
@@ -105,11 +109,12 @@ void print_array(t_cmd_table *print)
 void print_file(t_cmd_table *print)
 {
 	int i = 0;
+	printf("Last infile %d Last outfile %d\n", print->last_infile, print->last_outfile);
 	while (print->cmd_arr && print->cmd_arr[0])
 	{
 		if (!print->cmd_arr[i])
 			break ;
-		printf("string|%s|\n",print->cmd_arr[i]);
+		printf("String type: %d string|%s|\n",print->type,print->cmd_arr[i]);
 		i++;
 	}
 	i=0;

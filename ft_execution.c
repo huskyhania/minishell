@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 15:00:53 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/04 17:58:04 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/04 18:02:32 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,5 +129,5 @@ void	ft_execution(t_mini *attributes)
 		handle_command_or_pipe(attributes->commands, attributes);
 		free_pipes(attributes);
 	}
-	fr_free_ast(attributes);
+	ft_free_ast(attributes);
 }

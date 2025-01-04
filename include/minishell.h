@@ -19,10 +19,10 @@
 typedef enum e_token_type {
 	t_command,
 	t_pipe, // |
-	t_great, // >
-	t_less, // <
-	t_greatgreat, // >>
-	t_lessless, // <<
+	t_great, // > infile
+	t_less, // <  outfile
+	t_greatgreat, // >> append
+	t_lessless, // << here
 	t_bracketleft, // (
 	t_bracketrigth, // )
 	t_quote, // ' "
@@ -59,6 +59,8 @@ typedef struct s_cmd_table {
 	char			**outfile;
 	char			**here;
 	char			**append;
+	int				last_infile;
+	int				last_outfile;
 	struct s_cmd_table *right;
 	struct s_cmd_table *left;
 } t_cmd_table;
