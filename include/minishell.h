@@ -86,6 +86,7 @@ typedef struct s_minishell
 	int	**pipe_arr;
 	int	num_pipes;
 	int	i;
+	int	here_fd;
 }	t_mini;
 
 //ft_signal.c

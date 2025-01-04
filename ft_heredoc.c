@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 19:56:10 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/03 20:13:44 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2025/01/04 17:57:26 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,12 @@ int	here_doc_handler(t_cmd_table *node, t_mini *attributes)
 	{
 		ft_putendl_fd("cannot create temp file", 2);
 		attributes->exitcode = 1; //to udpate in struct and delete
-		exit(1);
+		return (-1);
 	}
 	while (1)
 	{
 		write(1, "heredoc> ", 9);//will fd ever change?
-		line = get_next_line(0);//or here?
+		line = get_next_line(STDIN_FILENO);//or here?
 		if (!line)
 			break ;
 		if (ft_strncmp(node->here[0], line, ft_strlen(node->here[0])) == 0 && line[ft_strlen(node->here[0])] == '\n')
@@ -44,9 +44,11 @@ int	here_doc_handler(t_cmd_table *node, t_mini *attributes)
 	{
 		printf("error from gnl");
 		close(temp_fd);
-		return (1); // or exit
+		//unlink("here_doc");
+		return (-1); // or exit
 	}
 	if (line)
 		free(line);
-	return (temp_fd);
+	close(temp_fd);
+	return (0);
 }
