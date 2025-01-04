@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 19:56:10 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/04 17:57:26 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2025/01/04 18:23:24 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int	here_doc_handler(t_cmd_table *node, t_mini *attributes)
 	{
 		printf("error from gnl");
 		close(temp_fd);
-		//unlink("here_doc");
+		unlink("here_doc");
 		return (-1); // or exit
 	}
 	if (line)

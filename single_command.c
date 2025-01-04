@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 20:07:20 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/04 17:52:52 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2025/01/04 18:39:54 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ static void	handle_single(char **cmd_array, t_mini *attributes, t_cmd_table *nod
 			printf("child exited with status %d\n", WEXITSTATUS(status));
 			attributes->exitcode = WEXITSTATUS(status);
 		}
-		if (access("here_doc", F_OK))
+		if (access("here_doc", F_OK) == 0)
 			unlink("here_doc");
 	}
 }
