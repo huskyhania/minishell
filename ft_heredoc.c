@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 19:56:10 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/04 18:23:24 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2025/01/04 19:13:09 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,12 @@
 //open temporary file with flags O_CREAT | O_WRONLY | O_TRUNCT, 0644
 //int here_doc_fd should it be in attributes?
 
-int	here_doc_handler(t_cmd_table *node, t_mini *attributes)
+int	here_doc_handler(t_cmd_table *node, t_mini *attributes, char *delimit)
 {
 	int	temp_fd;
 	char	*line;
 
+	(void)node;
 	temp_fd = open("here_doc", O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (temp_fd < 0)
 	{
@@ -35,7 +36,7 @@ int	here_doc_handler(t_cmd_table *node, t_mini *attributes)
 		line = get_next_line(STDIN_FILENO);//or here?
 		if (!line)
 			break ;
-		if (ft_strncmp(node->here[0], line, ft_strlen(node->here[0])) == 0 && line[ft_strlen(node->here[0])] == '\n')
+		if (ft_strncmp(delimit, line, ft_strlen(delimit)) == 0 && line[ft_strlen(delimit)] == '\n')
 			break ;
 		write(temp_fd, line, ft_strlen(line));
 		free(line);

@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 20:07:20 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/04 18:39:54 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2025/01/04 19:11:50 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,19 +68,26 @@ static void	handle_single(char **cmd_array, t_mini *attributes, t_cmd_table *nod
 void	single_command(t_cmd_table *node, t_mini *attributes)
 {
 	int	builtin_flag;
+	int	i;
+
+	i = 0;
 	//attributes->array = check_if_valid_command(node->cmd_arr[0]);
 	if (node->cmd_arr && node->cmd_arr[0])	
 		printf("%s command string\n", node->cmd_arr[0]);
 	if (node->infile && node->infile[0])
 		printf("%sinfile str", node->infile[0]);
-	if (node->here && node->here[0])
+	if (node->here && node->here[i] != NULL)
 	{
-		attributes->here_fd = here_doc_handler(node, attributes);
-		if (attributes->here_fd < 0)
+		while (node->here[i] != NULL)
 		{
-			perror("heredoc error");
-			attributes->exitcode = 1;
-			return ; 
+			attributes->here_fd = here_doc_handler(node, attributes, node->here[i]);
+			if (attributes->here_fd < 0)
+			{
+				perror("heredoc error");
+				attributes->exitcode = 1;
+				return ; 
+			}
+			i++;
 		}
 	}
 	if (attributes->commands->cmd_arr)
