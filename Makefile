@@ -6,7 +6,7 @@
 #    By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/02 14:41:28 by hskrzypi          #+#    #+#              #
-#    Updated: 2025/01/01 17:32:25 by llaakson         ###   ########.fr        #
+#    Updated: 2025/01/04 13:52:43 by hskrzypi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,7 @@ HEADERS	:= -I ./include -I $(LIBLIBFT)
 
 LIBS := -L$(LIBLIBFT) -lreadline -lft -fsanitize=address,undefined -g
 
-SRCS 	:= mainh.c ft_tokens.c ft_parsing.c ft_execution.c ft_path.c ft_tokens_tools.c ft_builtins.c ft_envp_builtins.c ft_export_builtin.c ft_ll_envp.c ft_parsing_tools.c ft_expand.c ft_heredoc.c ft_tokens_memory.c ft_utils.c single_command.c ft_syntax.c piping.c ft_cleanup.c ft_signal.c error_check.c\
+SRCS 	:= mainh.c ft_tokens.c ft_parsing.c ft_execution.c ft_path.c ft_tokens_tools.c ft_builtins.c ft_envp_builtins.c ft_export_builtin.c ft_ll_envp.c ft_parsing_tools.c ft_expand.c ft_heredoc.c ft_tokens_memory.c ft_utils.c single_command.c ft_syntax.c piping.c ft_cleanup.c ft_signal.c error_check.c ft_redirections.c\
 
 OBJS	:= ${SRCS:.c=.o}
 

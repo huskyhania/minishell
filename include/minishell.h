@@ -133,6 +133,10 @@ void	single_command(t_cmd_table *node, t_mini *attributes);
 int	create_pipes(t_mini *attributes);
 void	free_pipes(t_mini *attributes);
 
+//redirections
+int	check_redirs(t_cmd_table *node, t_mini *attributes);
+int	check_infile(t_cmd_table *node, t_mini *attributes);
+
 //ft_path.c - checking for path in envp if necessary
 char	*get_command_path(const char *cmd, t_mini *attributes);
 char	*check_command(const char *cmd, t_mini *attributes);
