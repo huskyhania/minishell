@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 13:41:36 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/04 17:59:06 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2025/01/05 14:09:33 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,8 @@ int	check_infile(t_cmd_table *node, t_mini *attributes)
 		}
 		i++;
 	}
-	dup2(input, STDIN_FILENO);
+	if (node->last_infile == 3)
+		dup2(input, STDIN_FILENO);
 	close(input);
 	return (0);
 }
@@ -65,10 +66,13 @@ int	check_heredoc(t_cmd_table *node, t_mini *attributes)
 		perror("failed to open heredoc file");
 		return (1);
 	}
-	if (dup2(attributes->here_fd, STDIN_FILENO) < 0)
+	if (node->last_infile == 5)
 	{
-		perror("dup2 error");
-		return (1);
+		if (dup2(attributes->here_fd, STDIN_FILENO) < 0)
+		{
+			perror("dup2 error");
+			return (1);
+		}
 	}
 	close(attributes->here_fd);
 	return (0);

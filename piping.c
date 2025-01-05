@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/22 13:52:07 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/31 15:41:44 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2025/01/04 19:43:06 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,4 +77,28 @@ void	free_pipes(t_mini *attributes)
 	free(attributes->pipe_arr);
 	attributes->pipe_arr = NULL;
 	attributes->i = 0;
+}
+
+void	handle_pipes(t_mini *attributes)
+{
+	if (attributes->i == 1)
+	{
+		perror("test1");
+		dup2(attributes->pipe_arr[attributes->i - 1][WRITE], STDOUT_FILENO);
+		close(attributes->pipe_arr[attributes->i - 1][WRITE]);
+	}
+	else if (attributes->i > 1 && attributes->i < attributes->cmd_index)
+	{
+		perror("test2");
+		dup2(attributes->pipe_arr[attributes->i - 2][READ], STDIN_FILENO);
+		close(attributes->pipe_arr[attributes->i - 2][READ]);
+		dup2(attributes->pipe_arr[attributes->i - 1][WRITE], STDOUT_FILENO);
+		close(attributes->pipe_arr[attributes->i - 1][WRITE]);
+	}
+	else if (attributes->i == attributes->cmd_index)
+	{
+		perror("test3");
+		dup2(attributes->pipe_arr[attributes->i - 2][READ], STDIN_FILENO);
+		close(attributes->pipe_arr[attributes->i - 2][READ]);
+	}
 }

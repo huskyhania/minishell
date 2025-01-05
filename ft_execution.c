@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 15:00:53 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/04 18:02:32 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/04 19:50:21 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,26 +14,7 @@
 
 void	execute_command(t_cmd_table *node, t_mini *attributes)
 {
-	if (attributes->i == 1)
-	{
-		perror("test1");
-		dup2(attributes->pipe_arr[attributes->i - 1][WRITE], STDOUT_FILENO);
-		close(attributes->pipe_arr[attributes->i - 1][WRITE]);
-	}
-	else if (attributes->i > 1 && attributes->i < attributes->cmd_index)
-	{
-		perror("test2");
-		dup2(attributes->pipe_arr[attributes->i - 2][READ], STDIN_FILENO);
-		close(attributes->pipe_arr[attributes->i - 2][READ]);
-		dup2(attributes->pipe_arr[attributes->i - 1][WRITE], STDOUT_FILENO);
-		close(attributes->pipe_arr[attributes->i - 1][WRITE]);
-	}
-	else if (attributes->i == attributes->cmd_index)
-	{
-		perror("test3");
-		dup2(attributes->pipe_arr[attributes->i - 2][READ], STDIN_FILENO);
-		close(attributes->pipe_arr[attributes->i - 2][READ]);
-	}
+	handle_pipes(attributes);
 	if (node->type != t_command)
 	{
 		if (check_redirs(node, attributes))
