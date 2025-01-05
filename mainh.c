@@ -6,11 +6,12 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:37:20 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/04 20:54:56 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/05 23:24:22 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+int g_signal = 0;
 int ft_check_everything(t_mini *attributes)
 {
 	if(is_empty_or_space(attributes->readret))

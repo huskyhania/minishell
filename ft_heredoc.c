@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 19:56:10 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/04 19:13:09 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2025/01/05 23:30:22 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,11 @@
 int	here_doc_handler(t_cmd_table *node, t_mini *attributes, char *delimit)
 {
 	int	temp_fd;
+	int	saved_stdin;
 	char	*line;
 
 	(void)node;
+	saved_stdin = dup(STDIN_FILENO);//checks for dup
 	temp_fd = open("here_doc", O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (temp_fd < 0)
 	{
@@ -30,6 +32,7 @@ int	here_doc_handler(t_cmd_table *node, t_mini *attributes, char *delimit)
 		attributes->exitcode = 1; //to udpate in struct and delete
 		return (-1);
 	}
+	ft_heresignal();
 	while (1)
 	{
 		write(1, "heredoc> ", 9);//will fd ever change?
@@ -41,15 +44,42 @@ int	here_doc_handler(t_cmd_table *node, t_mini *attributes, char *delimit)
 		write(temp_fd, line, ft_strlen(line));
 		free(line);
 	}
+	ft_sigint();
 	if (!line)
 	{
 		printf("error from gnl");
 		close(temp_fd);
 		unlink("here_doc");
+		dup2(saved_stdin, STDIN_FILENO);
+		close(saved_stdin);
 		return (-1); // or exit
 	}
 	if (line)
 		free(line);
+	dup2(saved_stdin, STDIN_FILENO);
+	close(saved_stdin);
 	close(temp_fd);
+	return (0);
+}
+
+int	process_heredocs(t_cmd_table *node, t_mini *attributes)
+{
+	int	i;
+
+	i = 0;
+	while (node->here[i] != NULL)
+	{
+		if (attributes->here_fd > 0)
+			close(attributes->here_fd);
+		attributes->here_fd = here_doc_handler(node, attributes, node->here[i]);
+		if (attributes->here_fd < 0)
+		{
+			perror(node->here[i]);
+			attributes->exitcode = 1;
+			return (1);
+		}
+		i++;
+	}
+	attributes->exitcode = 0;
 	return (0);
 }

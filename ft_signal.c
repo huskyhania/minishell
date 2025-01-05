@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/01 17:31:31 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/01 21:32:16 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/05 23:29:07 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,21 @@ void ft_sigint(void)
 {
 	signal(SIGINT, ft_handle_sigint);
 	//signal(SIGQUIT, SIG_IGN); // SIG_IGN ignores the signal
+}
+
+void ft_pop(int sig)
+{
+	if (sig == SIGINT)
+	{
+		printf("HERE\n");
+		close(STDIN_FILENO);
+		g_signal = SIGINT;
+	}
+}
+
+void ft_heresignal(void)
+{
+	signal(SIGINT, ft_pop);
 }
 
 //SIGCHLD      P1990      Ign     Child stopped or terminated

@@ -15,6 +15,7 @@
 #define READ 0
 #define WRITE 1
 
+extern int g_signal;
 // Token types
 typedef enum e_token_type {
 	t_command,
@@ -93,7 +94,7 @@ typedef struct s_minishell
 
 //ft_signal.c
 void ft_sigint(void);
-
+void ft_heresignal(void);
 
 //ft_tokens.c
 void    ft_tokenization(t_mini *attributes);
@@ -169,6 +170,7 @@ char	*get_value(char *s);
 
 //heredoc
 int	here_doc_handler(t_cmd_table *node, t_mini *attributes, char *delimit);
+int     process_heredocs(t_cmd_table *node, t_mini *attributes);
 
 //cleanup
 void	envp_cleanup(t_mini *attributes);
