@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 20:07:20 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/04 19:11:50 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2025/01/05 16:26:51 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,8 @@ void	single_command(t_cmd_table *node, t_mini *attributes)
 	{
 		while (node->here[i] != NULL)
 		{
+			if (attributes->here_fd > 0)
+				close(attributes->here_fd);
 			attributes->here_fd = here_doc_handler(node, attributes, node->here[i]);
 			if (attributes->here_fd < 0)
 			{
