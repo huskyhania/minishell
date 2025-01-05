@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/01 17:31:31 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/05 23:29:07 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2025/01/05 23:50:44 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,13 +40,14 @@ void ft_pop(int sig)
 	{
 		printf("HERE\n");
 		close(STDIN_FILENO);
-		g_signal = SIGINT;
+		//g_signal = SIGINT;
 	}
 }
 
 void ft_heresignal(void)
 {
 	signal(SIGINT, ft_pop);
+	signal(SIGQUIT, SIG_IGN);
 }
 
 //SIGCHLD      P1990      Ign     Child stopped or terminated
