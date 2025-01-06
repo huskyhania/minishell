@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 20:07:20 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/05 18:21:12 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2025/01/06 19:08:25 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ void	single_command(t_cmd_table *node, t_mini *attributes)
 	{
 		builtin_flag = is_builtin(node->cmd_arr[0]);
 		if (builtin_flag != 0)
-			handle_builtin(node->cmd_arr, builtin_flag, attributes);
+			handle_builtin(node, builtin_flag, attributes);
 		else
 			handle_single(node->cmd_arr, attributes, node);
 		free_array(node->cmd_arr);

@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 16:00:04 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/31 16:09:17 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2025/01/06 19:53:00 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,31 +47,55 @@ void	ft_env(t_mini *attributes)
 	}
 }
 
-void	ft_echo(char **cmd_array, t_mini *attributes)//should this be an int function?
+void	ft_echo(t_cmd_table *node, t_mini *attributes)//should this be an int function?
 {
-	//if no redirection
-	int	fd;
 	int	i;
 	int	newline;
+//	int	output;
+	int	saved_std;
 
-	fd = 1;
 	i = 1;
 	newline = 1;
-	//else get fd from struct?
-	if (cmd_array[i] && ft_strcmp(cmd_array[i], "-n") == 0)
+	saved_std = dup(STDOUT_FILENO);
+	if (attributes->i < attributes->cmd_index)
+	{
+		dup2(attributes->pipe_arr[attributes->i - 1][WRITE], STDOUT_FILENO);
+		close(attributes->pipe_arr[attributes->i - 1][WRITE]);
+	}
+	if (attributes->i > 1)
+		close(attributes->pipe_arr[attributes->i - 2][READ]);
+	if (node->outfile)
+	{
+		if (check_outfile(node, attributes))
+		{
+			attributes->exitcode = 1;
+			return ;
+		}
+	}
+	if (node->append)
+	{
+		if (check_append(node, attributes))
+		{
+			attributes->exitcode = 1;
+			return ;
+		}
+	}
+	if (node->cmd_arr[i] && ft_strcmp(node->cmd_arr[i], "-n") == 0)
 	{
 		newline = 0;
 		i++;
 	}
-	while (cmd_array[i] != NULL)
+	while (node->cmd_arr[i] != NULL)
 	{
-		ft_putstr_fd(cmd_array[i], fd);
-		if (cmd_array[i + 1] != NULL)
-			ft_putstr_fd(" ", fd);
+		printf("%s", node->cmd_arr[i]);
+		if (node->cmd_arr[i + 1] != NULL)
+			printf(" ");
 		i++;
 	}
 	if (newline)
-		ft_putstr_fd("\n", fd);
+		printf("\n");
+	dup2(saved_std, STDOUT_FILENO);
+	close(saved_std);
 	attributes->exitcode = 0;
 }
 
@@ -107,18 +131,18 @@ void	ft_cd(char **cmd_array, t_mini *attributes)//needs to handle edge cases and
 	}
 }
 
-void	handle_builtin(char **cmd_array, int flag, t_mini *attributes)
+void	handle_builtin(t_cmd_table *node, int flag, t_mini *attributes)
 {
 	if (flag == BUILTIN_ECHO)
-		ft_echo(cmd_array, attributes);
+		ft_echo(node, attributes);
 	if (flag == BUILTIN_CD)
-		ft_cd(cmd_array, attributes);
+		ft_cd(node->cmd_arr, attributes);
 	if (flag == BUILTIN_PWD)
 		ft_pwd(attributes);
 	if (flag == BUILTIN_EXPORT)
-		ft_export(cmd_array, attributes);
+		ft_export(node->cmd_arr, attributes);
 	if (flag == BUILTIN_UNSET)
-		remove_env_var(cmd_array, attributes);
+		remove_env_var(node->cmd_arr, attributes);
 	if (flag == BUILTIN_ENV)
 		ft_env(attributes);
 }

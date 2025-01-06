@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 15:00:53 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/05 22:42:44 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2025/01/06 16:31:05 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,13 +36,37 @@ void	execute_command(t_cmd_table *node, t_mini *attributes)
 		exit(127); // exitfailure??
 }
 
-
+void	fork_for_command(t_cmd_table *node, t_mini *attributes)
+{
+	int	pid;
+	int	status;
+	pid = fork();
+	if (pid < 0)
+	{
+		perror("fork error");
+		exit(EXIT_FAILURE);//might require closing fds, freeing memory)
+	}
+	if (pid == 0)
+		execute_command(node, attributes);
+	else
+	{
+		if (attributes->i > 1)
+			close(attributes->pipe_arr[attributes->i - 2][READ]);
+		if (attributes->i < attributes->cmd_index)
+			close(attributes->pipe_arr[attributes->i - 1][WRITE]);
+		//close(attributes->pipe_arr[attributes->i - 1][WRITE]);
+		waitpid(pid, &status, 0);
+		if (WIFEXITED(status))
+		{
+			printf("child exited with status %d\n", WEXITSTATUS(status));
+			attributes->exitcode = WEXITSTATUS(status);//can be conditional and only happen for the last command
+		}
+	}
+}
 void	handle_command(t_cmd_table *node, t_mini *attributes)
 {
 	//check path
 	//check command
-	int	pid;
-	int	status;
 	int	builtin_flag;
 	attributes->i++;
 	if (node->here && node->here != NULL)
@@ -57,32 +81,11 @@ void	handle_command(t_cmd_table *node, t_mini *attributes)
 	{
 		builtin_flag = is_builtin(node->cmd_arr[0]);
 		if (builtin_flag != 0)
-			handle_builtin(node->cmd_arr, builtin_flag, attributes);
+			handle_builtin(node, builtin_flag, attributes);
 		else
 		{
-			printf("handling command %d and its %s\n", attributes->i, node->cmd_arr[0]);
-			pid = fork();
-			if (pid < 0)
-			{
-				perror("fork error");
-				exit(EXIT_FAILURE);//might require closing fds, freeing memory)
-			}
-			if (pid == 0)
-				execute_command(node, attributes);
-			else
-			{
-				if (attributes->i > 1)
-					close(attributes->pipe_arr[attributes->i - 2][READ]);
-				if (attributes->i < attributes->cmd_index)
-					close(attributes->pipe_arr[attributes->i - 1][WRITE]);
-				//close(attributes->pipe_arr[attributes->i - 1][WRITE]);
-				waitpid(pid, &status, 0);
-				if (WIFEXITED(status))
-				{
-					printf("child exited with status %d\n", WEXITSTATUS(status));
-					attributes->exitcode = WEXITSTATUS(status);
-				}
-			}
+			fprintf(stderr, "forking for command no %d amd it is %s\n", attributes->i, node->cmd_arr[0]);
+			fork_for_command(node, attributes);
 		}
 	}
 }
