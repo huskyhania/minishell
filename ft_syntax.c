@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/26 14:59:32 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/04 20:02:15 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/06 19:48:00 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,13 +47,13 @@ int ft_check_redirection(t_tokens *token, t_mini *attributes)
 	if ((token->type == t_great || token->type == t_greatgreat) && token->next->type != t_command)
 	{
 		if (token->next->type == t_great)
-			printf("syntax error near unexpected token `>'\n");
+			printf(" syntax error near unexpected token `>'\n");
 		else if (token->next->type == t_greatgreat)
-			printf("syntax error near unexpected token `>>'\n");
+			printf(" syntax error near unexpected token `>>'\n");
 		else if (token->next->type == t_less)
-			printf("syntax error near unexpected token `<'\n");
+			printf(" syntax error near unexpected token `<'\n");
 		else if (token->next->type == t_lessless)
-			printf("syntax error near unexpected token `<'\n");
+			printf(" syntax error near unexpected token `<'\n");
 		attributes->exitcode = 2;
 		return (0);
 	}
@@ -64,7 +64,7 @@ int ft_check_pipe(t_tokens *token, t_mini *attributes)
 {
 	if (token->next == NULL || token->prev == NULL || token->next->type == t_pipe || token->prev->type == t_less || token->prev->type == t_lessless)
 	{
-		printf("syntax error near unexpected token `|'\n");
+		printf(" syntax error near unexpected token `|'\n");
 		attributes->exitcode = 2;
 		ft_free_tokens(attributes);
 		return (0);
@@ -87,7 +87,7 @@ void ft_merge_tokens(t_mini *attributes)
     token = attributes->tokens;
     while (token && token->next)
 	{
-		printf("String %s Merge %d type %d\n",token->str, token->merge, token->type);
+		//printf("String %s Merge %d type %d\n",token->str, token->merge, token->type);
 		if (token->next && token->merge == 1 && (token->next->type == t_command || token->next->type == t_quote))
 		{
 			char *new_str;

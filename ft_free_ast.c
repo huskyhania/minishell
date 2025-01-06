@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 17:07:16 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/04 19:10:47 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/06 18:30:28 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	ft_free_ast(t_mini *attributes)
 		printf("IDIOT\n");
 	while (table)
 	{
-		printf("free loop\n");
+		//printf("free loop\n");
 		if (table->right)
 		{
 			ft_check_ast_array(table->right);

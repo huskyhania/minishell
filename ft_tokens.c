@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 12:06:47 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/04 20:49:43 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/06 18:24:01 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,39 +110,31 @@ char *ft_add_expansion(t_mini *attributes, char *line)
 	new_command->type = t_command;
 	while (temp_line[i] != '"') // removed line check trust in the syntax check
 		i++;
-	printf("char\n"); 
+	//printf("char\n"); 
 	if (!ft_is_whitespace(&temp_line[i+1]))
 		new_command->merge = 1;
 	new_command->str = ft_substr(line, 1, i-1); // malloc here remeber to check and free after parsing
 	return (line + i + 1);
 }
 
-char *ft_com(t_mini *attributes, char *line)
-{
-	if (*line && ft_is_quote(line))
-			line = ft_add_quote(line, attributes);
-	if (*line && *line == '"')
-			line = ft_add_expansion(attributes, line);
-	if (*line && *line != ' ' && !ft_is_special(line) && *line != '"' && *line != '\'') // change this to else?
-			line = ft_add_command(line, attributes);
-	return (line);
-}
 void	ft_tokenization(t_mini *attributes)
 {
 	char		*line;
 
-	attributes->cmd_index = 0;
 	attributes->tokens = NULL;
 	line = attributes->readret;
-	printf("line |%s|\n",line);
+	//printf("line |%s|\n",line);
 	while (*line)
 	{
 		line += ft_skip_whitespace(line); // function that skips whitespace
 		if (*line && ft_is_special(line))
 			ft_add_pipe(attributes, &line);
-		line = ft_com(attributes, line);
-		//if (*line && !ft_is_special(line))
-		//	line++; // Why do I need this ????????
+		if (*line && ft_is_quote(line))
+			line = ft_add_quote(line, attributes);
+		if (*line && *line == '"')
+			line = ft_add_expansion(attributes, line);
+		if (*line && *line != ' ' && !ft_is_special(line) && *line != '"' && *line != '\'') // change this to else?
+			line = ft_add_command(line, attributes);
 	}
 	//print_tokens(attributes);
 }

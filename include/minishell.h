@@ -181,4 +181,6 @@ void	free_array(char **array);
 int     ft_strcmp(char *s1, char *s2);
 void	set_error_and_display(int error_code, t_mini *attributes, const char *cmd);
 
+//delete from final product
+void ft_print_table(t_mini *attributes);
 #endif

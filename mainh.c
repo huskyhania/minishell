@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:37:20 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/06 17:31:34 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/06 18:28:03 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void	ft_readline_loop(t_mini *attributes)
 		if (attributes->readret && attributes->readret[0] != '\0')
 		{
 			add_history(attributes->readret);
-			printf("\nyour shitty input was %s\n", attributes->readret);
+			//printf("\nyour shitty input was %s\n", attributes->readret);
 			if (ft_check_everything(attributes))
 			{
 				puts("exe");

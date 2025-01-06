@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 15:11:35 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/04 20:46:23 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/06 18:29:12 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,14 +58,14 @@ void	ft_expand_word(t_mini *attributes, t_tokens *token)
 			if (token->str[j+1] == '?')
 			{
 					exitcode = ft_itoa(attributes->exitcode);
-					printf("Exitcode %d\n", attributes->exitcode);
+					//printf("Exitcode %d\n", attributes->exitcode);
 					token->str = ft_replace_expansion(token->str,ft_substr(token->str,j,2),exitcode);
 					break ;
 			}
 			if (token->str[j+1] == '$')
 			{
 				expansion = get_env_value(attributes, "SYSTEMD_EXEC_PID");
-				printf("Case $$ %s\n", expansion);
+				//printf("Case $$ %s\n", expansion);
 				token->str = ft_replace_expansion(token->str,ft_substr(token->str,j,2),expansion);
 				break ;
 			}
