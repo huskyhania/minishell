@@ -97,7 +97,7 @@ void ft_sigint(void);
 void ft_heresignal(void);
 
 //ft_tokens.c
-void    ft_tokenization(t_mini *attributes);
+int	ft_tokenization(t_mini *attributes);
 
 //ft_tokens_memory.c
 void    ft_free_tokens(t_mini *attributes);
@@ -116,9 +116,9 @@ int ft_syntax_check(t_mini *attributes);
 void ft_merge_tokens(t_mini *attributes);
 
 //ft_expand.c
-void    ft_expand(t_mini *attributes);
+int    ft_expand(t_mini *attributes);
 //ft_parsing.c
- void ft_parsing(t_mini *attributes);
+int ft_parsing(t_mini *attributes);
  
 //ft_parsing_tools.c
 t_cmd_table *ft_find_last_parse(t_cmd_table *stack);

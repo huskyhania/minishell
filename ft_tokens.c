@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 12:06:47 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/06 18:24:01 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/06 21:13:47 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,15 @@ void	ft_add_token_type(t_tokens *new_command, char **line, int size)
 	new_command->str = ft_substr(*line, 0, size);
 }
 
-void	ft_add_pipe(t_mini *attributes, char **line)
+int	ft_add_pipe(t_mini *attributes, char **line)
 {
 	t_tokens *new_command;
 	int size;
 	
 	size = 1;
-	new_command = ft_add_token(attributes); // Can't handle << or >>
+	new_command = ft_add_token(attributes);// Can't handle << or >>
+	if (!new_command)
+		return (0);
 	if (**line == '|')
 		new_command->type = t_pipe;
 	if (**line == '>')
@@ -41,7 +43,10 @@ void	ft_add_pipe(t_mini *attributes, char **line)
 	if (new_command->type == t_lessless || new_command->type == t_greatgreat)
 		size++;
 	new_command->str = ft_substr(*line, 0, size);
+	if (!new_command->str)
+		return (0);
 	(*line) += size;
+	return (1);
 }
 
 int		ft_add_special(char **line, t_mini *attributes)
@@ -117,16 +122,15 @@ char *ft_add_expansion(t_mini *attributes, char *line)
 	return (line + i + 1);
 }
 
-void	ft_tokenization(t_mini *attributes)
+int	ft_tokenization(t_mini *attributes)
 {
 	char		*line;
 
 	attributes->tokens = NULL;
 	line = attributes->readret;
-	//printf("line |%s|\n",line);
 	while (*line)
 	{
-		line += ft_skip_whitespace(line); // function that skips whitespace
+		line += ft_skip_whitespace(line);
 		if (*line && ft_is_special(line))
 			ft_add_pipe(attributes, &line);
 		if (*line && ft_is_quote(line))
@@ -137,4 +141,5 @@ void	ft_tokenization(t_mini *attributes)
 			line = ft_add_command(line, attributes);
 	}
 	//print_tokens(attributes);
+	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:37:20 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/06 18:28:03 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/06 21:19:48 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,14 @@ int ft_check_everything(t_mini *attributes)
 		return (0);
 	if(!(ft_check_quotes(attributes->readret)))
 		return (0);
-	ft_tokenization(attributes);
+	if(!(ft_tokenization(attributes)))
+		return (0);
 	if (!(ft_syntax_check(attributes)))
 		return (0);
-	ft_expand(attributes);
-	ft_parsing(attributes);
+	if (!(ft_expand(attributes)))
+		return (0);
+	if (!(ft_parsing(attributes)))
+		return (0);
 	return (1);
 }
 
@@ -65,8 +68,8 @@ void	ft_readline_loop(t_mini *attributes)
 			//printf("\nyour shitty input was %s\n", attributes->readret);
 			if (ft_check_everything(attributes))
 			{
-				puts("exe");
 				ft_execution(attributes);
+				//minishell_init(attributes); reset here?
 			}
 		}
  	}

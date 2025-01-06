@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 15:11:35 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/06 18:29:12 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/06 20:54:13 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ void	ft_expand_word(t_mini *attributes, t_tokens *token)
 	//free(path);
 }
 
-void	ft_expand(t_mini *attributes)
+int	ft_expand(t_mini *attributes)
 {		
 		t_tokens *token;
 		token = attributes->tokens;
@@ -104,4 +104,5 @@ void	ft_expand(t_mini *attributes)
 			token = token->next;
 		}
 		ft_merge_tokens(attributes);
+		return (1);
 }
