@@ -145,6 +145,8 @@ void	handle_pipes(t_mini *attributes);
 //redirections
 int	check_redirs(t_cmd_table *node, t_mini *attributes);
 int	check_infile(t_cmd_table *node, t_mini *attributes);
+int	check_outfile(t_cmd_table *node, t_mini *attributes);
+int	check_append(t_cmd_table *node, t_mini *attributes);
 
 //ft_path.c - checking for path in envp if necessary
 char	*get_command_path(const char *cmd, t_mini *attributes);
@@ -154,7 +156,7 @@ char	*find_path_in_envp(char *envp[]);
 
 //builtins
 int	is_builtin(char *cmd_text);
-void	handle_builtin(char **cmd_array, int flag, t_mini *attributes);
+void	handle_builtin(t_cmd_table *node, int flag, t_mini *attributes);
 int	remove_env_var(char **cmd_array, t_mini *attributes);
 char	*get_env_value(t_mini *attributes, char *key);
 void    ft_env(t_mini *attributes);
