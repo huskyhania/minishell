@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 20:07:20 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/06 19:08:25 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2025/01/07 19:19:28 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,6 @@ void	single_command(t_cmd_table *node, t_mini *attributes)
 	int	i;
 
 	i = 0;
-	//attributes->array = check_if_valid_command(node->cmd_arr[0]);
 	if (node->cmd_arr && node->cmd_arr[0])//check to delete	
 		printf("%s command string\n", node->cmd_arr[0]);
 	if (node->infile && node->infile[0])
@@ -90,8 +89,9 @@ void	single_command(t_cmd_table *node, t_mini *attributes)
 		if (builtin_flag != 0)
 			handle_builtin(node, builtin_flag, attributes);
 		else
-			handle_single(node->cmd_arr, attributes, node);
-		free_array(node->cmd_arr);
-		node->cmd_arr = NULL;
+		{
+			if (!check_if_valid_command(node, attributes))
+				handle_single(node->cmd_arr, attributes, node);
+		}
 	}
 }

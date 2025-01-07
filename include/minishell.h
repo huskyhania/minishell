@@ -131,7 +131,7 @@ void    ft_free_ast(t_mini *attributes);
 
 //ft_execution.c - executing simple commands
 int	is_empty_or_space(const char *cmd);
-char	**check_if_valid_command(const char *cmd);
+int	check_if_valid_command(t_cmd_table *node, t_mini *attributes);
 void	execute_simple_command(char **cmd_arr, t_mini *attributes, t_cmd_table *node);
 void	handle_simple_command(char **cmd_arr, t_mini *attributes, t_cmd_table *node);
 void	ft_execution(t_mini *attributes);
