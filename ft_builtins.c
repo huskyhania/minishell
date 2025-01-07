@@ -57,22 +57,25 @@ void	ft_echo(t_cmd_table *node, t_mini *attributes)//should this be an int funct
 	i = 1;
 	newline = 1;
 	saved_std = dup(STDOUT_FILENO);
-	if (attributes->i < attributes->cmd_index)
+	if (attributes->cmd_index > 1)
 	{
-		dup2(attributes->pipe_arr[attributes->i - 1][WRITE], STDOUT_FILENO);
-		close(attributes->pipe_arr[attributes->i - 1][WRITE]);
-	}
-	if (attributes->i > 1)
-		close(attributes->pipe_arr[attributes->i - 2][READ]);
-	if (node->outfile)
-	{
-		if (check_outfile(node, attributes))
+		if (attributes->i < attributes->cmd_index)
 		{
-			attributes->exitcode = 1;
-			return ;
+			dup2(attributes->pipe_arr[attributes->i - 1][WRITE], STDOUT_FILENO);
+			close(attributes->pipe_arr[attributes->i - 1][WRITE]);
 		}
-	}
-	if (node->append)
+		if (attributes->i > 1)
+			close(attributes->pipe_arr[attributes->i - 2][READ]);
+	}	
+	if (node->outfile)
+		{
+			if (check_outfile(node, attributes))
+			{
+				attributes->exitcode = 1;
+				return ;
+			}
+		}
+		if (node->append)
 	{
 		if (check_append(node, attributes))
 		{

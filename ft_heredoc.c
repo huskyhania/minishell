@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 19:56:10 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/06 20:45:53 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/07 15:51:26 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,19 +35,17 @@ int	here_doc_handler(t_cmd_table *node, t_mini *attributes, char *delimit)
 	ft_heresignal();
 	while (1)
 	{
-		write(1, "heredoc> ", 9);//will fd ever change?
-		line = get_next_line(STDIN_FILENO);//or here?
-		if (!line)
-			break ;
-		if (ft_strncmp(delimit, line, ft_strlen(delimit)) == 0 && line[ft_strlen(delimit)] == '\n')
+		line = readline("heredoc> ");//or here?
+		if (!line || ft_strncmp(delimit, line, ft_strlen(delimit)) == 0)
 			break ;
 		write(temp_fd, line, ft_strlen(line));
+		write(temp_fd, "\n", 1);
 		free(line);
+		line = NULL;
 	}
 	ft_sigint();
 	if (!line)
 	{
-		printf("error from gnl");
 		close(temp_fd);
 		unlink("here_doc");
 		dup2(saved_stdin, STDIN_FILENO);
@@ -71,7 +69,13 @@ int	process_heredocs(t_cmd_table *node, t_mini *attributes)
 	{
 		if (attributes->here_fd > 0)
 			close(attributes->here_fd);
-		attributes->here_fd = here_doc_handler(node, attributes, node->here[i]);
+		if (here_doc_handler(node, attributes, node->here[i]) < 0)
+		{
+			perror(node->here[i]);
+			attributes->exitcode = 1;
+			return (1);
+		}
+		attributes->here_fd = open("here_doc", O_RDONLY);
 		if (attributes->here_fd < 0)
 		{
 			perror(node->here[i]);
