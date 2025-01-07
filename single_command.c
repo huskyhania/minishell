@@ -71,10 +71,6 @@ void	single_command(t_cmd_table *node, t_mini *attributes)
 	int	i;
 
 	i = 0;
-	if (node->cmd_arr && node->cmd_arr[0])//check to delete	
-		printf("%s command string\n", node->cmd_arr[0]);
-	if (node->infile && node->infile[0])
-		printf("%sinfile str", node->infile[0]);//until here
 	if (node->here && node->here[i] != NULL)
 	{
 		if (process_heredocs(node, attributes))

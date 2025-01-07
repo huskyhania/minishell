@@ -32,7 +32,7 @@ int	check_if_valid_command(t_cmd_table *node, t_mini *attributes)
 	else 
 	{
 		attributes->exitcode = 127;
-		write(2, ":command not found\n", 17);
+		write(2, ": command not found\n", 21);
 	}
 	return (1);
 }
