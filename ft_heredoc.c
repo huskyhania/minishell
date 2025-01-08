@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 19:56:10 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/07 15:51:26 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2025/01/08 14:18:17 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,14 @@ int	here_doc_handler(t_cmd_table *node, t_mini *attributes, char *delimit)
 		write(temp_fd, "\n", 1);
 		free(line);
 		line = NULL;
+	}
+	if (g_signal == SIGINT)
+	{
+		attributes->exitcode = 130;
+		// reset g_signal to 0 here or later
+		ft_sigint();
+		printf("exit heredoc with ctrl+c\n");
+		// stop execution in here after ctrl+c in heredoc
 	}
 	ft_sigint();
 	if (!line)

@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 20:07:51 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/06 18:30:49 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/08 13:21:29 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,6 @@ t_cmd_table *ft_add_new(t_mini *attributes, t_tokens *token)
 		printf("Error\n");
 		exit(1);
 	}
-	//if (token->type == t_command)
-	//new_node->str = ft_strdup(token->str);
 	new_node->right = NULL;
 	new_node->left = NULL;
 	new_node->cmd_arr= NULL;
@@ -41,6 +39,8 @@ t_cmd_table *ft_add_new(t_mini *attributes, t_tokens *token)
 	new_node->infile = NULL;
 	new_node->here = NULL;
 	new_node->append = NULL;
+	new_node->last_outfile = 0;
+	new_node->last_infile = 0;
 	new_node->type = (token->type);
 	return(new_node);
 }

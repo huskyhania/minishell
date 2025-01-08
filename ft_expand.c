@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 15:11:35 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/06 20:54:13 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/08 14:12:21 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ void	ft_expand_word(t_mini *attributes, t_tokens *token)
 					exitcode = ft_itoa(attributes->exitcode);
 					//printf("Exitcode %d\n", attributes->exitcode);
 					token->str = ft_replace_expansion(token->str,ft_substr(token->str,j,2),exitcode);
+					free(exitcode);
 					break ;
 			}
 			if (token->str[j+1] == '$')

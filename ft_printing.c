@@ -14,13 +14,14 @@ void print_helper(t_cmd_table *print)
 void print_array(t_cmd_table *print)
 {
 	int i = 0;
-	while (print && print->cmd_arr[i])
+	while (print && print->cmd_arr && print->cmd_arr[i])
 	{
 		printf("Index %d string|%s|\n", i, print->cmd_arr[i]);
 		//printf("Type: %d ", print->type);
 		i++;
 	}
-	printf("Index %d string|%s|\n", i, print->cmd_arr[i]);
+	if (print->cmd_arr)
+		printf("Index %d string|%s|\n", i, print->cmd_arr[i]);
 }
 
 void print_file(t_cmd_table *print)
@@ -88,7 +89,6 @@ void ft_print_table(t_mini *attributes)
 		if (print->type == t_pipe && print->right)
 		{
 			print_file(print->right);
-			//printf("right node : %s type: %d\n", print->right->str, print->right->type);
 		}
 		if (print->type == t_pipe)
 		{

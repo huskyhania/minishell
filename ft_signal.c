@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/01 17:31:31 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/05 23:50:44 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2025/01/08 13:57:37 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,19 +34,19 @@ void ft_sigint(void)
 	//signal(SIGQUIT, SIG_IGN); // SIG_IGN ignores the signal
 }
 
-void ft_pop(int sig)
+void ft_heredoc_sighandler(int sig)
 {
 	if (sig == SIGINT)
 	{
 		printf("HERE\n");
 		close(STDIN_FILENO);
-		//g_signal = SIGINT;
+		g_signal = SIGINT;
 	}
 }
 
 void ft_heresignal(void)
 {
-	signal(SIGINT, ft_pop);
+	signal(SIGINT, ft_heredoc_sighandler);
 	signal(SIGQUIT, SIG_IGN);
 }
 
