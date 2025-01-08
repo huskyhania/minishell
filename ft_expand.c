@@ -6,11 +6,12 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 15:11:35 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/08 15:46:58 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/08 17:17:05 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
 char	*ft_replace_expansion(char *token, char *path, char *expansion)
 {
 	char *temp;
@@ -54,12 +55,30 @@ void ft_expand_small(t_mini *attributes, t_tokens *token, int j)
 	free(path);
 }
 
-void	ft_expand_word(t_mini *attributes, t_tokens *token)
+void ft_expand_big(t_mini *attributes, t_tokens *token, int j, int i)
 {
 	char *path;
+	char *expansion;
+
+	i++;
+	while (token->str[j+i] != '\0' && (token->str[j+i] == '_' || ft_isalpha(token->str[j+i])))
+		i++;
+	path = ft_substr(token->str, j, i);
+	expansion = get_env_value(attributes, &path[1]);
+	if (!expansion)
+	{
+		token->str = ft_replace_expansion(token->str,path,"");
+		free(path);
+		return ;
+	}
+	token->str = ft_replace_expansion(token->str,path,expansion);
+	free(path);
+}
+
+void	ft_expand_word(t_mini *attributes, t_tokens *token)
+{
 	int i;
 	int j;
-	char *expansion;
 
 	j = 0;
 	i = 0;
@@ -72,20 +91,11 @@ void	ft_expand_word(t_mini *attributes, t_tokens *token)
 				ft_expand_small(attributes, token, j);
 				break ;
 			}
-			i++;
-			while (token->str[j+i] != '\0' && (token->str[j+i] == '_' || ft_isalpha(token->str[j+i])))
-				i++;
-			path = ft_substr(token->str, j, i);
-			expansion = get_env_value(attributes, &path[1]);
-			if (!expansion)
+			else
 			{
-				token->str = ft_replace_expansion(token->str,path,"");
-				free(path);
+				ft_expand_big(attributes, token, j, i);
 				break ;
 			}
-			token->str = ft_replace_expansion(token->str,path,expansion);
-			free(path);
-			break ;
 		}
 		j++;
 	}
