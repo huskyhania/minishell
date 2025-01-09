@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 13:41:36 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/05 16:21:53 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2025/01/09 20:38:38 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,7 @@ int	check_infile(t_cmd_table *node, t_mini *attributes)
 		input = open(node->infile[i], O_RDONLY);
 		if (input < 0)
 		{
-			perror(node->infile[i]);
-			attributes->exitcode = 1;
+			set_error_and_display(1, attributes, node->infile[i]);
 			return (1);
 		}
 		i++;
@@ -53,8 +52,7 @@ int	check_outfile(t_cmd_table *node, t_mini *attributes)
 		output = open(node->outfile[i], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		if (output < 0)
 		{
-			perror(node->outfile[i]);
-			attributes->exitcode = 1;
+			set_error_and_display(1, attributes, node->outfile[i]);
 			return (1);
 		}
 		i++;
@@ -80,8 +78,7 @@ int	check_append(t_cmd_table *node, t_mini *attributes)
 		output = open(node->append[i], O_WRONLY | O_CREAT | O_APPEND, 0644);
 		if (output < 0)
 		{
-			perror(node->append[i]);
-			attributes->exitcode = 1;
+			set_error_and_display(1, attributes, node->append[i]);
 			return (1);
 		}
 		i++;
@@ -98,7 +95,7 @@ int	check_heredoc(t_cmd_table *node, t_mini *attributes)
 	attributes->here_fd = open("here_doc", O_RDONLY);
 	if (attributes->here_fd < 0)
 	{
-		perror("failed to open heredoc file");
+		set_error_and_display(1, attributes, "here_doc");
 		return (1);
 	}
 	if (node->last_infile == 5)
@@ -117,28 +114,25 @@ int	check_redirs(t_cmd_table *node, t_mini *attributes)
 {
 	if (node->infile && node->infile[0])
 	{
-		perror("got into infile check");
+		//perror("got into infile check");
 		if (check_infile(node, attributes))
 			exit (1);
 	}
 	if (node->here && node->here[0])
 	{
-		perror("got into heredoc check");
+		//perror("got into heredoc check");
 		if (check_heredoc(node, attributes))
-		{
-			perror("heredoc check fail");
 			exit (1);
-		}
 	}
 	if (node->outfile && node->outfile[0])
 	{
-		perror("got into outfile check");
+		//perror("got into outfile check");
 		if (check_outfile(node, attributes))
 			exit (1);
 	}
 	if (node->append && node->append[0])
 	{
-		perror("got into append check");
+		//perror("got into append check");
 		if (check_append(node, attributes))
 			exit (1);
 	}
