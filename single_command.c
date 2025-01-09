@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 20:07:20 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/09 21:04:51 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2025/01/09 21:10:49 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ static void	execute_single(char **cmd_array, t_mini *attributes, t_cmd_table *no
 		if (execve(cmd_path, cmd_array, NULL) == -1)
 		{
 			perror("execve error");
+			ft_free_ast(attributes);
 			envp_cleanup(attributes);
 			exit(attributes->exitcode);
 		}
@@ -34,6 +35,7 @@ static void	execute_single(char **cmd_array, t_mini *attributes, t_cmd_table *no
 	{
 	//	perror("command not found- path");
 		envp_cleanup(attributes);
+		ft_free_ast(attributes);
 		exit(attributes->exitcode);
 	}
 }

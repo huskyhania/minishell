@@ -160,7 +160,7 @@ int	is_builtin(char *cmd_text);
 void	handle_builtin(t_cmd_table *node, int flag, t_mini *attributes);
 int	remove_env_var(char **cmd_array, t_mini *attributes);
 char	*get_env_value(t_mini *attributes, char *key);
-void    ft_env(t_mini *attributes);
+void    ft_env(t_cmd_table *node, t_mini *attributes);
 char	*find_in_envp(char **envp, const char *key);
 int	ft_export(char **cmd_array, t_mini *attributes);
 t_envp	*envp_to_list(char **envp);

@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 16:00:04 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/09 17:19:52 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2025/01/09 21:01:05 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,40 @@ void	ft_pwd(t_mini *attributes)
 	attributes->exitcode = 0;
 }
 
-void	ft_env(t_mini *attributes)
+void	ft_env(t_cmd_table *node, t_mini *attributes)
 {
 	char	*path_value;
+	int	saved_std;
 
 	path_value = get_env_value(attributes, "PATH");
+	saved_std = dup(STDOUT_FILENO);
+	if (attributes->cmd_index > 1)
+	{
+		if (attributes->i < attributes->cmd_index)
+		{
+			dup2(attributes->pipe_arr[attributes->i - 1][WRITE], STDOUT_FILENO);
+			close(attributes->pipe_arr[attributes->i - 1][WRITE]);
+		}
+		if (attributes->i > 1)
+			close(attributes->pipe_arr[attributes->i - 2][READ]);
+	}	
+	if (node->outfile)
+	{
+		if (check_outfile(node, attributes))
+		{
+			attributes->exitcode = 1;
+			return ;
+		}
+	}
+	if (node->append)
+	{
+		if (check_append(node, attributes))
+		{
+			attributes->exitcode = 1;
+			return ;
+		}
+	}
+
 	if (!path_value || path_value[0] == '\0')
 	{
 		ft_putstr_fd("env: No such file or directory", 2);
@@ -45,6 +74,8 @@ void	ft_env(t_mini *attributes)
 		print_envp_list(attributes->envp_heap);
 		attributes->exitcode = 0;
 	}
+	dup2(saved_std, STDOUT_FILENO);
+	close(saved_std);
 }
 
 void	ft_echo(t_cmd_table *node, t_mini *attributes)//should this be an int function?
@@ -68,14 +99,14 @@ void	ft_echo(t_cmd_table *node, t_mini *attributes)//should this be an int funct
 			close(attributes->pipe_arr[attributes->i - 2][READ]);
 	}	
 	if (node->outfile)
+	{
+		if (check_outfile(node, attributes))
 		{
-			if (check_outfile(node, attributes))
-			{
-				attributes->exitcode = 1;
-				return ;
-			}
+			attributes->exitcode = 1;
+			return ;
 		}
-		if (node->append)
+	}
+	if (node->append)
 	{
 		if (check_append(node, attributes))
 		{
@@ -147,7 +178,7 @@ void	handle_builtin(t_cmd_table *node, int flag, t_mini *attributes)
 	if (flag == BUILTIN_UNSET)
 		remove_env_var(node->cmd_arr, attributes);
 	if (flag == BUILTIN_ENV)
-		ft_env(attributes);
+		ft_env(node, attributes);
 	if (flag == BUILTIN_EXIT && attributes->cmd_index == 1)
 		ft_exit(node->cmd_arr, attributes);
 	if (flag == BUILTIN_EXIT && attributes->cmd_index > 1)
