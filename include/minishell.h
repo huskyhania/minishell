@@ -173,6 +173,7 @@ char	*get_value(char *s);
 
 //ft_exit.c
 void    ft_exit(char **cmd_array, t_mini *attributes);
+void    ft_child_exit(char **cmd_array, t_mini *attributes);
 
 //heredoc
 int	here_doc_handler(t_cmd_table *node, t_mini *attributes, char *delimit);
