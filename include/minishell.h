@@ -170,6 +170,9 @@ void	print_envp_list(t_envp *envp_heap);
 char	*get_key(char *s);
 char	*get_value(char *s);
 
+//ft_exit.c
+void    ft_exit(char **cmd_array, t_mini *attributes);
+
 //heredoc
 int	here_doc_handler(t_cmd_table *node, t_mini *attributes, char *delimit);
 int     process_heredocs(t_cmd_table *node, t_mini *attributes);

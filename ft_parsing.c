@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 18:12:26 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/06 21:01:49 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/09 14:45:04 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,8 +59,6 @@ t_cmd_table	*ft_merge_command(t_mini *attributes, t_tokens **token)
 			new_node->cmd_arr = ft_add_command_array(new_node->cmd_arr, (*token)->str);
 		*token = (*token)->next;
 	}
-	//new_node->type = 20;
-	//printf("Merging done\n");
 	attributes->cmd_index += 1;
 	return (new_node);
 }

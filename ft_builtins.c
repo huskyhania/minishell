@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 16:00:04 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/06 19:53:00 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2025/01/09 16:49:24 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,6 +148,8 @@ void	handle_builtin(t_cmd_table *node, int flag, t_mini *attributes)
 		remove_env_var(node->cmd_arr, attributes);
 	if (flag == BUILTIN_ENV)
 		ft_env(attributes);
+	if (flag == BUILTIN_EXIT)
+		ft_exit(node->cmd_arr, attributes);
 }
 
 // checks if command is one of the builtins and which one
