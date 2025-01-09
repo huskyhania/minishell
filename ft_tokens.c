@@ -146,6 +146,6 @@ int	ft_tokenization(t_mini *attributes)
 		else
 			i += check;
 	}
-	print_tokens(attributes);
+	//print_tokens(attributes);
 	return (1);
 }

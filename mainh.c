@@ -1,4 +1,4 @@
-///* ************************************************************************** */
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   mainh.c                                            :+:      :+:    :+:   */
@@ -6,21 +6,21 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:37:20 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/09 20:28:38 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/09 21:53:02 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int g_signal = 0;
+int	g_signal = 0;
 
-int ft_check_everything(t_mini *attributes)
+int	ft_check_everything(t_mini *attributes)
 {
-	if(is_empty_or_space(attributes->readret))
+	if (is_empty_or_space(attributes->readret))
 		return (0);
-	if(!(ft_check_quotes(attributes->readret)))
+	if (!(ft_check_quotes(attributes->readret)))
 		return (0);
-	if(!(ft_tokenization(attributes)))
+	if (!(ft_tokenization(attributes)))
 	{
 		ft_free_tokens(attributes);
 		printf("Tokenization error\n");
@@ -51,7 +51,7 @@ void	minishell_init(char **envp, t_mini *attributes)
 	attributes->i = 0;
 	attributes->exitcode = 0;
 	attributes->cmd_index = 0;
-	
+
 	/*attributes->array;
 	attributes->pipe_arr; // not initialized yet / should they be?
 	attributes->num_pipes;
@@ -62,7 +62,7 @@ void	ft_readline_loop(t_mini *attributes)
 {
 	while (1)
 	{
-		if(!(attributes->readret = readline(PROMPT)))
+		if (!(attributes->readret = readline(PROMPT)))
 		{
 			printf("exit\n");
 			rl_clear_history();
@@ -79,14 +79,14 @@ void	ft_readline_loop(t_mini *attributes)
 				//minishell_init(attributes); reset here?
 			}
 		}
- 	}
+	}
 	//clean history after breaking the loop???
 	envp_cleanup(attributes);
 }
 
-int main(int argc, char **argv, char **envp)
+int	main(int argc, char **argv, char **envp)
 {
-	t_mini  attributes;
+	t_mini	attributes;
 
 	(void)argv;
 	if (argc > 1)
