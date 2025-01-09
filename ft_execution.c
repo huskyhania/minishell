@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 15:00:53 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/07 15:55:13 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2025/01/09 14:50:43 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,12 @@ void	handle_command(t_cmd_table *node, t_mini *attributes)
 			return ;
 		}
 	}
+	if (!node->cmd_arr && node->type != t_command)
+	{
+		perror("here.......?");
+		redir_empty(node, attributes);
+		unlink("here_doc");
+	}
 	if (node->cmd_arr)
 	{
 		builtin_flag = is_builtin(node->cmd_arr[0]);
@@ -98,7 +104,7 @@ void	handle_command_or_pipe(t_cmd_table *node, t_mini *attributes)
 	handle_command_or_pipe(node->left, attributes);
 	if (node->type != t_pipe)
 	{
-		printf("executing command %s\n", node->cmd_arr[0]);
+		//printf("executing command %s\n", node->cmd_arr[0]);
 		handle_command(node, attributes);
 		//attributes->cmd_index--;
 		//printf("commands left to execute: %d\n", attributes->cmd_index);
@@ -124,11 +130,14 @@ void	ft_execution(t_mini *attributes)
 	{
 		printf("entering new command execution\n");
 		printf("creating pipes array");
+		printf("no of commands is %d\n", attributes->cmd_index);
 		if (create_pipes(attributes) == -1)
 		{
 			printf("pipe creation error\n");//clean up;
 			return ;
 		}
+		else 
+			printf("pipe creation success\n");
 		handle_command_or_pipe(attributes->commands, attributes);
 		free_pipes(attributes);
 	}
