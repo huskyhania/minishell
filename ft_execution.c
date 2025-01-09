@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 15:00:53 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/09 14:50:43 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2025/01/09 15:28:43 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,9 +88,9 @@ void	handle_command(t_cmd_table *node, t_mini *attributes)
 		builtin_flag = is_builtin(node->cmd_arr[0]);
 		if (builtin_flag != 0)
 			handle_builtin(node, builtin_flag, attributes);
-		else
+		else if (!check_if_valid_command(node, attributes))
 		{
-			fprintf(stderr, "forking for command no %d amd it is %s\n", attributes->i, node->cmd_arr[0]);
+			fprintf(stderr, "forking for command no %d amd it is %s\n", attributes->i, node->cmd_arr[0]);	
 			fork_for_command(node, attributes);
 		}
 	}
