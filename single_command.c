@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 20:07:20 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/09 14:29:00 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2025/01/09 21:04:51 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,14 @@ static void	execute_single(char **cmd_array, t_mini *attributes, t_cmd_table *no
 		if (execve(cmd_path, cmd_array, NULL) == -1)
 		{
 			perror("execve error");
+			envp_cleanup(attributes);
 			exit(attributes->exitcode);
 		}
 	}
 	else
 	{
 	//	perror("command not found- path");
+		envp_cleanup(attributes);
 		exit(attributes->exitcode);
 	}
 }
@@ -63,6 +65,7 @@ static void	handle_single(char **cmd_array, t_mini *attributes, t_cmd_table *nod
 		if (access("here_doc", F_OK) == 0)
 			unlink("here_doc");
 	}
+	envp_cleanup(attributes);
 }
 
 void	single_command(t_cmd_table *node, t_mini *attributes)

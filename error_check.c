@@ -25,6 +25,6 @@ void	set_error_and_display(int error_code, t_mini *attributes, const char *cmd)
 		if (access(cmd, F_OK) == 0)
 			ft_putstr_fd(": Permission denied\n", 2);
 		else
-			ft_putstr_fd(": no such file or directory\n", 2);
+			ft_putstr_fd(": No such file or directory\n", 2);
 	}
 }
