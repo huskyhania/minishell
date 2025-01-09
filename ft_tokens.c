@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 12:06:47 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/09 20:25:10 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/09 21:24:18 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,42 +17,41 @@ void	ft_add_token_type(t_tokens *new_command, char **line, int size)
 	new_command->str = ft_substr(*line, 0, size);
 }
 
-int	ft_add_operator(t_mini *attributes, char **line)
+int	ft_add_operator(t_mini *attributes, char *line)
 {
 	t_tokens *new_command;
 	int size;
-	(void)attributes;
 	
 	size = 1;
-	new_command = NULL; //ft_add_token(attributes);
+	new_command = ft_add_token(attributes);
 	if (new_command == NULL)
 		return (0);
-	if (**line == '|')
+	if (line[0] == '|')
 		new_command->type = t_pipe;
-	if (**line == '>')
+	if (line[0] == '>')
 		new_command->type = t_great;
-	if (**line == '<')
+	if (line[0] == '<')
 		new_command->type = t_less;
-	if (**line == '(')
+	if (line[0] == '(')
 		new_command->type = t_bracketleft;
-	if (**line == ')')
+	if (line[0] == ')')
 		new_command->type = t_bracketrigth;
-	if (!(ft_strncmp(*line, ">>", 2)))
+	if (!(ft_strncmp(line, ">>", 2)))
 		new_command->type = t_greatgreat;
-	if (!(ft_strncmp(*line, "<<", 2)))
+	if (!(ft_strncmp(line, "<<", 2)))
 		new_command->type = t_lessless;
 	if (new_command->type == t_lessless || new_command->type == t_greatgreat)
 		size++;
-	new_command->str = ft_substr(*line, 0, size);
+	new_command->str = ft_substr(line, 0, size);
 	if (!new_command->str)
 		return (0);
-	(*line) += size;
-	return (1);
+	//(*line) += size;
+	return (size);
 }
 
-int		ft_add_special(char **line, t_mini *attributes)
+int		ft_add_special(char *line, t_mini *attributes)
 {
-		if (**line == '|' || **line == '>' || **line == '<' || **line == '(' || **line == ')')
+		if (line[0] == '|' || line[0] == '>' || line[0] == '<' || line[0] == '(' || line[0] == ')')
 		{
 			ft_add_operator(attributes, line);
 			return (1);
@@ -61,7 +60,7 @@ int		ft_add_special(char **line, t_mini *attributes)
 	
 }
 //Bug?? This functions can add < > () | to the command arg. if middle or at the end of the arg.
-char	*ft_add_command(char *line, t_mini *attributes)
+int	ft_add_command(char *line, t_mini *attributes)
 {
 		t_tokens *new_command;
 		char *temp_line;
@@ -79,10 +78,10 @@ char	*ft_add_command(char *line, t_mini *attributes)
 		if (!ft_is_whitespace(&temp_line[i]))
 			new_command->merge = 1;
 		new_command->str = ft_substr(line, 0, i); // malloc here remeber to check and free after parsing
-		return (line+i);
+		return (i);
 }
 
-char	*ft_add_quote(char *line, t_mini *attributes)
+int	ft_add_quote(char *line, t_mini *attributes)
 {
 	t_tokens *new_command;
 	char *temp_line;
@@ -100,10 +99,10 @@ char	*ft_add_quote(char *line, t_mini *attributes)
 		new_command->merge = 1;
 	new_command->str = ft_substr(line, 1, i-2);
 	//new_command->str = ft_strjoin(new_command->str, " "); // This is shit ??
-	return (line+i);
+	return (i);
 }
 
-char *ft_add_expansion(t_mini *attributes, char *line)
+int ft_add_expansion(t_mini *attributes, char *line)
 {
 	int i;
 	char *temp_line;
@@ -115,33 +114,38 @@ char *ft_add_expansion(t_mini *attributes, char *line)
 	i++;
 	new_command->type = t_command;
 	while (temp_line[i] != '"') // removed line check trust in the syntax check
-		i++;
-	//printf("char\n"); 
+		i++; 
 	if (!ft_is_whitespace(&temp_line[i+1]))
 		new_command->merge = 1;
 	new_command->str = ft_substr(line, 1, i-1); // malloc here remeber to check and free after parsing
-	return (line + i + 1);
+	return (i + 1);
 }
 
 int	ft_tokenization(t_mini *attributes)
 {
 	char		*line;
-
+	int i;
+	int check;
+	
+	i = 0;
 	attributes->tokens = NULL;
 	line = attributes->readret;
-	while (*line)
+	while (line[i] != '\0')
 	{
-		line += ft_skip_whitespace(line);
-		if (*line && ft_is_special(line))
-			if(!(ft_add_operator(attributes, &line)))
-				return (0);
-		if (*line && ft_is_quote(line))
-			line = ft_add_quote(line, attributes);
-		if (*line && *line == '"')
-			line = ft_add_expansion(attributes, line);
-		if (*line && *line != ' ' && !ft_is_special(line) && *line != '"' && *line != '\'') // change this to else?
-			line = ft_add_command(line, attributes);
+		check = ft_skip_whitespace(&line[i]);
+		if (line[i] && ft_is_special(&line[i]))
+			check = ft_add_operator(attributes, &line[i]);
+		if (line[i] && ft_is_quote(&line[i]))
+			check= ft_add_quote(&line[i], attributes);
+		if (line[i] && *line == '"')
+			check = ft_add_expansion(attributes, &line[i]);
+		if (line[i] && line[i] != ' ' && !ft_is_special(&line[i]) && *line != '"' && *line != '\'')
+			check = ft_add_command(&line[i], attributes);
+		if (check == 0)
+			return (0);
+		else
+			i += check;
 	}
-	//print_tokens(attributes);
+	print_tokens(attributes);
 	return (1);
 }
