@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 12:06:47 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/09 21:51:08 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/09 23:28:52 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,19 +40,8 @@ int	ft_add_operator(t_mini *attributes, char *line)
 		size++;
 	new_command->str = ft_substr(line, 0, size);
 	if (!new_command->str)
-		return (0);
-	//(*line) += size;
+		return (-1);
 	return (size);
-}
-
-int		ft_add_special(char *line, t_mini *attributes)
-{
-		if (line[0] == '|' || line[0] == '>' || line[0] == '<' || line[0] == '(' || line[0] == ')')
-		{
-			ft_add_operator(attributes, line);
-			return (1);
-		}
-		return (0);
 }
 
 int	ft_add_command(char *line, t_mini *attributes)
@@ -63,6 +52,8 @@ int	ft_add_command(char *line, t_mini *attributes)
 		
 		temp_line = line;
 		new_command = ft_add_token(attributes);
+		if (new_command == NULL)
+			return (-1);
 		new_command->type = t_command;
 		while (!(ft_is_whitespace(&temp_line[i])) && !(ft_is_special(&temp_line[i])) && temp_line[i] != '"' && temp_line[i] != '\'')
 		{
@@ -72,7 +63,9 @@ int	ft_add_command(char *line, t_mini *attributes)
 		}
 		if (!ft_is_whitespace(&temp_line[i]))
 			new_command->merge = 1;
-		new_command->str = ft_substr(line, 0, i); // malloc here remeber to check and free after parsing
+		new_command->str = ft_substr(line, 0, i);
+		if (new_command->str == NULL)
+			return (-1);
 		return (i);
 }
 
@@ -85,6 +78,8 @@ int	ft_add_quote(char *line, t_mini *attributes)
 	i = 1;
 	temp_line = line;
 	new_command = ft_add_token(attributes);
+	if (new_command == NULL)
+		return (-1);
 	new_command->type = t_quote;
 	while (!ft_is_quote(&line[i]) && temp_line[i] != '\0')
 		i++;
@@ -92,6 +87,8 @@ int	ft_add_quote(char *line, t_mini *attributes)
 	if (!ft_is_whitespace(&temp_line[i]))
 		new_command->merge = 1;
 	new_command->str = ft_substr(line, 1, i-2);
+	if (new_command->str == NULL)
+		return (-1);
 	return (i);
 }
 
@@ -106,11 +103,15 @@ int ft_add_expansion(t_mini *attributes, char *line)
 	i = 0;
 	i++;
 	new_command->type = t_command;
+	if (new_command == NULL)
+		return (-1);
 	while (temp_line[i] != '"') // removed line check trust in the syntax check
 		i++; 
 	if (!ft_is_whitespace(&temp_line[i+1]))
 		new_command->merge = 1;
-	new_command->str = ft_substr(line, 1, i-1); // malloc here remeber to check and free after parsing
+	new_command->str = ft_substr(line, 1, i-1);
+	if (new_command->str == NULL)
+		return (-1);
 	return (i + 1);
 }
 
@@ -128,9 +129,9 @@ int	ft_tokenization(t_mini *attributes)
 		check = ft_skip_whitespace(&line[i]);
 		if (line[i] && ft_is_special(&line[i]))
 			check = ft_add_operator(attributes, &line[i]);
-		if (line[i] && ft_is_quote(&line[i]))
+		if (line[i] && ft_is_quote(&line[i])) // quote function reduntant?
 			check= ft_add_quote(&line[i], attributes);
-		if (line[i] && *line == '"')
+		if (line[i] && line[i] == '"')
 			check = ft_add_expansion(attributes, &line[i]);
 		if (line[i] && line[i] != ' ' && !ft_is_special(&line[i]) && line[i] != '"' && line[i] != '\'')
 			check = ft_add_command(&line[i], attributes);
