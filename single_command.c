@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 20:07:20 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/07 19:19:28 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2025/01/09 14:29:00 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,12 @@ void	single_command(t_cmd_table *node, t_mini *attributes)
 			return ;
 		}
 	}
-	if (attributes->commands->cmd_arr)
+	if (!node->cmd_arr && node->type != t_command)
+	{
+		redir_empty(node, attributes);
+		unlink("here_doc");
+	}
+	else if (attributes->commands->cmd_arr)
 	{
 		builtin_flag = is_builtin(node->cmd_arr[0]);
 		if (builtin_flag != 0)
@@ -89,5 +94,5 @@ void	single_command(t_cmd_table *node, t_mini *attributes)
 			if (!check_if_valid_command(node, attributes))
 				handle_single(node->cmd_arr, attributes, node);
 		}
-	}
+	}	
 }
