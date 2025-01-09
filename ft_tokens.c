@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 12:06:47 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/09 21:24:18 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/09 21:51:08 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,17 +25,13 @@ int	ft_add_operator(t_mini *attributes, char *line)
 	size = 1;
 	new_command = ft_add_token(attributes);
 	if (new_command == NULL)
-		return (0);
+		return (-1);
 	if (line[0] == '|')
 		new_command->type = t_pipe;
 	if (line[0] == '>')
 		new_command->type = t_great;
 	if (line[0] == '<')
 		new_command->type = t_less;
-	if (line[0] == '(')
-		new_command->type = t_bracketleft;
-	if (line[0] == ')')
-		new_command->type = t_bracketrigth;
 	if (!(ft_strncmp(line, ">>", 2)))
 		new_command->type = t_greatgreat;
 	if (!(ft_strncmp(line, "<<", 2)))
@@ -57,9 +53,8 @@ int		ft_add_special(char *line, t_mini *attributes)
 			return (1);
 		}
 		return (0);
-	
 }
-//Bug?? This functions can add < > () | to the command arg. if middle or at the end of the arg.
+
 int	ft_add_command(char *line, t_mini *attributes)
 {
 		t_tokens *new_command;
@@ -91,14 +86,12 @@ int	ft_add_quote(char *line, t_mini *attributes)
 	temp_line = line;
 	new_command = ft_add_token(attributes);
 	new_command->type = t_quote;
-	// feels wrong
 	while (!ft_is_quote(&line[i]) && temp_line[i] != '\0')
 		i++;
 	i++;
 	if (!ft_is_whitespace(&temp_line[i]))
 		new_command->merge = 1;
 	new_command->str = ft_substr(line, 1, i-2);
-	//new_command->str = ft_strjoin(new_command->str, " "); // This is shit ??
 	return (i);
 }
 
@@ -139,13 +132,13 @@ int	ft_tokenization(t_mini *attributes)
 			check= ft_add_quote(&line[i], attributes);
 		if (line[i] && *line == '"')
 			check = ft_add_expansion(attributes, &line[i]);
-		if (line[i] && line[i] != ' ' && !ft_is_special(&line[i]) && *line != '"' && *line != '\'')
+		if (line[i] && line[i] != ' ' && !ft_is_special(&line[i]) && line[i] != '"' && line[i] != '\'')
 			check = ft_add_command(&line[i], attributes);
-		if (check == 0)
+		if (check == -1)
 			return (0);
 		else
 			i += check;
 	}
-	print_tokens(attributes);
+	//print_tokens(attributes);
 	return (1);
 }

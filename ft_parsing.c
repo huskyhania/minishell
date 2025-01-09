@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 18:12:26 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/09 14:45:04 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/09 21:51:41 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ int	ft_parsing(t_mini *attributes)
 {
 	attributes->commands = NULL;
 	ft_start_parsing(attributes);
-	ft_print_table(attributes);
+	//ft_print_table(attributes);
 	ft_free_tokens(attributes);
 	return (1);
 }
