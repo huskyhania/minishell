@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/19 17:11:35 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/04 19:23:34 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/09 20:21:27 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,23 +58,21 @@ t_tokens	*ft_add_token(t_mini *attributes)
 		t_tokens *new_token;
 		t_tokens *last_token;
 
-		new_token = malloc(sizeof(t_tokens)); // malloc here the list needs to be freed after parsing.
+		new_token = malloc(sizeof(t_tokens));
 		if (!new_token)
 		{
 			printf("Error\n");
-			exit(1);
+			return (NULL);
 		}
 		new_token->next = NULL;
 		new_token->merge = 0;
 		if (!attributes->tokens)
 		{
-			//printf("Made first token\n");
 			attributes->tokens = new_token;
 			new_token->prev = NULL;
 		}
 		else
 		{
-			//printf("Made additional token\n");
 			last_token = ft_find_last(attributes->tokens);
 			last_token->next = new_token;
 			new_token->prev = last_token;
