@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 15:11:35 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/09 19:34:35 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/09 21:50:15 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int ft_expand_small(t_mini *attributes, t_tokens *token, int j)
 
 	if (token->str[j+1] == '?')
 	{
-		if(!(exitcode = 0 )) //ft_itoa(attributes->exitcode)))
+		if(!(exitcode = ft_itoa(attributes->exitcode)))
 			return (0);
 		if(!(path = ft_substr(token->str,j,2)))
 		{
