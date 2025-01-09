@@ -48,7 +48,7 @@ static void	handle_single(char **cmd_array, t_mini *attributes, t_cmd_table *nod
 	}
 	if (pid == 0)
 	{
-		perror("child process");
+		//perror("child process");
 		execute_single(cmd_array, attributes, node);
 	}
 	else
@@ -57,7 +57,7 @@ static void	handle_single(char **cmd_array, t_mini *attributes, t_cmd_table *nod
 		waitpid(pid, &status, 0);
 		if (WIFEXITED(status))
 		{
-			printf("child exited with status %d\n", WEXITSTATUS(status));
+			//printf("child exited with status %d\n", WEXITSTATUS(status));
 			attributes->exitcode = WEXITSTATUS(status);
 		}
 		if (access("here_doc", F_OK) == 0)

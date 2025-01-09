@@ -72,9 +72,9 @@ void print_file(t_cmd_table *print)
 
 void ft_print_table(t_mini *attributes)
 {
-	printf("COMMAND TABLE:\n");
+	//printf("COMMAND TABLE:\n");
 	t_cmd_table *print = attributes->commands;
-	printf("CMD COUNT %d\n",attributes->cmd_index);
+	//printf("CMD COUNT %d\n",attributes->cmd_index);
 	while(print)
 	{
 		if (print->type == t_command)
@@ -98,5 +98,5 @@ void ft_print_table(t_mini *attributes)
 		else
 			break ;
 	}
-	printf("COMMAND TABLE FINITO:\n");
+	//printf("COMMAND TABLE FINITO:\n");
 }

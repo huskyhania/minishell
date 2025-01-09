@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 15:00:53 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/09 17:20:26 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2025/01/09 19:03:59 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,9 @@ void	execute_command(t_cmd_table *node, t_mini *attributes)
 			exit(EXIT_FAILURE);	
 	}
 	char *cmd_path = get_command_path(node->cmd_arr[0], attributes);
-	fprintf(stderr, "about to execute command %s\n", node->cmd_arr[0]);
-	fprintf(stderr, "exitcode in after path check %d\n", attributes->exitcode);
-	fprintf(stderr, "%s was path found\n", cmd_path);
+	//fprintf(stderr, "about to execute command %s\n", node->cmd_arr[0]);
+	///fprintf(stderr, "exitcode in after path check %d\n", attributes->exitcode);
+	//fprintf(stderr, "%s was path found\n", cmd_path);
 	if (cmd_path)
 	{
 		if (execve(cmd_path, node->cmd_arr, attributes->envp_arr) == -1)
@@ -33,7 +33,7 @@ void	execute_command(t_cmd_table *node, t_mini *attributes)
 		}
 	}
 	else if (!cmd_path)
-		exit(127); // exitfailure??
+		exit(attributes->exitcode); // exitfailure??
 }
 
 void	fork_for_command(t_cmd_table *node, t_mini *attributes)
@@ -58,7 +58,7 @@ void	fork_for_command(t_cmd_table *node, t_mini *attributes)
 		waitpid(pid, &status, 0);
 		if (WIFEXITED(status))
 		{
-			printf("child exited with status %d\n", WEXITSTATUS(status));
+			//printf("child exited with status %d\n", WEXITSTATUS(status));
 			attributes->exitcode = WEXITSTATUS(status);//can be conditional and only happen for the last command
 		}
 	}
@@ -79,7 +79,6 @@ void	handle_command(t_cmd_table *node, t_mini *attributes)
 	}
 	if (!node->cmd_arr && node->type != t_command)
 	{
-		perror("here.......?");
 		redir_empty(node, attributes);
 		unlink("here_doc");
 	}
@@ -90,7 +89,7 @@ void	handle_command(t_cmd_table *node, t_mini *attributes)
 			handle_builtin(node, builtin_flag, attributes);
 		else if (!check_if_valid_command(node, attributes))
 		{
-			fprintf(stderr, "forking for command no %d amd it is %s\n", attributes->i, node->cmd_arr[0]);	
+			//fprintf(stderr, "forking for command no %d amd it is %s\n", attributes->i, node->cmd_arr[0]);	
 			fork_for_command(node, attributes);
 		}
 	}
@@ -121,23 +120,23 @@ void	ft_execution(t_mini *attributes)
 	}
 	if (attributes->commands->type != t_pipe)
 	{
-		if (attributes->commands->cmd_arr && attributes->commands->cmd_arr[0])
-			printf("%sc command str\n", attributes->commands->cmd_arr[0]);
-		printf("entering single command execution\n");
+		//if (attributes->commands->cmd_arr && attributes->commands->cmd_arr[0])
+		//	printf("%sc command str\n", attributes->commands->cmd_arr[0]);
+		//printf("entering single command execution\n");
 		single_command(attributes->commands, attributes);
 	}
 	else
 	{
-		printf("entering new command execution\n");
-		printf("creating pipes array");
-		printf("no of commands is %d\n", attributes->cmd_index);
+		//printf("entering new command execution\n");
+		//printf("creating pipes array");
+		//printf("no of commands is %d\n", attributes->cmd_index);
 		if (create_pipes(attributes) == -1)
 		{
 			printf("pipe creation error\n");//clean up;
 			return ;
 		}
-		else 
-			printf("pipe creation success\n");
+		//else 
+		//	printf("pipe creation success\n");
 		handle_command_or_pipe(attributes->commands, attributes);
 		free_pipes(attributes);
 	}

@@ -20,4 +20,11 @@ void	set_error_and_display(int error_code, t_mini *attributes, const char *cmd)
 		ft_putstr_fd(": permissions denied", 2);
 	if (error_code == 127)
 		ft_putstr_fd(": command not found\n", 2);
+	if (error_code == 1)
+	{
+		if (access(cmd, F_OK) == 0)
+			ft_putstr_fd(": Permission denied\n", 2);
+		else
+			ft_putstr_fd(": no such file or directory\n", 2);
+	}
 }
