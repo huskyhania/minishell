@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:37:20 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/07 15:56:50 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2025/01/09 20:28:38 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,18 @@ int ft_check_everything(t_mini *attributes)
 	if(!(ft_check_quotes(attributes->readret)))
 		return (0);
 	if(!(ft_tokenization(attributes)))
+	{
+		ft_free_tokens(attributes);
+		printf("Tokenization error\n");
 		return (0);
+	}
 	if (!(ft_syntax_check(attributes)))
 		return (0);
 	if (!(ft_expand(attributes)))
+	{
+		ft_free_tokens(attributes);
 		return (0);
+	}
 	if (!(ft_parsing(attributes)))
 		return (0);
 	return (1);

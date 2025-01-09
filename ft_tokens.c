@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 12:06:47 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/06 21:13:47 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/09 20:25:10 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,14 +17,15 @@ void	ft_add_token_type(t_tokens *new_command, char **line, int size)
 	new_command->str = ft_substr(*line, 0, size);
 }
 
-int	ft_add_pipe(t_mini *attributes, char **line)
+int	ft_add_operator(t_mini *attributes, char **line)
 {
 	t_tokens *new_command;
 	int size;
+	(void)attributes;
 	
 	size = 1;
-	new_command = ft_add_token(attributes);// Can't handle << or >>
-	if (!new_command)
+	new_command = NULL; //ft_add_token(attributes);
+	if (new_command == NULL)
 		return (0);
 	if (**line == '|')
 		new_command->type = t_pipe;
@@ -53,7 +54,7 @@ int		ft_add_special(char **line, t_mini *attributes)
 {
 		if (**line == '|' || **line == '>' || **line == '<' || **line == '(' || **line == ')')
 		{
-			ft_add_pipe(attributes, line);
+			ft_add_operator(attributes, line);
 			return (1);
 		}
 		return (0);
@@ -132,7 +133,8 @@ int	ft_tokenization(t_mini *attributes)
 	{
 		line += ft_skip_whitespace(line);
 		if (*line && ft_is_special(line))
-			ft_add_pipe(attributes, &line);
+			if(!(ft_add_operator(attributes, &line)))
+				return (0);
 		if (*line && ft_is_quote(line))
 			line = ft_add_quote(line, attributes);
 		if (*line && *line == '"')
