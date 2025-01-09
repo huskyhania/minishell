@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/09 16:48:06 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/09 16:53:26 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/09 17:47:06 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,4 +70,26 @@ void	ft_exit(char **cmd_array, t_mini *attributes)
 	else if (cmd_array[1] && exit_number == 0)
 		exit_number = ft_atoi(cmd_array[1]);
 	ft_final_exit(attributes, exit_number);
+}
+
+void	ft_child_exit(char **cmd_array, t_mini *attributes)
+{
+	int	exit_number;
+
+	exit_number = 0;
+	if (cmd_array[1] == NULL)
+		exit_number = attributes->exitcode;
+	else if (ft_is_exit_digit(cmd_array[1]))
+	{
+		exit_number = 2;
+		printf("exit: %s: numeric argument required\n", cmd_array[1]);
+	}
+	else if (cmd_array[1] && cmd_array[2])
+	{
+		printf("exit: too many arguments\n");
+		exit_number = 1;
+	}
+	else if (cmd_array[1] && exit_number == 0)
+		exit_number = ft_atoi(cmd_array[1]);
+	attributes->exitcode = exit_number;
 }
