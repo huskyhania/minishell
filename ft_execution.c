@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 15:00:53 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/09 19:03:59 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2025/01/09 21:33:31 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,19 @@ void	execute_command(t_cmd_table *node, t_mini *attributes)
 		if (execve(cmd_path, node->cmd_arr, attributes->envp_arr) == -1)
 		{
 			free(cmd_path);
+			free_pipes(attributes);
+			ft_free_ast(attributes);
+			envp_cleanup(attributes);
 			exit(attributes->exitcode);//exitfailure?
 		}
 	}
 	else if (!cmd_path)
+	{
+		envp_cleanup(attributes);
+		free_pipes(attributes);
+		ft_free_ast(attributes);
 		exit(attributes->exitcode); // exitfailure??
+	}
 }
 
 void	fork_for_command(t_cmd_table *node, t_mini *attributes)
