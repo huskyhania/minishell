@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 20:07:20 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/09 21:10:49 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2025/01/09 21:58:09 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,6 @@ static void	handle_single(char **cmd_array, t_mini *attributes, t_cmd_table *nod
 		if (access("here_doc", F_OK) == 0)
 			unlink("here_doc");
 	}
-	envp_cleanup(attributes);
 }
 
 void	single_command(t_cmd_table *node, t_mini *attributes)
