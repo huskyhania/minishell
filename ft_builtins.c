@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 16:00:04 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/09 21:01:05 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2025/01/10 14:18:57 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,7 +140,7 @@ void	ft_cd(char **cmd_array, t_mini *attributes)//needs to handle edge cases and
 	attributes->exitcode = 0;
 	if (cmd_array[2] != NULL)
 	{
-		printf("too many arguments for cd\n");
+		ft_putstr_fd(" too many arguments\n", 2);
 		attributes->exitcode = 1;
 		return ;
 	}
@@ -149,7 +149,7 @@ void	ft_cd(char **cmd_array, t_mini *attributes)//needs to handle edge cases and
 		home = get_env_value(attributes, "HOME");
 		if (!home || home[0] == '\0')
 		{
-			printf("cd: HOME not set\n");
+			ft_putstr_fd("cd: HOME not set\n", 2);
 			attributes->exitcode = 1;
 			return ;
 		}

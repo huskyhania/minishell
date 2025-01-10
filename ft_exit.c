@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/09 16:48:06 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/09 17:47:06 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2025/01/10 14:17:53 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,12 +58,14 @@ void	ft_exit(char **cmd_array, t_mini *attributes)
 	if (ft_is_exit_digit(cmd_array[1]))
 	{
 		exit_number = 2;
-		printf("exit: %s: numeric argument required\n", cmd_array[1]);
+		ft_putstr_fd("exit: ", 2);
+		ft_putstr_fd(cmd_array[1], 2);
+		ft_putstr_fd(": numeric argument required\n", 2);
 		ft_final_exit(attributes, exit_number);
 	}
 	if (cmd_array[1] && cmd_array[2])
 	{
-		printf("exit: too many arguments\n");
+		ft_putstr_fd("exit: too many arguments\n", 2);
 		attributes->exitcode = 1;
 		return ;
 	}
@@ -82,11 +84,13 @@ void	ft_child_exit(char **cmd_array, t_mini *attributes)
 	else if (ft_is_exit_digit(cmd_array[1]))
 	{
 		exit_number = 2;
-		printf("exit: %s: numeric argument required\n", cmd_array[1]);
+		ft_putstr_fd("exit: ", 2);
+		ft_putstr_fd("cmd_array[1]", 2);
+		ft_putstr_fd(" : numeric argument required\n", 2);
 	}
 	else if (cmd_array[1] && cmd_array[2])
 	{
-		printf("exit: too many arguments\n");
+		ft_putstr_fd("exit: too many arguments\n", 2);
 		exit_number = 1;
 	}
 	else if (cmd_array[1] && exit_number == 0)

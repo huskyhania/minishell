@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/07 16:18:06 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/18 20:35:38 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2025/01/10 14:08:50 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,8 @@ int	export_single_var(t_mini *attributes, char *export)
 {
 	if (is_valid_export(export))
 	{
-		printf("%s is not a valid identifier\n", export);
+		ft_putstr_fd(export, 2);
+		ft_putstr_fd(": not a valid identifier\n", 2);
 		return (1);
 	}
 	if (env_var_exists(export, &attributes->envp_heap))
@@ -165,7 +166,6 @@ int	ft_export(char **cmd_array, t_mini *attributes)
 	{
 		if (export_single_var(attributes, cmd_array[i]) == 1)
 		{
-			printf("export error");
 			attributes->exitcode = 1;
 			ret = 1;
 		}
