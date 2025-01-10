@@ -17,7 +17,7 @@ void	set_error_and_display(int error_code, t_mini *attributes, const char *cmd)
 	attributes->exitcode = error_code;
 	ft_putstr_fd((char *)cmd, 2);
 	if (error_code == 126)
-		ft_putstr_fd(": permissions denied", 2);
+		ft_putstr_fd(": Permission denied\n", 2);
 	if (error_code == 127)
 		ft_putstr_fd(": command not found\n", 2);
 	if (error_code == 1)

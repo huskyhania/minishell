@@ -40,7 +40,7 @@ void	execute_command(t_cmd_table *node, t_mini *attributes)
 		envp_cleanup(attributes);
 		free_pipes(attributes);
 		ft_free_ast(attributes);
-		exit(attributes->exitcode); // exitfailure??
+		exit(attributes->exitcode);
 	}
 }
 
