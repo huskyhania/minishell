@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 20:07:51 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/08 13:21:29 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/10 20:45:18 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,9 @@ char **ft_add_command_array(char **old_array, char *str)
 	char **new_array;
 	int size;
 	int i;
-	
+
+	if (str[0] == '\0')
+		return (old_array);
 	size = ft_count_array(old_array);
 	//printf("Counting done size %d\n",size);
 	new_array = malloc((size + 2) * sizeof(char *));

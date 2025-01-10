@@ -116,6 +116,7 @@ int ft_is_quote(char *line);
 int ft_check_quotes(char *line);
 int ft_syntax_check(t_mini *attributes);
 void ft_merge_tokens(t_mini *attributes);
+void    ft_delete_token(t_tokens *token);
 
 //ft_expand.c
 int    ft_expand(t_mini *attributes);
