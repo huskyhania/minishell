@@ -19,6 +19,7 @@ int	check_if_valid_command(t_cmd_table *node, t_mini *attributes)
 		write(2, node->cmd_arr[0], ft_strlen(node->cmd_arr[0]));
 		write(2, ": command not found\n", 21);
 		attributes->exitcode = 127;
+		ft_free_ast(attributes);
 		return (1);
 	}
 	return (0);
