@@ -18,7 +18,11 @@ static void	execute_single(char **cmd_array, t_mini *attributes, t_cmd_table *no
 	if (node->type != t_command)
 	{
 		if (check_redirs(node, attributes))
+		{
+			ft_free_ast(attributes);
+			envp_cleanup(attributes);
 			exit(EXIT_FAILURE);
+		}
 	}
 	cmd_path = get_command_path(cmd_array[0], attributes);
 	if (cmd_path)
