@@ -33,7 +33,6 @@ static void	execute_single(char **cmd_array, t_mini *attributes, t_cmd_table *no
 	}
 	else
 	{
-	//	perror("command not found- path");
 		envp_cleanup(attributes);
 		ft_free_ast(attributes);
 		exit(attributes->exitcode);

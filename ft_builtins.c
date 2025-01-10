@@ -82,7 +82,6 @@ void	ft_echo(t_cmd_table *node, t_mini *attributes)//should this be an int funct
 {
 	int	i;
 	int	newline;
-//	int	output;
 	int	saved_std;
 
 	i = 1;
@@ -103,6 +102,8 @@ void	ft_echo(t_cmd_table *node, t_mini *attributes)//should this be an int funct
 		if (check_outfile(node, attributes))
 		{
 			attributes->exitcode = 1;
+			dup2(saved_std, STDOUT_FILENO);
+			close(saved_std);
 			return ;
 		}
 	}
@@ -111,6 +112,8 @@ void	ft_echo(t_cmd_table *node, t_mini *attributes)//should this be an int funct
 		if (check_append(node, attributes))
 		{
 			attributes->exitcode = 1;
+			dup2(saved_std, STDOUT_FILENO);
+			close(saved_std);
 			return ;
 		}
 	}
