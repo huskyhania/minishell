@@ -6,17 +6,17 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/26 14:59:32 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/06 19:48:00 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/10 15:43:52 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int ft_check_quotes(char *line)
+int	ft_check_quotes(char *line)
 {
-	int i;
-	char c;
-	int ret;
+	int		i;
+	char	c;
+	int		ret;
 
 	ret = 1;
 	i = 0;
@@ -32,47 +32,49 @@ int ft_check_quotes(char *line)
 		i++;
 	}
 	if (!ret)
-		printf("syntax error unclosed quotes\n");
+		ft_putstr_fd("Syntax error unclosed quotes\n", 2);
 	return (ret);
 }
 
-int ft_check_redirection(t_tokens *token, t_mini *attributes)
+int	ft_check_redirection(t_tokens *token, t_mini *attributes)
 {
 	if (token->next == NULL)
 	{
-		printf("syntax error near unexpected token `newline'\n"); // needs it own token type?
+		ft_putstr_fd("syntax error near unexpected token `newline'\n", 2);
 		attributes->exitcode = 2;
 		return (0);
 	}
-	if ((token->type == t_great || token->type == t_greatgreat) && token->next->type != t_command)
+	if ((token->type == t_great || token->type == t_greatgreat)
+		&& token->next->type != t_command)
 	{
 		if (token->next->type == t_great)
-			printf(" syntax error near unexpected token `>'\n");
+			ft_putstr_fd(" syntax error near unexpected token `>'\n", 2);
 		else if (token->next->type == t_greatgreat)
-			printf(" syntax error near unexpected token `>>'\n");
+			ft_putstr_fd(" syntax error near unexpected token `>>'\n", 2);
 		else if (token->next->type == t_less)
-			printf(" syntax error near unexpected token `<'\n");
+			ft_putstr_fd(" syntax error near unexpected token `<'\n", 2);
 		else if (token->next->type == t_lessless)
-			printf(" syntax error near unexpected token `<'\n");
+			ft_putstr_fd(" syntax error near unexpected token `<'\n", 2);
 		attributes->exitcode = 2;
 		return (0);
 	}
 	return (1);
 }
 
-int ft_check_pipe(t_tokens *token, t_mini *attributes)
+int	ft_check_pipe(t_tokens *token, t_mini *attributes)
 {
-	if (token->next == NULL || token->prev == NULL || token->next->type == t_pipe || token->prev->type == t_less || token->prev->type == t_lessless)
+	if (token->next == NULL || token->prev == NULL
+		|| token->next->type == t_pipe || token->prev->type == t_less
+		|| token->prev->type == t_lessless)
 	{
-		printf(" syntax error near unexpected token `|'\n");
+		ft_putstr_fd(" syntax error near unexpected token `|'\n", 2);
 		attributes->exitcode = 2;
-		ft_free_tokens(attributes);
 		return (0);
 	}
 	return (1);
 }
 
-void ft_delete_token(t_tokens *token)
+void	ft_delete_token(t_tokens *token)
 {
 	t_tokens *temp;
 
@@ -80,6 +82,7 @@ void ft_delete_token(t_tokens *token)
 	token->next = token->next->next;
 	free(temp);
 }
+
 void ft_merge_tokens(t_mini *attributes)
 {
     t_tokens *token;
@@ -87,7 +90,6 @@ void ft_merge_tokens(t_mini *attributes)
     token = attributes->tokens;
     while (token && token->next)
 	{
-		//printf("String %s Merge %d type %d\n",token->str, token->merge, token->type);
 		if (token->next && token->merge == 1 && (token->next->type == t_command || token->next->type == t_quote))
 		{
 			char *new_str;

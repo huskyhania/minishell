@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 15:11:35 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/09 21:50:15 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/10 18:20:11 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,30 +135,28 @@ int	ft_expand_word(t_mini *attributes, t_tokens *token)
 		}
 		j++;
 	}
+	if(ft_strchr(token->str+j,36))
+		ft_expand_word(attributes, token);
 	return (1);
 }
 
 int	ft_expand(t_mini *attributes)
 {		
 		t_tokens *token;
-		int i;
 
-		i = 0;
 		token = attributes->tokens;
 		while(token)
 		{
-			while (token && ft_strchr(token->str+i, '$'))
-			{
-				if (token->type == t_command)
-					if(!ft_expand_word(attributes, token))
-					{
-						printf("Parsing error\n");
-						return (0);
-					}
-				i++;
-			}
+			if (token->type == t_command)
+				if(!ft_expand_word(attributes, token))
+				{
+					printf("Parsing error\n");
+					return (0);
+				}
 			token = token->next;
 		}
+		if (!(ft_validate_expansion(attributes)))
+			return (0);
 		ft_merge_tokens(attributes);
 		return (1);
 }

@@ -103,6 +103,7 @@ int	ft_tokenization(t_mini *attributes);
 void    ft_free_tokens(t_mini *attributes);
 void    print_tokens(t_mini *attributes);
 t_tokens    *ft_add_token(t_mini *attributes);
+int ft_validate_expansion(t_mini *attributes);
 
 //ft_tokens_tools.c
 int ft_skip_whitespace(char *line);

@@ -6,22 +6,17 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 12:06:47 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/09 23:28:52 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/10 18:21:00 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_add_token_type(t_tokens *new_command, char **line, int size)
-{
-	new_command->str = ft_substr(*line, 0, size);
-}
-
 int	ft_add_operator(t_mini *attributes, char *line)
 {
-	t_tokens *new_command;
-	int size;
-	
+	t_tokens	*new_command;
+	int			size;
+
 	size = 1;
 	new_command = ft_add_token(attributes);
 	if (new_command == NULL)
@@ -46,34 +41,35 @@ int	ft_add_operator(t_mini *attributes, char *line)
 
 int	ft_add_command(char *line, t_mini *attributes)
 {
-		t_tokens *new_command;
-		char *temp_line;
-		int i = 0;
-		
-		temp_line = line;
-		new_command = ft_add_token(attributes);
-		if (new_command == NULL)
-			return (-1);
-		new_command->type = t_command;
-		while (!(ft_is_whitespace(&temp_line[i])) && !(ft_is_special(&temp_line[i])) && temp_line[i] != '"' && temp_line[i] != '\'')
-		{
-			if (temp_line[i] == '\0')
-				break ;
-			i++;
-		}
-		if (!ft_is_whitespace(&temp_line[i]))
-			new_command->merge = 1;
-		new_command->str = ft_substr(line, 0, i);
-		if (new_command->str == NULL)
-			return (-1);
-		return (i);
+	t_tokens	*new_command;
+	char		*temp_line;
+	int			i;
+
+	i = 0;
+	temp_line = line;
+	new_command = ft_add_token(attributes);
+	if (new_command == NULL)
+		return (-1);
+	new_command->type = t_command;
+	while (!(ft_is_whitespace(&temp_line[i])) && !(ft_is_special(&temp_line[i])) && temp_line[i] != '"' && temp_line[i] != '\'')
+	{
+		if (temp_line[i] == '\0')
+			break ;
+		i++;
+	}
+	if (!ft_is_whitespace(&temp_line[i]))
+		new_command->merge = 1;
+	new_command->str = ft_substr(line, 0, i);
+	if (new_command->str == NULL)
+		return (-1);
+	return (i);
 }
 
 int	ft_add_quote(char *line, t_mini *attributes)
 {
-	t_tokens *new_command;
-	char *temp_line;
-	int i;
+	t_tokens	*new_command;
+	char		*temp_line;
+	int			i;
 
 	i = 1;
 	temp_line = line;
@@ -92,24 +88,23 @@ int	ft_add_quote(char *line, t_mini *attributes)
 	return (i);
 }
 
-int ft_add_expansion(t_mini *attributes, char *line)
+int	ft_add_expansion(t_mini *attributes, char *line)
 {
-	int i;
-	char *temp_line;
-	t_tokens *new_command;
+	int			i;
+	char		*temp_line;
+	t_tokens	*new_command;
 
-	new_command = ft_add_token(attributes);
 	temp_line = line;
-	i = 0;
-	i++;
-	new_command->type = t_command;
+	i = 1;
+	new_command = ft_add_token(attributes);
 	if (new_command == NULL)
 		return (-1);
+	new_command->type = t_command;
 	while (temp_line[i] != '"') // removed line check trust in the syntax check
 		i++; 
-	if (!ft_is_whitespace(&temp_line[i+1]))
+	if (!ft_is_whitespace(&temp_line[i + 1]))
 		new_command->merge = 1;
-	new_command->str = ft_substr(line, 1, i-1);
+	new_command->str = ft_substr(line, 1, i - 1);
 	if (new_command->str == NULL)
 		return (-1);
 	return (i + 1);
@@ -117,9 +112,9 @@ int ft_add_expansion(t_mini *attributes, char *line)
 
 int	ft_tokenization(t_mini *attributes)
 {
-	char		*line;
-	int i;
-	int check;
+	char	*line;
+	int		i;
+	int		check;
 	
 	i = 0;
 	attributes->tokens = NULL;
@@ -130,7 +125,7 @@ int	ft_tokenization(t_mini *attributes)
 		if (line[i] && ft_is_special(&line[i]))
 			check = ft_add_operator(attributes, &line[i]);
 		if (line[i] && ft_is_quote(&line[i])) // quote function reduntant?
-			check= ft_add_quote(&line[i], attributes);
+			check = ft_add_quote(&line[i], attributes);
 		if (line[i] && line[i] == '"')
 			check = ft_add_expansion(attributes, &line[i]);
 		if (line[i] && line[i] != ' ' && !ft_is_special(&line[i]) && line[i] != '"' && line[i] != '\'')
