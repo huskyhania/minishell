@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 15:11:35 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/10 18:20:11 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/11 23:21:08 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,13 @@
 
 char	*ft_replace_expansion(char *token, char *path, char *expansion)
 {
-	char *temp;
-	char *temp2;
-	char *start;
-	int len;
+	char	*temp;
+	char	*temp2;
+	char	*start;
+	int		len;
 
-	len = ft_strlen(token) + ft_strlen(expansion) - ft_strlen(path) + 1; 
-	temp2 = ft_calloc(len + 1,(sizeof(char))); // too much malloc?
+	len = ft_strlen(token) + ft_strlen(expansion) - ft_strlen(path) + 1;
+	temp2 = ft_calloc(len + 1, (sizeof(char))); // too much malloc?
 	if (temp2 == NULL)
 	{
 		free(token);
@@ -42,22 +42,22 @@ char	*ft_replace_expansion(char *token, char *path, char *expansion)
 	return (temp2);
 }
 
-int ft_expand_small(t_mini *attributes, t_tokens *token, int j)
+int	ft_expand_small(t_mini *attributes, t_tokens *token, int j)
 {
-	char *exitcode;
-	char *expansion;
-	char *path;
+	char	*exitcode;
+	char	*expansion;
+	char	*path;
 
-	if (token->str[j+1] == '?')
+	if (token->str[j + 1] == '?')
 	{
 		if(!(exitcode = ft_itoa(attributes->exitcode)))
 			return (0);
-		if(!(path = ft_substr(token->str,j,2)))
+		if(!(path = ft_substr(token->str, j, 2)))
 		{
 			free(exitcode);
 			return (0);
 		}
-		if(!(token->str = ft_replace_expansion(token->str,path,exitcode)))
+		if(!(token->str = ft_replace_expansion(token->str, path, exitcode)))
 		{
 			free(exitcode);
 			return (0);
@@ -68,9 +68,9 @@ int ft_expand_small(t_mini *attributes, t_tokens *token, int j)
 	{
 		if (!(expansion = get_env_value(attributes, "SYSTEMD_EXEC_PID")))
 			return (0);
-		if (!(path = ft_substr(token->str,j,2)))
+		if (!(path = ft_substr(token->str, j, 2)))
 			return (0);
-		if(!(token->str = ft_replace_expansion(token->str,path,expansion)))
+		if(!(token->str = ft_replace_expansion(token->str, path, expansion)))
 		{
 			free(path);
 			return (0);
@@ -82,11 +82,12 @@ int ft_expand_small(t_mini *attributes, t_tokens *token, int j)
 
 int	ft_expand_big(t_mini *attributes, t_tokens *token, int j, int i)
 {
-	char *path;
-	char *expansion;
+	char	*path;
+	char	*expansion;
 
 	i++;
-	while (token->str[j+i] != '\0' && (token->str[j+i] == '_' || ft_isalpha(token->str[j+i])))
+	while (token->str[j + i] != '\0' && (token->str[j + i] == '_'
+			|| ft_isalpha(token->str[j + i])))
 		i++;
 	path = ft_substr(token->str, j, i);
 	if (path == NULL)
@@ -94,11 +95,12 @@ int	ft_expand_big(t_mini *attributes, t_tokens *token, int j, int i)
 	expansion = get_env_value(attributes, &path[1]);
 	if (!expansion)
 	{
-		token->str = ft_replace_expansion(token->str,path,"");
+		token->str = ft_replace_expansion(token->str, path, "");
 		free(path);
 		return (1);
 	}
-	if (!(token->str = ft_replace_expansion(token->str,path,expansion)))
+	token->str = ft_replace_expansion(token->str, path, expansion);
+	if (token->str == NULL)
 	{
 		free(path);
 		return (0);
@@ -107,56 +109,51 @@ int	ft_expand_big(t_mini *attributes, t_tokens *token, int j, int i)
 	return (1);
 }
 
-int	ft_expand_word(t_mini *attributes, t_tokens *token)
+int	ft_expand_word(t_mini *attributes, t_tokens *t, int j)
 {
-	int i;
-	int j;
-
-	j = 0;
-	i = 0;
-	if (!token || !token->str)
+	if (!t || !t->str)
 		return (0);
-	while (token->str[j] != '\0')
+	while (t->str[j] != '\0')
 	{
-		if (token->str[j] == '$' && (ft_isalpha(token->str[j+1]) || token->str[j+1] == '_' || token->str[j+1] == '?' || token->str[j+1] == '$'))
+		if (t->str[j] == '$' && (ft_isalpha(t->str[j + 1])
+				|| t->str[j + 1] == '_'
+				|| t->str[j + 1] == '?' || t->str[j + 1] == '$'))
 		{
-			if (token->str[j+1] == '?' || token->str[j+1] == '$')
+			if (t->str[j + 1] == '?' || t->str[j + 1] == '$')
 			{
-				if (!ft_expand_small(attributes, token, j))
+				if (!ft_expand_small(attributes, t, j))
 					return (0);
-				break ;
 			}
 			else
-			{
-				if (!ft_expand_big(attributes, token, j, i))
+				if (!ft_expand_big(attributes, t, j, 0))
 					return (0);
-				break ;
-			}
+			break ;
 		}
 		j++;
 	}
-	if(ft_strchr(token->str+j,36))
-		ft_expand_word(attributes, token);
+	if (ft_strchr(t->str + j, 36))
+		if (!(ft_expand_word(attributes, t, 0)))
+			return (0);
 	return (1);
 }
 
 int	ft_expand(t_mini *attributes)
 {		
-		t_tokens *token;
+	t_tokens	*token;
 
-		token = attributes->tokens;
-		while(token)
-		{
-			if (token->type == t_command)
-				if(!ft_expand_word(attributes, token))
-				{
-					printf("Parsing error\n");
-					return (0);
-				}
-			token = token->next;
-		}
-		if (!(ft_validate_expansion(attributes)))
-			return (0);
-		ft_merge_tokens(attributes);
-		return (1);
+	token = attributes->tokens;
+	while (token)
+	{
+		if (token->type == t_command)
+			if (!(ft_expand_word(attributes, token, 0)))
+			{
+				printf("Parsing error\n");
+				return (0);
+			}
+		token = token->next;
+	}
+	if (!(ft_validate_expansion(attributes)))
+		return (0);
+	ft_merge_tokens(attributes);
+	return (1);
 }
