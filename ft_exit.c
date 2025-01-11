@@ -73,7 +73,7 @@ void	ft_exit(char **cmd_array, t_mini *attributes)
 		exit_number = ft_atoi(cmd_array[1]);
 	ft_final_exit(attributes, exit_number);
 }
-
+/** not necessary now?
 void	ft_child_exit(char **cmd_array, t_mini *attributes)
 {
 	int	exit_number;
@@ -96,4 +96,4 @@ void	ft_child_exit(char **cmd_array, t_mini *attributes)
 	else if (cmd_array[1] && exit_number == 0)
 		exit_number = ft_atoi(cmd_array[1]);
 	attributes->exitcode = exit_number;
-}
+}*/

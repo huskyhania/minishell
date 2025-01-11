@@ -62,13 +62,6 @@ void	ft_env(t_cmd_table *node, t_mini *attributes)
 			return ;
 		}
 	}
-
-	if (!path_value || path_value[0] == '\0')
-	{
-		ft_putstr_fd("env: No such file or directory", 2);
-		attributes->exitcode = 127;
-		return ;
-	}
 	else
 	{
 		print_envp_list(attributes->envp_heap);
@@ -87,16 +80,6 @@ void	ft_echo(t_cmd_table *node, t_mini *attributes)//should this be an int funct
 	i = 1;
 	newline = 1;
 	saved_std = dup(STDOUT_FILENO);
-	if (attributes->cmd_index > 1)
-	{
-		if (attributes->i < attributes->cmd_index)
-		{
-			dup2(attributes->pipe_arr[attributes->i - 1][WRITE], STDOUT_FILENO);
-			close(attributes->pipe_arr[attributes->i - 1][WRITE]);
-		}
-		if (attributes->i > 1)
-			close(attributes->pipe_arr[attributes->i - 2][READ]);
-	}	
 	if (node->infile)
 	{
 		if (check_infile(node, attributes))
@@ -144,9 +127,13 @@ void	ft_echo(t_cmd_table *node, t_mini *attributes)//should this be an int funct
 void	ft_cd(char **cmd_array, t_mini *attributes)//needs to handle edge cases and complicated relative paths
 {
 	char	*home;
+	int	i;
 
 	attributes->exitcode = 0;
-	if (cmd_array[2] != NULL)
+	i = 0;
+	while (cmd_array[i])
+		i++;
+	if (i > 2)
 	{
 		ft_putstr_fd(" too many arguments\n", 2);
 		attributes->exitcode = 1;
@@ -187,10 +174,10 @@ void	handle_builtin(t_cmd_table *node, int flag, t_mini *attributes)
 		remove_env_var(node->cmd_arr, attributes);
 	if (flag == BUILTIN_ENV)
 		ft_env(node, attributes);
-	if (flag == BUILTIN_EXIT && attributes->cmd_index == 1)
+	if (flag == BUILTIN_EXIT)
 		ft_exit(node->cmd_arr, attributes);
-	if (flag == BUILTIN_EXIT && attributes->cmd_index > 1)
-		ft_child_exit(node->cmd_arr, attributes);
+	if (flag != BUILTIN_EXIT && attributes->cmd_index > 1)
+		exit(attributes->exitcode);
 }
 
 // checks if command is one of the builtins and which one

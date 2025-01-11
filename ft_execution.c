@@ -48,6 +48,7 @@ void	fork_for_command(t_cmd_table *node, t_mini *attributes)
 {
 	int	pid;
 	int	status;
+	int	builtin_flag;
 	pid = fork();
 	if (pid < 0)
 	{
@@ -55,7 +56,19 @@ void	fork_for_command(t_cmd_table *node, t_mini *attributes)
 		exit(EXIT_FAILURE);//might require closing fds, freeing memory)
 	}
 	if (pid == 0)
-		execute_command(node, attributes);
+	{
+		handle_pipes(attributes);
+		if (node->type != t_command)
+		{
+			if (check_redirs(node, attributes))
+				exit(EXIT_FAILURE);	
+		}
+		builtin_flag = is_builtin(node->cmd_arr[0]);
+		if (builtin_flag != 0)
+			handle_builtin(node, builtin_flag, attributes);	
+		else
+			execute_command(node, attributes);
+	}
 	else
 	{
 		if (attributes->i > 1)
@@ -75,7 +88,7 @@ void	handle_command(t_cmd_table *node, t_mini *attributes)
 {
 	//check path
 	//check command
-	int	builtin_flag;
+	//int	builtin_flag;
 	attributes->i++;
 	if (node->here && node->here != NULL)
 	{
@@ -92,10 +105,7 @@ void	handle_command(t_cmd_table *node, t_mini *attributes)
 	}
 	if (node->cmd_arr)
 	{
-		builtin_flag = is_builtin(node->cmd_arr[0]);
-		if (builtin_flag != 0)
-			handle_builtin(node, builtin_flag, attributes);
-		else if (!check_if_valid_command(node, attributes))
+		if (!check_if_valid_command(node, attributes))
 		{
 			//fprintf(stderr, "forking for command no %d amd it is %s\n", attributes->i, node->cmd_arr[0]);	
 			fork_for_command(node, attributes);
