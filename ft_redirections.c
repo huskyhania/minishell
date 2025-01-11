@@ -116,25 +116,25 @@ int	check_redirs(t_cmd_table *node, t_mini *attributes)
 	{
 		//perror("got into infile check");
 		if (check_infile(node, attributes))
-			exit (1);
+			return (1);
 	}
 	if (node->here && node->here[0])
 	{
 		//perror("got into heredoc check");
 		if (check_heredoc(node, attributes))
-			exit (1);
+			return (1);
 	}
 	if (node->outfile && node->outfile[0])
 	{
 		//perror("got into outfile check");
 		if (check_outfile(node, attributes))
-			exit (1);
+			return (1);
 	}
 	if (node->append && node->append[0])
 	{
 		//perror("got into append check");
 		if (check_append(node, attributes))
-			exit (1);
+			return (1);
 	}
 	return (0);
 }
