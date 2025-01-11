@@ -97,6 +97,11 @@ void	ft_echo(t_cmd_table *node, t_mini *attributes)//should this be an int funct
 		if (attributes->i > 1)
 			close(attributes->pipe_arr[attributes->i - 2][READ]);
 	}	
+	if (node->infile)
+	{
+		if (check_infile(node, attributes))
+			return ;
+	}
 	if (node->outfile)
 	{
 		if (check_outfile(node, attributes))
