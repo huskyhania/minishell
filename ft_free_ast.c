@@ -12,10 +12,12 @@
 
 #include "minishell.h"
 
+void	ft_triple_pointer(char ***arr);
+
 void ft_check_ast_array(t_cmd_table *print)
 {
 	if (print->cmd_arr)
-		ft_free_cmd_array(print->cmd_arr);
+		ft_triple_pointer(&print->cmd_arr);
 	if (print && print->outfile)
 		ft_free_cmd_array(print->outfile);
 	if (print && print->infile)

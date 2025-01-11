@@ -68,6 +68,23 @@ void	ft_free_cmd_array(char **arr)
 	}
 }
 
+void	ft_triple_pointer(char ***arr)
+{
+	int i;
+
+	if (!arr || !*arr)
+		return ;
+	i = 0;
+	while ((*arr)[i])
+	{
+		free((*arr)[i]);
+		(*arr)[i] = NULL;
+		i++;
+	}
+	free(*arr);
+	*arr = NULL;
+}
+
 int	ft_count_array(char **old_array)
 {
 	int i;
