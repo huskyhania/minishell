@@ -20,8 +20,14 @@ void print_array(t_cmd_table *print)
 		//printf("Type: %d ", print->type);
 		i++;
 	}
-	if (print->cmd_arr)
-		printf("Index %d string|%s|\n", i, print->cmd_arr[i]);
+	i = 0;
+	while (print->type_arr && print->type_arr[i] != 0)
+	{
+		printf("Type array: %d Index %d \n", print->type_arr[i], i);
+		i++;
+	}
+	//if (print->cmd_arr)
+	//	printf("Index %d string|%s|\n", i, print->cmd_arr[i]);
 }
 
 void print_file(t_cmd_table *print)
@@ -29,14 +35,20 @@ void print_file(t_cmd_table *print)
 	int i = 0;
 	print_array(print);
 	printf("Last infile %d Last outfile %d\n", print->last_infile, print->last_outfile);
-	/*while (print->cmd_arr && print->cmd_arr[0])
+	while (print->type_arr && print->type_arr[i] != 0)
 	{
-		if (!print->cmd_arr[i])
-			break ;
-		printf("String type: %d string|%s|\n",print->type,print->cmd_arr[i]);
+		printf("Type array: %d Index %d \n", print->type_arr[i], i);
 		i++;
 	}
-	i=0;*/
+	i = 0;
+	while (print && print->herefile && print->herefile[0])
+	{
+		if (!print->herefile[i])
+			break ;
+		printf("Type: %d Index %d Outfile:|%s|\n", print->type ,i, print->herefile[i]);
+		i++;
+	}
+	i = 0;
 	while (print && print->outfile && print->outfile[0])
 	{
 		if (!print->outfile[i])
@@ -72,9 +84,8 @@ void print_file(t_cmd_table *print)
 
 void ft_print_table(t_mini *attributes)
 {
-	//printf("COMMAND TABLE:\n");
+	printf("COMMAND TABLE:\n");
 	t_cmd_table *print = attributes->commands;
-	//printf("CMD COUNT %d\n",attributes->cmd_index);
 	while(print)
 	{
 		if (print->type == t_command)

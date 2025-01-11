@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 20:07:51 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/10 20:45:18 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/11 19:45:46 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,9 @@ t_cmd_table *ft_add_new(t_mini *attributes, t_tokens *token)
 	new_node->outfile = NULL;
 	new_node->infile = NULL;
 	new_node->here = NULL;
+	new_node->herefile = NULL;
 	new_node->append = NULL;
+	new_node->type_arr = NULL;
 	new_node->last_outfile = 0;
 	new_node->last_infile = 0;
 	new_node->type = (token->type);
@@ -119,7 +121,7 @@ char **ft_add_command_array(char **old_array, char *str)
 	}
 	//printf("array done\n");
 	new_array[i] = ft_strdup(str);
-	new_array[i+1] = NULL;
+	new_array[i+1] = 0;
 	free_array(old_array);
 	return (new_array);
 }

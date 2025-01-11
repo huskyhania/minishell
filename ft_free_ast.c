@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 17:07:16 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/10 15:32:53 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/11 19:39:10 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,9 @@ void ft_check_ast_array(t_cmd_table *print)
 		ft_free_cmd_array(print->here);
 	if (print && print->append)
 		ft_free_cmd_array(print->append);
+	if (print && print->herefile)
+		ft_triple_pointer(&print->herefile);
+	free(print->type_arr);
 }
 
 void	ft_free_ast(t_mini *attributes)

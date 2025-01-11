@@ -60,7 +60,9 @@ typedef struct s_cmd_table {
 	char 			**infile;
 	char			**outfile;
 	char			**here;
+	char			**herefile;
 	char			**append;
+	int				*type_arr;
 	int				last_infile;
 	int				last_outfile;
 	struct s_cmd_table *right;
@@ -90,6 +92,7 @@ typedef struct s_minishell
 	int	**pipe_arr;
 	int	num_pipes;
 	int	i;
+	int             type_count;
 	int	here_fd;
 }	t_mini;
 
@@ -128,6 +131,8 @@ t_cmd_table *ft_find_last_parse(t_cmd_table *stack);
 t_cmd_table *ft_add_new(t_mini *attributes, t_tokens *token);
 char **ft_add_command_array(char **old_array, char *str);
 void	ft_free_cmd_array(char **arr);
+
+int *ft_add_type_array(t_mini *attributes, int *old_array, int type);
 
 //ft_free_ast.c
 void    ft_free_ast(t_mini *attributes);

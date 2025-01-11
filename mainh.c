@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:37:20 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/10 15:27:10 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/11 18:30:01 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ void	minishell_init(char **envp, t_mini *attributes)
 	attributes->i = 0;
 	attributes->exitcode = 0;
 	attributes->cmd_index = 0;
+	attributes->type_count = 0;
 
 	/*attributes->array;
 	attributes->pipe_arr; // not initialized yet / should they be?

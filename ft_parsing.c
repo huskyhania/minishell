@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 18:12:26 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/10 21:53:04 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/11 19:36:52 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,16 +26,12 @@ void ft_merge_pipe(t_mini *attributes, t_cmd_table *old_table)
 	attributes->commands = new_pipe;
 }
 
-t_cmd_table *ft_merge_redirection(t_tokens **token, t_cmd_table *old_table)
+t_cmd_table *ft_merge_redirection(t_mini *attributes, t_tokens **token, t_cmd_table *old_table)
 {
-	if ((*token)->type == t_great)
-		old_table->outfile = ft_add_command_array(old_table->outfile, (*token)->next->str);
-	if ((*token)->type == t_less)
-		old_table->infile = ft_add_command_array(old_table->infile, (*token)->next->str);
-	if ((*token)->type == t_lessless)
-		old_table->here = ft_add_command_array(old_table->here, (*token)->next->str);
-	if ((*token)->type == t_greatgreat)
-		old_table->append = ft_add_command_array(old_table->append, (*token)->next->str);
+	attributes->type_count += 1;
+	if ((*token)->type == t_great || (*token)->type == t_greatgreat || (*token)->type == t_less || (*token)->type == t_lessless)
+		old_table->herefile = ft_add_command_array(old_table->herefile, (*token)->next->str);
+	old_table->type_arr = ft_add_type_array(attributes, old_table->type_arr, (*token)->type);
 	*token = (*token)->next;
 	if ((*token)->prev->type == t_great || (*token)->prev->type == t_greatgreat)
 		old_table->last_outfile = (*token)->prev->type;
@@ -54,7 +50,7 @@ t_cmd_table	*ft_merge_command(t_mini *attributes, t_tokens **token)
 	{
 		//printf("Merging\n");
 		if (*token && ((*token)->type == t_great || (*token)->type == t_less || (*token)->type == t_lessless || (*token)->type == t_greatgreat))
-			new_node = ft_merge_redirection(token, new_node);
+			new_node = ft_merge_redirection(attributes, token, new_node);
 		else
 			new_node->cmd_arr = ft_add_command_array(new_node->cmd_arr, (*token)->str);
 		*token = (*token)->next;
@@ -84,9 +80,10 @@ void ft_start_parsing(t_mini *attributes)
 
 int	ft_parsing(t_mini *attributes)
 {
+	attributes->type_count = 0;
 	attributes->commands = NULL;
 	ft_start_parsing(attributes);
-	//ft_print_table(attributes);
+	ft_print_table(attributes);
 	ft_free_tokens(attributes);
 	return (1);
 }
