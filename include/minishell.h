@@ -66,6 +66,8 @@ typedef struct s_cmd_table {
 	int				*type_arr;
 	int				last_infile;
 	int				last_outfile;
+	int				input_fd;
+	int				output_fd;
 	struct s_cmd_table *right;
 	struct s_cmd_table *left;
 } t_cmd_table;
@@ -95,6 +97,7 @@ typedef struct s_minishell
 	int	i;
 	int             type_count;
 	int	here_fd;
+	int	*pids;
 }	t_mini;
 
 //ft_signal.c

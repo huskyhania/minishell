@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/22 13:52:07 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/09 19:02:08 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2025/01/12 19:07:41 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,24 +81,33 @@ void	free_pipes(t_mini *attributes)
 
 void	handle_pipes(t_mini *attributes)
 {
+	int i = 0;
 	if (attributes->i == 1)
 	{
+		//pipe 0 
 		//perror("test1");
 		dup2(attributes->pipe_arr[attributes->i - 1][WRITE], STDOUT_FILENO);
-		close(attributes->pipe_arr[attributes->i - 1][WRITE]);
+		//close(attributes->pipe_arr[attributes->i - 1][WRITE]);
 	}
 	else if (attributes->i > 1 && attributes->i < attributes->cmd_index)
 	{
 		//perror("test2");
 		dup2(attributes->pipe_arr[attributes->i - 2][READ], STDIN_FILENO);
-		close(attributes->pipe_arr[attributes->i - 2][READ]);
+		//close(attributes->pipe_arr[attributes->i - 2][READ]);
 		dup2(attributes->pipe_arr[attributes->i - 1][WRITE], STDOUT_FILENO);
-		close(attributes->pipe_arr[attributes->i - 1][WRITE]);
+		//close(attributes->pipe_arr[attributes->i - 1][WRITE]);
 	}
 	else if (attributes->i == attributes->cmd_index)
 	{
 		//perror("test3");
+		//last pipe (no of commands)
 		dup2(attributes->pipe_arr[attributes->i - 2][READ], STDIN_FILENO);
-		close(attributes->pipe_arr[attributes->i - 2][READ]);
+		//close(attributes->pipe_arr[attributes->i - 2][READ]);
+	}
+	while (i < attributes->cmd_index - 1)
+	{
+		close(attributes->pipe_arr[i][READ]);
+		close(attributes->pipe_arr[i][WRITE]);
+		i++;
 	}
 }

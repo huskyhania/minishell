@@ -16,18 +16,22 @@ void	execute_command(t_cmd_table *node, t_mini *attributes)
 {
 	handle_pipes(attributes);
 	//fprintf(stderr, "comand no %d\n", attributes->i);
-	if (attributes->input_fd > 0)
-	{	
-		//perror("input check");
-		dup2(attributes->input_fd, STDIN_FILENO);
-		close(attributes->input_fd);
-	}
-	//fprintf(stderr, "current outout fd %d %d\n\n", attributes->output_fd, attributes->input_fd);
-	if (attributes->output_fd > 1)
+	fprintf(stderr, "current outout fd %d %d\n\n", attributes->output_fd, attributes->input_fd);
+	if (node->type != t_command)
 	{
-		//perror("output check");
-		dup2(attributes->output_fd, STDOUT_FILENO);
-		close(attributes->output_fd);
+		if (attributes->input_fd > 0)
+		{	
+			//perror("input check");
+			dup2(attributes->input_fd, STDIN_FILENO);
+			close(attributes->input_fd);
+		}
+		//fprintf(stderr, "current outout fd %d %d\n\n", attributes->output_fd, attributes->input_fd);
+		if (attributes->output_fd > 1)
+		{
+			//perror("output check");
+			dup2(attributes->output_fd, STDOUT_FILENO);
+			close(attributes->output_fd);
+		}
 	}
 	char *cmd_path = get_command_path(node->cmd_arr[0], attributes);
 	//fprintf(stderr, "about to execute command %s\n", node->cmd_arr[0]);
@@ -56,7 +60,7 @@ void	execute_command(t_cmd_table *node, t_mini *attributes)
 void	fork_for_command(t_cmd_table *node, t_mini *attributes)
 {
 	int	pid;
-	int	status;
+	//int	status;
 	int	builtin_flag;
 	pid = fork();
 	if (pid < 0)
@@ -89,20 +93,46 @@ void	fork_for_command(t_cmd_table *node, t_mini *attributes)
 			close(attributes->pipe_arr[attributes->i - 2][READ]);
 		if (attributes->i < attributes->cmd_index)
 			close(attributes->pipe_arr[attributes->i - 1][WRITE]);
+		/*if (attributes->i == 1)
+		{
+			//close(attributes->pipe_arr[0][READ]);
+			close(attributes->pipe_arr[0][WRITE]);
+		}
+		if (attributes->i > 1 && attributes->i < attributes->cmd_index)
+		{
+			close(attributes->pipe_arr[attributes->i - 2][READ]);
+			close(attributes->pipe_arr[attributes->i - 1][WRITE]);
+		}
+		if (attributes->i == attributes->cmd_index)
+			close(attributes->pipe_arr[attributes->i - 2][READ]);*/
 		//close(attributes->pipe_arr[attributes->i - 1][WRITE]);
-		waitpid(pid, &status, 0);
+		attributes->pids[attributes->i - 1] = pid;
+		if (attributes->input_fd > 0)
+			close(attributes->input_fd);
+		if (attributes->output_fd > 1)
+			close(attributes->output_fd);
+	}
+}
+
+void	wait_for_all_processes(t_mini *attributes)
+{
+	int	status;
+	int	i;
+
+	i = 0;
+	while (i < attributes->cmd_index)
+	{
+		waitpid(attributes->pids[i], &status, 0);
 		if (WIFEXITED(status))
 		{
 			//printf("child exited with status %d\n", WEXITSTATUS(status));
-			attributes->exitcode = WEXITSTATUS(status);//can be conditional and only happen for the last command
+			attributes->exitcode = WEXITSTATUS(status);
 		}
+		i++;
 	}
 }
 void	handle_command(t_cmd_table *node, t_mini *attributes)
 {
-	//check path
-	//check command
-	//int	builtin_flag;
 	attributes->i++;
 	attributes->input_fd = 0;
 	attributes->output_fd = 1;
@@ -119,6 +149,12 @@ void	handle_command(t_cmd_table *node, t_mini *attributes)
 		redir_empty(node, attributes);
 		unlink("here_doc");
 	}*/
+	int i = 0;
+	while (node->herefile[i])
+	{
+		printf("file name string %s\n", node->herefile[i]);
+		i++;
+	}
 	if (node->cmd_arr)
 	{
 		if (!check_if_valid_command(node, attributes))
@@ -131,16 +167,12 @@ void	handle_command(t_cmd_table *node, t_mini *attributes)
 
 void	handle_command_or_pipe(t_cmd_table *node, t_mini *attributes)
 {
-	//int	builtin_flag;
 	if (!node)
 		return ; //is it necessary?
 	handle_command_or_pipe(node->left, attributes);
 	if (node->type != t_pipe)
 	{
-		//printf("executing command %s\n", node->cmd_arr[0]);
 		handle_command(node, attributes);
-		//attributes->cmd_index--;
-		//printf("commands left to execute: %d\n", attributes->cmd_index);
 	}
 	handle_command_or_pipe(node->right, attributes);
 }	
@@ -154,27 +186,26 @@ void	ft_execution(t_mini *attributes)
 	}
 	attributes->input_fd = 0;
 	attributes->output_fd = 1;
-	if (attributes->commands->type != t_pipe)
+	attributes->pids = malloc(sizeof(int) * attributes->cmd_index);
+	if (!attributes->pids)
 	{
-		//if (attributes->commands->cmd_arr && attributes->commands->cmd_arr[0])
-		//	printf("%sc command str\n", attributes->commands->cmd_arr[0]);
-		//printf("entering single command execution\n");
-		single_command(attributes->commands, attributes);
+		ft_putstr_fd("malloc error\n", 2);
+		return ;
 	}
+	if (attributes->commands->type != t_pipe)
+		single_command(attributes->commands, attributes);
 	else
 	{
-		//printf("entering new command execution\n");
-		//printf("creating pipes array");
-		//printf("no of commands is %d\n", attributes->cmd_index);
 		if (create_pipes(attributes) == -1)
 		{
 			printf("pipe creation error\n");//clean up;
 			return ;
 		}
-		//else 
-		//	printf("pipe creation success\n");
 		handle_command_or_pipe(attributes->commands, attributes);
+		//close pipes here?
+		wait_for_all_processes(attributes);
 		free_pipes(attributes);
 	}
 	ft_free_ast(attributes);
+	free(attributes->pids);
 }
