@@ -60,6 +60,7 @@ void	minishell_init(char **envp, t_mini *attributes)
 	attributes->pipe_arr; // not initialized yet / should they be?
 	attributes->num_pipes;
 	attributes->here_fd;*/
+	//test
 }
 
 void	ft_readline_loop(t_mini *attributes)
