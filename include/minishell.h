@@ -156,7 +156,9 @@ int	check_redirs(t_cmd_table *node, t_mini *attributes);
 int	check_infile(t_cmd_table *node, t_mini *attributes);
 int	check_outfile(t_cmd_table *node, t_mini *attributes);
 int	check_append(t_cmd_table *node, t_mini *attributes);
-int     redir_empty(t_cmd_table *node, t_mini *attributes);
+int	redir_empty(t_cmd_table *node, t_mini *attributes);
+int	check_files(t_cmd_table *node, t_mini *attributes);
+
 
 //ft_path.c - checking for path in envp if necessary
 char	*get_command_path(const char *cmd, t_mini *attributes);

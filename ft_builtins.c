@@ -31,10 +31,8 @@ void	ft_pwd(t_mini *attributes)
 
 void	ft_env(t_cmd_table *node, t_mini *attributes)
 {
-	char	*path_value;
 	int	saved_std;
-
-	path_value = get_env_value(attributes, "PATH");
+	(void)node;
 	saved_std = dup(STDOUT_FILENO);
 	if (attributes->cmd_index > 1)
 	{
@@ -46,27 +44,13 @@ void	ft_env(t_cmd_table *node, t_mini *attributes)
 		if (attributes->i > 1)
 			close(attributes->pipe_arr[attributes->i - 2][READ]);
 	}	
-	if (node->outfile)
+	if (attributes->output_fd > 1)
 	{
-		if (check_outfile(node, attributes))
-		{
-			attributes->exitcode = 1;
-			return ;
-		}
+			dup2(attributes->output_fd, STDOUT_FILENO);
+			close(attributes->output_fd);
 	}
-	if (node->append)
-	{
-		if (check_append(node, attributes))
-		{
-			attributes->exitcode = 1;
-			return ;
-		}
-	}
-	else
-	{
-		print_envp_list(attributes->envp_heap);
-		attributes->exitcode = 0;
-	}
+	print_envp_list(attributes->envp_heap);
+	attributes->exitcode = 0;
 	dup2(saved_std, STDOUT_FILENO);
 	close(saved_std);
 }
@@ -80,30 +64,20 @@ void	ft_echo(t_cmd_table *node, t_mini *attributes)//should this be an int funct
 	i = 1;
 	newline = 1;
 	saved_std = dup(STDOUT_FILENO);
-	if (node->infile)
+	if (attributes->cmd_index > 1)
 	{
-		if (check_infile(node, attributes))
-			return ;
-	}
-	if (node->outfile)
-	{
-		if (check_outfile(node, attributes))
+		if (attributes->i < attributes->cmd_index)
 		{
-			attributes->exitcode = 1;
-			dup2(saved_std, STDOUT_FILENO);
-			close(saved_std);
-			return ;
+			dup2(attributes->pipe_arr[attributes->i - 1][WRITE], STDOUT_FILENO);
+			close(attributes->pipe_arr[attributes->i - 1][WRITE]);
 		}
+		if (attributes->i > 1)
+			close(attributes->pipe_arr[attributes->i - 2][READ]);
 	}
-	if (node->append)
+	if (attributes->output_fd > 1)
 	{
-		if (check_append(node, attributes))
-		{
-			attributes->exitcode = 1;
-			dup2(saved_std, STDOUT_FILENO);
-			close(saved_std);
-			return ;
-		}
+		dup2(attributes->output_fd, STDOUT_FILENO);
+		close(attributes->output_fd);
 	}
 	if (node->cmd_arr[i] && ft_strcmp(node->cmd_arr[i], "-n") == 0)
 	{
