@@ -30,19 +30,19 @@ int	*ft_add_type_array(t_mini *attributes, int *old_array, int type)
 	int i;
 
 	size = attributes->type_count;
-	printf("Counting done size %d\n",size);
+	//printf("Counting done size %d\n",size);
 	new_array = malloc((size + 1) * sizeof(int));
 	if (!new_array)
 		printf("no new array");//add malloc check
-	printf("Malloc done\n");
+	//printf("Malloc done\n");
 	i = 0;
 	while (size-- >= 2)
 	{
 		new_array[i] = old_array[i];
-		printf("Type %d Index %d size %d \n", old_array[i], i, size);
+		//printf("Type %d Index %d size %d \n", old_array[i], i, size);
 		i++;
 	}
-	printf("array done\n");
+	//printf("array done\n");
 	new_array[i] = type;
 	new_array[i+1] = 0;
 	if (old_array)

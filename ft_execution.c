@@ -15,10 +15,19 @@
 void	execute_command(t_cmd_table *node, t_mini *attributes)
 {
 	handle_pipes(attributes);
-	if (node->type != t_command)
+	//fprintf(stderr, "comand no %d\n", attributes->i);
+	if (attributes->input_fd > 0)
+	{	
+		//perror("input check");
+		dup2(attributes->input_fd, STDIN_FILENO);
+		close(attributes->input_fd);
+	}
+	//fprintf(stderr, "current outout fd %d %d\n\n", attributes->output_fd, attributes->input_fd);
+	if (attributes->output_fd > 1)
 	{
-		if (check_redirs(node, attributes))
-			exit(EXIT_FAILURE);	
+		//perror("output check");
+		dup2(attributes->output_fd, STDOUT_FILENO);
+		close(attributes->output_fd);
 	}
 	char *cmd_path = get_command_path(node->cmd_arr[0], attributes);
 	//fprintf(stderr, "about to execute command %s\n", node->cmd_arr[0]);
@@ -57,15 +66,20 @@ void	fork_for_command(t_cmd_table *node, t_mini *attributes)
 	}
 	if (pid == 0)
 	{
-		handle_pipes(attributes);
+		//attributes->input_fd = 0;
+		//attributes->output_fd = 1;
+		//handle_pipes(attributes);
 		if (node->type != t_command)
 		{
-			if (check_redirs(node, attributes))
+			if (check_files(node, attributes))
 				exit(EXIT_FAILURE);	
 		}
 		builtin_flag = is_builtin(node->cmd_arr[0]);
 		if (builtin_flag != 0)
-			handle_builtin(node, builtin_flag, attributes);	
+		{
+			handle_pipes(attributes);
+			handle_builtin(node, builtin_flag, attributes);
+		}	
 		else
 			execute_command(node, attributes);
 	}
@@ -90,7 +104,9 @@ void	handle_command(t_cmd_table *node, t_mini *attributes)
 	//check command
 	//int	builtin_flag;
 	attributes->i++;
-	if (node->here && node->here != NULL)
+	attributes->input_fd = 0;
+	attributes->output_fd = 1;
+	/*if (node->here && node->here != NULL)
 	{
 		if (process_heredocs(node, attributes))
 		{
@@ -102,7 +118,7 @@ void	handle_command(t_cmd_table *node, t_mini *attributes)
 	{
 		redir_empty(node, attributes);
 		unlink("here_doc");
-	}
+	}*/
 	if (node->cmd_arr)
 	{
 		if (!check_if_valid_command(node, attributes))
@@ -136,6 +152,8 @@ void	ft_execution(t_mini *attributes)
 		printf("something went wrong\n");
 		return ;
 	}
+	attributes->input_fd = 0;
+	attributes->output_fd = 1;
 	if (attributes->commands->type != t_pipe)
 	{
 		//if (attributes->commands->cmd_arr && attributes->commands->cmd_arr[0])

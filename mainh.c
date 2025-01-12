@@ -79,6 +79,7 @@ void	ft_readline_loop(t_mini *attributes)
 			//printf("\nyour shitty input was %s\n", attributes->readret);
 			if (ft_check_everything(attributes))
 			{
+				//printf("muted exec\n");
 				ft_execution(attributes);
 				//minishell_init(attributes); reset here?
 			}
