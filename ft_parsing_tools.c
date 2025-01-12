@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 20:07:51 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/11 19:45:46 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/12 20:39:41 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,10 @@ t_cmd_table	*ft_find_last_parse(t_cmd_table *stack)
 	return (stack);
 }
 
-t_cmd_table *ft_add_new(t_mini *attributes, t_tokens *token)
+t_cmd_table	*ft_add_new(t_tokens *token)
 {
-	t_cmd_table *new_node;
+	t_cmd_table	*new_node;
 
-	(void)attributes;
 	new_node = malloc(sizeof(t_cmd_table));
 	if (!new_node)
 	{
@@ -72,7 +71,7 @@ void	ft_free_cmd_array(char **arr)
 
 void	ft_triple_pointer(char ***arr)
 {
-	int i;
+	int	i;
 
 	if (!arr || !*arr)
 		return ;
@@ -89,7 +88,7 @@ void	ft_triple_pointer(char ***arr)
 
 int	ft_count_array(char **old_array)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if (!old_array || !old_array[i])
@@ -99,27 +98,27 @@ int	ft_count_array(char **old_array)
 	return (i);
 }
 	
-char **ft_add_command_array(char **old_array, char *str)
+char	**ft_add_command_array(char **old_array, char *str)
 {
-	char **new_array;
-	int size;
-	int i;
+	char	**new_array;
+	int		size;
+	int		i;
 
 	if (str[0] == '\0')
 		return (old_array);
 	size = ft_count_array(old_array);
-	//printf("Counting done size %d\n",size);
 	new_array = malloc((size + 2) * sizeof(char *));
 	if (!new_array)
-		printf("no new array");//add malloc check
-	//printf("Malloc done\n");
+	{	
+		ft_free_cmd_array(old_array);
+		return (NULL);
+	}
 	i = 0;
 	while (old_array && old_array[i])
 	{
 		new_array[i] = ft_strdup(old_array[i]);
 		i++;
 	}
-	//printf("array done\n");
 	new_array[i] = ft_strdup(str);
 	new_array[i+1] = 0;
 	free_array(old_array);
