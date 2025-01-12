@@ -129,14 +129,15 @@ int ft_parsing(t_mini *attributes);
  
 //ft_parsing_tools.c
 t_cmd_table *ft_find_last_parse(t_cmd_table *stack);
-t_cmd_table *ft_add_new(t_mini *attributes, t_tokens *token);
+t_cmd_table *ft_add_new(t_tokens *token);
 char **ft_add_command_array(char **old_array, char *str);
 void	ft_free_cmd_array(char **arr);
 
 int *ft_add_type_array(t_mini *attributes, int *old_array, int type);
 
 //ft_free_ast.c
-void    ft_free_ast(t_mini *attributes);
+int    ft_free_ast(t_mini *attributes);
+void ft_check_ast_array(t_cmd_table *print);
 
 //ft_execution.c - executing simple commands
 int	is_empty_or_space(const char *cmd);

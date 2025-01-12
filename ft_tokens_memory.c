@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/19 17:11:35 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/10 20:42:13 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/12 19:15:48 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,21 +14,19 @@
 
 int	ft_validate_expansion(t_mini *attributes)
 {
-	t_tokens 	*token;
-	int 		i;
+	t_tokens	*token;
+	int			i;
 
 	i = 0;
 	token = attributes->tokens;
 	while (token)
 	{
-		if (token->type == t_command && token->str[0] != '\0')
-		{
+		if (token->type == t_command && token->str[0] != '\0') // break removed;
 			i = 1;
-			break ;
-		}
 		if (token->type == t_lessless)
 			i = 1;
-		if ((token->type == t_great || token->type == t_less || token->type == t_greatgreat ) && token->next->str[0] == '\0')
+		if ((token->type == t_great || token->type == t_less
+				|| token->type == t_greatgreat ) && token->next->str[0] == '\0')
 		{
 			ft_putstr_fd("ambiguous redirect\n", 2);
 			attributes->exitcode = 1;
@@ -37,7 +35,6 @@ int	ft_validate_expansion(t_mini *attributes)
 		}
 		token = token->next;
 	}
-	//ft_delete_empty_nodes(attributes);
 	return (i);
 }
 

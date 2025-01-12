@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 17:07:16 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/11 19:39:10 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/12 20:56:31 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ void	ft_triple_pointer(char ***arr);
 
 void ft_check_ast_array(t_cmd_table *print)
 {
+	if (!print)
+		return ;
 	if (print->cmd_arr)
 		ft_triple_pointer(&print->cmd_arr);
 	if (print && print->outfile)
@@ -31,14 +33,14 @@ void ft_check_ast_array(t_cmd_table *print)
 	free(print->type_arr);
 }
 
-void	ft_free_ast(t_mini *attributes)
+int ft_free_ast(t_mini *attributes)
 {
 	t_cmd_table *table;
 	t_cmd_table *temp;
 
 	table = attributes->commands;
 	if (!attributes->commands)
-		printf("IDIOT\n");
+		return (0);
 	while (table)
 	{
 		//printf("free loop\n");
@@ -57,4 +59,5 @@ void	ft_free_ast(t_mini *attributes)
 			free(table);
 		table = temp;
 	}
+	return (1);
 }
