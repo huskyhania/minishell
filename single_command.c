@@ -15,7 +15,6 @@
 static void	execute_single(char **cmd_array, t_mini *attributes, t_cmd_table *node)
 {
 	char	*cmd_path;
-	(void)node;
 	if (node->type != t_command)
 	{
 		if (check_files(node, attributes))
@@ -25,15 +24,15 @@ static void	execute_single(char **cmd_array, t_mini *attributes, t_cmd_table *no
 			exit(EXIT_FAILURE);
 		}
 	}
-	if (attributes->input_fd > 0)
+	if (node->input_fd > 0)
 	{	
-		dup2(attributes->input_fd, STDIN_FILENO);
-		close(attributes->input_fd);
+		dup2(node->input_fd, STDIN_FILENO);
+		close(node->input_fd);
 	}
-	if (attributes->output_fd > 1)
+	if (node->output_fd > 1)
 	{
-		dup2(attributes->output_fd, STDOUT_FILENO);
-		close(attributes->output_fd);
+		dup2(node->output_fd, STDOUT_FILENO);
+		close(node->output_fd);
 	}
 	cmd_path = get_command_path(cmd_array[0], attributes);
 	if (cmd_path)
@@ -89,6 +88,8 @@ void	single_command(t_cmd_table *node, t_mini *attributes)
 	int	i;
 
 	i = 0;
+	node->input_fd = 0;
+	node->output_fd = 1;
 	if (node->type != t_command)
 	{
 		if (check_files(node, attributes))

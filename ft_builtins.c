@@ -44,10 +44,10 @@ void	ft_env(t_cmd_table *node, t_mini *attributes)
 		if (attributes->i > 1)
 			close(attributes->pipe_arr[attributes->i - 2][READ]);
 	}	
-	if (attributes->output_fd > 1)
+	if (node->output_fd > 1)
 	{
-			dup2(attributes->output_fd, STDOUT_FILENO);
-			close(attributes->output_fd);
+			dup2(node->output_fd, STDOUT_FILENO);
+			close(node->output_fd);
 	}
 	print_envp_list(attributes->envp_heap);
 	attributes->exitcode = 0;
@@ -74,10 +74,10 @@ void	ft_echo(t_cmd_table *node, t_mini *attributes)//should this be an int funct
 		if (attributes->i > 1)
 			close(attributes->pipe_arr[attributes->i - 2][READ]);
 	}
-	if (attributes->output_fd > 1)
+	if (node->output_fd > 1)
 	{
-		dup2(attributes->output_fd, STDOUT_FILENO);
-		close(attributes->output_fd);
+		dup2(node->output_fd, STDOUT_FILENO);
+		close(node->output_fd);
 	}
 	if (node->cmd_arr[i] && ft_strcmp(node->cmd_arr[i], "-n") == 0)
 	{

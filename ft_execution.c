@@ -16,27 +16,23 @@ void	execute_command(t_cmd_table *node, t_mini *attributes)
 {
 	handle_pipes(attributes);
 	//fprintf(stderr, "comand no %d\n", attributes->i);
-	fprintf(stderr, "current outout fd %d %d\n\n", attributes->output_fd, attributes->input_fd);
-	if (node->type != t_command)
+	fprintf(stderr, "current outout fd %d %d\n\n", node->output_fd, node->input_fd);
+	if (node->input_fd > 0)
+	{	
+		//perror("input check");
+		dup2(node->input_fd, STDIN_FILENO);
+		close(node->input_fd);
+	}
+	if (node->output_fd > 1)
 	{
-		if (attributes->input_fd > 0)
-		{	
-			//perror("input check");
-			dup2(attributes->input_fd, STDIN_FILENO);
-			close(attributes->input_fd);
-		}
-		//fprintf(stderr, "current outout fd %d %d\n\n", attributes->output_fd, attributes->input_fd);
-		if (attributes->output_fd > 1)
-		{
-			//perror("output check");
-			dup2(attributes->output_fd, STDOUT_FILENO);
-			close(attributes->output_fd);
-		}
+		//perror("output check");
+		dup2(node->output_fd, STDOUT_FILENO);
+		close(node->output_fd);
 	}
 	char *cmd_path = get_command_path(node->cmd_arr[0], attributes);
 	//fprintf(stderr, "about to execute command %s\n", node->cmd_arr[0]);
-	///fprintf(stderr, "exitcode in after path check %d\n", attributes->exitcode);
-	//fprintf(stderr, "%s was path found\n", cmd_path);
+	//fprintf(stderr, "exitcode in after path check %d\n", attributes->exitcode);
+	//fprintf(stderr, "%s was path found\n", cmd_path);
 	if (cmd_path)
 	{
 		if (execve(cmd_path, node->cmd_arr, attributes->envp_arr) == -1)
@@ -70,9 +66,6 @@ void	fork_for_command(t_cmd_table *node, t_mini *attributes)
 	}
 	if (pid == 0)
 	{
-		//attributes->input_fd = 0;
-		//attributes->output_fd = 1;
-		//handle_pipes(attributes);
 		if (node->type != t_command)
 		{
 			if (check_files(node, attributes))
@@ -107,10 +100,10 @@ void	fork_for_command(t_cmd_table *node, t_mini *attributes)
 			close(attributes->pipe_arr[attributes->i - 2][READ]);*/
 		//close(attributes->pipe_arr[attributes->i - 1][WRITE]);
 		attributes->pids[attributes->i - 1] = pid;
-		if (attributes->input_fd > 0)
-			close(attributes->input_fd);
-		if (attributes->output_fd > 1)
-			close(attributes->output_fd);
+		if (node->input_fd > 0)
+			close(node->input_fd);
+		if (node->output_fd > 1)
+			close(node->output_fd);
 	}
 }
 
@@ -134,8 +127,8 @@ void	wait_for_all_processes(t_mini *attributes)
 void	handle_command(t_cmd_table *node, t_mini *attributes)
 {
 	attributes->i++;
-	attributes->input_fd = 0;
-	attributes->output_fd = 1;
+	node->input_fd = 0;
+	node->output_fd = 1;
 	/*if (node->here && node->here != NULL)
 	{
 		if (process_heredocs(node, attributes))
@@ -149,12 +142,6 @@ void	handle_command(t_cmd_table *node, t_mini *attributes)
 		redir_empty(node, attributes);
 		unlink("here_doc");
 	}*/
-	int i = 0;
-	while (node->herefile[i])
-	{
-		printf("file name string %s\n", node->herefile[i]);
-		i++;
-	}
 	if (node->cmd_arr)
 	{
 		if (!check_if_valid_command(node, attributes))
@@ -168,7 +155,7 @@ void	handle_command(t_cmd_table *node, t_mini *attributes)
 void	handle_command_or_pipe(t_cmd_table *node, t_mini *attributes)
 {
 	if (!node)
-		return ; //is it necessary?
+		return ;
 	handle_command_or_pipe(node->left, attributes);
 	if (node->type != t_pipe)
 	{
@@ -184,8 +171,6 @@ void	ft_execution(t_mini *attributes)
 		printf("something went wrong\n");
 		return ;
 	}
-	attributes->input_fd = 0;
-	attributes->output_fd = 1;
 	attributes->pids = malloc(sizeof(int) * attributes->cmd_index);
 	if (!attributes->pids)
 	{
