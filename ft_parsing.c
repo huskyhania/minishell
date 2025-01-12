@@ -88,7 +88,7 @@ int	ft_parsing(t_mini *attributes)
 	attributes->commands = NULL;
 	if(!(ft_start_parsing(attributes)))
 		return (0);
-	//ft_print_table(attributes);
+	ft_print_table(attributes);
 	ft_free_tokens(attributes);
 	return (1);
 }
