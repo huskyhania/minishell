@@ -49,6 +49,7 @@ typedef struct s_tokens {
 	char 			*str;
 	int 			dir_flag;
 	int				merge;
+	int				failexp;
 	struct s_tokens	*next;
 	struct s_tokens	*prev;
 } t_tokens;

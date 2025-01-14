@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 20:07:51 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/12 20:39:41 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/14 18:57:20 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,8 +104,8 @@ char	**ft_add_command_array(char **old_array, char *str)
 	int		size;
 	int		i;
 
-	if (str[0] == '\0')
-		return (old_array);
+	//if (str[0] == '\0')
+	//	return (old_array);
 	size = ft_count_array(old_array);
 	new_array = malloc((size + 2) * sizeof(char *));
 	if (!new_array)
@@ -115,11 +115,11 @@ char	**ft_add_command_array(char **old_array, char *str)
 	}
 	i = 0;
 	while (old_array && old_array[i])
-	{
-		new_array[i] = ft_strdup(old_array[i]);
+	{	
+		new_array[i] = ft_strdup(old_array[i]); //aa
 		i++;
 	}
-	new_array[i] = ft_strdup(str);
+	new_array[i] = ft_strdup(str); //aaa
 	new_array[i+1] = 0;
 	free_array(old_array);
 	return (new_array);
