@@ -69,6 +69,8 @@ typedef struct s_cmd_table {
 	int				last_outfile;
 	int				input_fd;
 	int				output_fd;
+	char	*in1;
+	char	*out1;
 	struct s_cmd_table *right;
 	struct s_cmd_table *left;
 } t_cmd_table;

@@ -14,21 +14,71 @@
 
 void	execute_command(t_cmd_table *node, t_mini *attributes)
 {
+	if (isatty(STDIN_FILENO))
+		printf("stdin is terminal");
 	handle_pipes(attributes);
 	//fprintf(stderr, "comand no %d\n", attributes->i);
-	fprintf(stderr, "current outout fd %d %d\n\n", node->output_fd, node->input_fd);
+	//fprintf(stderr, "current outout fd %d %d\n\n", node->output_fd, node->input_fd);
+	if (isatty(STDIN_FILENO))
+		printf("stdin is terminal");
+	else
+		printf("stdin is not terminal");
+	if (isatty(STDOUT_FILENO))
+		printf("stdout is terminal");
+	else
+		printf("stdout is not terminal");
 	if (node->input_fd > 0)
+	{
+		node->input_fd = open(node->in1, O_RDONLY);
+		//printf("%d input fd\n", node->input_fd);
+		if (dup2(node->input_fd, STDIN_FILENO) == -1)
+			perror("dup2 fail for input");
+		close(node->input_fd);
+	}
+	if (node->output_fd > 1)
+	{
+		if (node->last_outfile == 2)
+			node->output_fd = open(node->out1, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		//printf("%d output fd\n", node->output_fd);
+		else if (node->last_outfile == 4)
+			node->output_fd = open(node->out1, O_WRONLY | O_CREAT | O_APPEND, 0644);
+		if (dup2(node->output_fd, STDOUT_FILENO) == -1)
+			perror("dup2 fail for output");
+		close(node->output_fd);
+	}
+	/*if (node->input_fd > 0)
 	{	
 		//perror("input check");
-		dup2(node->input_fd, STDIN_FILENO);
+		if (fcntl(node->input_fd, F_GETFD) == -1)
+		{
+			perror("fcntl failed");
+			printf("in File descriptor %d is not open.\n", node->input_fd);
+		}
+		else
+		{
+			printf("in File descriptor %d is open.\n", node->input_fd);
+ 		}
+		if (dup2(node->input_fd, 0) == -1)
+			perror("dup2 fail for input");
 		close(node->input_fd);
 	}
 	if (node->output_fd > 1)
 	{
 		//perror("output check");
-		dup2(node->output_fd, STDOUT_FILENO);
+		if (fcntl(node->output_fd, F_GETFD) == -1) 
+		{
+   			perror("fcntl failed");
+    			printf("o File descriptor %d is not open.\n", node->output_fd);
+		} 
+		else 
+		{
+    			printf("o File descriptor %d is open.\n", node->output_fd);
+		}
+		if (dup2(node->output_fd, 1) == -1)
+			strerror(errno);
 		close(node->output_fd);
-	}
+	}*/
+	//fprintf(stderr, "current outout fd %d %d\n\n", node->output_fd, node->input_fd);
 	char *cmd_path = get_command_path(node->cmd_arr[0], attributes);
 	//fprintf(stderr, "about to execute command %s\n", node->cmd_arr[0]);
 	//fprintf(stderr, "exitcode in after path check %d\n", attributes->exitcode);
@@ -52,7 +102,6 @@ void	execute_command(t_cmd_table *node, t_mini *attributes)
 		exit(attributes->exitcode);
 	}
 }
-
 void	fork_for_command(t_cmd_table *node, t_mini *attributes)
 {
 	int	pid;
@@ -100,30 +149,30 @@ void	fork_for_command(t_cmd_table *node, t_mini *attributes)
 			close(attributes->pipe_arr[attributes->i - 2][READ]);*/
 		//close(attributes->pipe_arr[attributes->i - 1][WRITE]);
 		attributes->pids[attributes->i - 1] = pid;
-		if (node->input_fd > 0)
-			close(node->input_fd);
-		if (node->output_fd > 1)
-			close(node->output_fd);
+		//if (node->input_fd > 0)
+			//close(node->input_fd);
+		//if (node->output_fd > 1)
+			//close(node->output_fd);
 	}
 }
-
 void	wait_for_all_processes(t_mini *attributes)
 {
 	int	status;
 	int	i;
-
 	i = 0;
-	while (i < attributes->cmd_index)
+	while (attributes->pids[i])
 	{
 		waitpid(attributes->pids[i], &status, 0);
 		if (WIFEXITED(status))
 		{
 			//printf("child exited with status %d\n", WEXITSTATUS(status));
-			attributes->exitcode = WEXITSTATUS(status);
+			if (i == attributes->cmd_index - 1)
+				attributes->exitcode = WEXITSTATUS(status);
 		}
 		i++;
 	}
 }
+
 void	handle_command(t_cmd_table *node, t_mini *attributes)
 {
 	attributes->i++;
@@ -142,6 +191,17 @@ void	handle_command(t_cmd_table *node, t_mini *attributes)
 		redir_empty(node, attributes);
 		unlink("here_doc");
 	}*/
+	//fprintf(stderr, "last infile type is %d and last outfile %d\n", node->last_infile, node->last_outfile);
+	if (node->type != t_command && !node->cmd_arr)
+	{
+		if (check_files(node, attributes) == 1)
+		{
+			//fprintf(stderr, "check file fail\n");
+			attributes->exitcode = 1;
+			//fprintf(stderr, "exitcode is %d\n", attributes->exitcode);
+			return ;
+		}
+	}
 	if (node->cmd_arr)
 	{
 		if (!check_if_valid_command(node, attributes))
@@ -151,7 +211,6 @@ void	handle_command(t_cmd_table *node, t_mini *attributes)
 		}
 	}
 }
-
 void	handle_command_or_pipe(t_cmd_table *node, t_mini *attributes)
 {
 	if (!node)
@@ -163,7 +222,6 @@ void	handle_command_or_pipe(t_cmd_table *node, t_mini *attributes)
 	}
 	handle_command_or_pipe(node->right, attributes);
 }	
-
 void	ft_execution(t_mini *attributes)
 {
 	if (!attributes || !attributes->commands)
@@ -193,4 +251,5 @@ void	ft_execution(t_mini *attributes)
 	}
 	ft_free_ast(attributes);
 	free(attributes->pids);
+	//fprintf(stderr, "exitcode check %d\n", attributes->exitcode);
 }
