@@ -27,10 +27,12 @@ static int	ultimate_check_infile(t_cmd_table *node, t_mini *attributes, int inde
 		return (1);
 	}
 	if (node->cmd_arr)
+	{
 		node->input_fd = input;
+		node->in1 = node->herefile[index];//test
+	}
 	return (0);
 }
-
 static int	ultimate_check_outfile(t_cmd_table *node, t_mini *attributes, int index)
 {
 	(void)attributes;
@@ -44,10 +46,12 @@ static int	ultimate_check_outfile(t_cmd_table *node, t_mini *attributes, int ind
 		return (1);
 	}
 	if (node->cmd_arr)
+	{
 		node->output_fd = output;
+		node->out1 = node->herefile[index];
+	}
 	return (0);
 }
-
 static int	ultimate_check_append(t_cmd_table *node, t_mini *attributes, int index)
 {
 	(void)attributes;
@@ -61,14 +65,18 @@ static int	ultimate_check_append(t_cmd_table *node, t_mini *attributes, int inde
 		return (1);
 	}
 	if (node->cmd_arr)
+	{
 		node->output_fd = ap_output;
+		node->out1 = node->herefile[index];
+	}
 	return (0);
 }
-
 int	check_files(t_cmd_table *node, t_mini *attributes)
 {
 	int	i;
 	i = 0;
+	node->in1 = NULL;
+	node->out1 = NULL;
 	while (node->herefile[i] != NULL)
 	{
 		if (node->type_arr[i] == 3)

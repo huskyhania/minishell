@@ -63,7 +63,8 @@ void	ft_echo(t_cmd_table *node, t_mini *attributes)//should this be an int funct
 
 	i = 1;
 	newline = 1;
-	saved_std = dup(STDOUT_FILENO);
+	if (attributes->cmd_index == 1)	
+		saved_std = dup(STDOUT_FILENO);
 	if (attributes->cmd_index > 1)
 	{
 		if (attributes->i < attributes->cmd_index)
@@ -74,9 +75,29 @@ void	ft_echo(t_cmd_table *node, t_mini *attributes)//should this be an int funct
 		if (attributes->i > 1)
 			close(attributes->pipe_arr[attributes->i - 2][READ]);
 	}
-	if (node->output_fd > 1)
+	/*if (node->output_fd > 1)
 	{
 		dup2(node->output_fd, STDOUT_FILENO);
+		close(node->output_fd);
+	}*/
+	/*if (node->input_fd > 0)
+	{
+		node->input_fd = open(node->in1, O_RDONLY);
+		//printf("%d input fd\n", node->input_fd);
+		if (dup2(node->input_fd, STDIN_FILENO) == -1)
+			perror("dup2 fail for input");
+		close(node->input_fd);
+	}*/
+
+	if (node->output_fd > 1)
+	{
+		if (node->last_outfile == 2)
+			node->output_fd = open(node->out1, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		//printf("%d output fd\n", node->output_fd);
+		else if (node->last_outfile == 4)
+			node->output_fd = open(node->out1, O_WRONLY | O_CREAT | O_APPEND, 0644);
+		if (dup2(node->output_fd, STDOUT_FILENO) == -1)
+			perror("dup2 fail for output");
 		close(node->output_fd);
 	}
 	if (node->cmd_arr[i] && ft_strcmp(node->cmd_arr[i], "-n") == 0)
@@ -93,9 +114,12 @@ void	ft_echo(t_cmd_table *node, t_mini *attributes)//should this be an int funct
 	}
 	if (newline)
 		printf("\n");
-	dup2(saved_std, STDOUT_FILENO);
-	close(saved_std);
-	attributes->exitcode = 0;
+	if (attributes->cmd_index == 1)
+	{
+		dup2(saved_std, STDOUT_FILENO);
+		close(saved_std);
+		attributes->exitcode = 0;
+	}
 }
 
 void	ft_cd(char **cmd_array, t_mini *attributes)//needs to handle edge cases and complicated relative paths
