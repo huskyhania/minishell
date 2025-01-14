@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 19:56:10 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/08 14:18:17 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/14 21:27:37 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ int	here_doc_handler(t_cmd_table *node, t_mini *attributes, char *delimit)
 
 	(void)node;
 	saved_stdin = dup(STDIN_FILENO);//checks for dup
+	fprintf(stderr, "given delimiter is %s\n", delimit);
 	temp_fd = open("here_doc", O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (temp_fd < 0)
 	{

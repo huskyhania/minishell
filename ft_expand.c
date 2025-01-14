@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 15:11:35 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/14 20:59:35 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/14 21:46:38 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,6 +158,8 @@ int	ft_expand(t_mini *attributes)
 			}
 		if (token->type == t_quote)
 			token->failexp = 0;
+		if (token->type == 5)
+			token = token->next;
 		token = token->next;
 	}
 	//if (!(ft_validate_expansion(attributes)))

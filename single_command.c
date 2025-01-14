@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 20:07:20 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/09 21:58:09 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2025/01/14 21:48:15 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 static void	execute_single(char **cmd_array, t_mini *attributes, t_cmd_table *node)
 {
 	char	*cmd_path;
-	if (node->type != t_command)
+	if (node->type != t_command && node->type != 5)
 	{
 		if (check_files(node, attributes))
 		{
