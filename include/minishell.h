@@ -72,6 +72,7 @@ typedef struct s_cmd_table {
 	int				failexp;
 	char	*in1;
 	char	*out1;
+	char	*name;
 	struct s_cmd_table *right;
 	struct s_cmd_table *left;
 } t_cmd_table;
@@ -197,6 +198,8 @@ void    ft_child_exit(char **cmd_array, t_mini *attributes);
 //heredoc
 int	here_doc_handler(t_cmd_table *node, t_mini *attributes, char *delimit);
 int     process_heredocs(t_cmd_table *node, t_mini *attributes);
+int	check_for_heredocs(t_cmd_table *node, t_mini *attributes);
+int	ultimate_check_heredoc(t_cmd_table *node, t_mini *attributes, int index);
 
 //cleanup
 void	envp_cleanup(t_mini *attributes);

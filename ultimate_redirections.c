@@ -96,18 +96,6 @@ int	ultimate_check_heredoc(t_cmd_table *node, t_mini *attributes, int index)
 		return (1);
 	if (node->cmd_arr)
 	{
-		/*node->input_fd = open("here_doc", O_RDONLY);
-		if (node->input_fd < 0)
-		{
-			perror(node->herefile[index]);
-			perror("this fails???");
-			return (1);
-		}
-		else
-		{
-			node->in1 = "here_doc";
-			return (0);
-		}*/
 		node->in1 = "here_doc";
 		return (0);
 	}
@@ -144,7 +132,7 @@ int	check_files(t_cmd_table *node, t_mini *attributes)
 				return (1);
 			}
 		}
-		if (node->type_arr[i] == 5)
+		if (node->type_arr[i] == 5 && (attributes->cmd_index == 1 || !node->cmd_arr))
 		{
 			if (ultimate_check_heredoc(node, attributes, i))
 				return (1);

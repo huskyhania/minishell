@@ -25,7 +25,7 @@ int	here_doc_handler(t_cmd_table *node, t_mini *attributes, char *delimit)
 
 	(void)node;
 	saved_stdin = dup(STDIN_FILENO);//checks for dup
-	fprintf(stderr, "given delimiter is %s\n", delimit);
+	//fprintf(stderr, "given delimiter is %s\n", delimit);
 	temp_fd = open("here_doc", O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (temp_fd < 0)
 	{
@@ -37,7 +37,9 @@ int	here_doc_handler(t_cmd_table *node, t_mini *attributes, char *delimit)
 	while (1)
 	{
 		line = readline("heredoc> ");//or here?
-		if (!line || ft_strncmp(delimit, line, ft_strlen(delimit)) == 0)
+		if (!line)
+			break ;
+		if ((delimit[0] == '\0' && line[0] == '\0') || (ft_strncmp(delimit, line, ft_strlen(delimit)) == 0 && ft_strlen(delimit) == ft_strlen(line)))
 			break ;
 		write(temp_fd, line, ft_strlen(line));
 		write(temp_fd, "\n", 1);
@@ -95,5 +97,20 @@ int	process_heredocs(t_cmd_table *node, t_mini *attributes)
 		i++;
 	}
 	attributes->exitcode = 0;
+	return (0);
+}
+
+int	check_for_heredocs(t_cmd_table *node, t_mini *attributes)
+{
+	int	i;
+	i = 0;
+	while (node->herefile[i] != NULL)
+	{
+		if (node->type_arr[i] != 5)
+			i++;
+		else if (ultimate_check_heredoc(node, attributes, i))
+			return (1);
+		i++;
+	}
 	return (0);
 }
