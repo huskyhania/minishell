@@ -75,20 +75,6 @@ void	ft_echo(t_cmd_table *node, t_mini *attributes)//should this be an int funct
 		if (attributes->i > 1)
 			close(attributes->pipe_arr[attributes->i - 2][READ]);
 	}
-	/*if (node->output_fd > 1)
-	{
-		dup2(node->output_fd, STDOUT_FILENO);
-		close(node->output_fd);
-	}*/
-	/*if (node->input_fd > 0)
-	{
-		node->input_fd = open(node->in1, O_RDONLY);
-		//printf("%d input fd\n", node->input_fd);
-		if (dup2(node->input_fd, STDIN_FILENO) == -1)
-			perror("dup2 fail for input");
-		close(node->input_fd);
-	}*/
-
 	if (node->output_fd > 1)
 	{
 		if (node->last_outfile == 2)

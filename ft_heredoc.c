@@ -43,6 +43,7 @@ int	here_doc_handler(t_cmd_table *node, t_mini *attributes, char *delimit)
 		free(line);
 		line = NULL;
 	}
+	close(temp_fd);
 	if (g_signal == SIGINT)
 	{
 		attributes->exitcode = 130;
@@ -54,8 +55,8 @@ int	here_doc_handler(t_cmd_table *node, t_mini *attributes, char *delimit)
 	ft_sigint();
 	if (!line)
 	{
-		close(temp_fd);
-		unlink("here_doc");
+		//close(temp_fd);
+		//unlink("here_doc");
 		dup2(saved_stdin, STDIN_FILENO);
 		close(saved_stdin);
 		return (-1); // or exit
