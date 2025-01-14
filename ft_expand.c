@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 15:11:35 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/11 23:21:08 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/14 20:59:35 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ int	ft_expand_small(t_mini *attributes, t_tokens *token, int j)
 			return (0);
 		}
 	}
+	token->failexp = 0;
 	free(path);
 	return (1);
 }
@@ -96,6 +97,8 @@ int	ft_expand_big(t_mini *attributes, t_tokens *token, int j, int i)
 	if (!expansion)
 	{
 		token->str = ft_replace_expansion(token->str, path, "");
+		if (token->failexp == -1)
+			token->failexp = 1;
 		free(path);
 		return (1);
 	}
@@ -105,6 +108,7 @@ int	ft_expand_big(t_mini *attributes, t_tokens *token, int j, int i)
 		free(path);
 		return (0);
 	}
+	token->failexp = 0;
 	free(path);
 	return (1);
 }
@@ -134,6 +138,8 @@ int	ft_expand_word(t_mini *attributes, t_tokens *t, int j)
 	if (ft_strchr(t->str + j, 36))
 		if (!(ft_expand_word(attributes, t, 0)))
 			return (0);
+	if (t->failexp == -1)
+		t->failexp = 0;
 	return (1);
 }
 
@@ -150,10 +156,12 @@ int	ft_expand(t_mini *attributes)
 				printf("Parsing error\n");
 				return (0);
 			}
+		if (token->type == t_quote)
+			token->failexp = 0;
 		token = token->next;
 	}
-	if (!(ft_validate_expansion(attributes)))
-		return (0);
+	//if (!(ft_validate_expansion(attributes)))
+	//	return (0);
 	ft_merge_tokens(attributes);
 	return (1);
 }

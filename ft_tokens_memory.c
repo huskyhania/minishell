@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/19 17:11:35 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/12 19:15:48 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/14 20:46:07 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	ft_validate_expansion(t_mini *attributes)
 	t_tokens	*token;
 	int			i;
 
-	i = 0;
+	i = 1;
 	token = attributes->tokens;
 	while (token)
 	{
@@ -26,12 +26,11 @@ int	ft_validate_expansion(t_mini *attributes)
 		if (token->type == t_lessless)
 			i = 1;
 		if ((token->type == t_great || token->type == t_less
-				|| token->type == t_greatgreat ) && token->next->str[0] == '\0')
+				|| token->type == t_greatgreat ) && (token->next->str[0] == '\0' && token->next->failexp == 1))
 		{
-			ft_putstr_fd("ambiguous redirect\n", 2);
-			attributes->exitcode = 1;
-			i = 0;
-			break ;
+			//ft_putstr_fd("ambiguous redirect\n", 2);
+			//attributes->exitcode = 1;
+			i = 1;
 		}
 		token = token->next;
 	}
@@ -88,6 +87,7 @@ t_tokens	*ft_add_token(t_mini *attributes)
 		return (NULL);
 	new_token->next = NULL;
 	new_token->merge = 0;
+	new_token->failexp = -1;
 	new_token->str = NULL; // ned addition might fuck up things?
 	if (!attributes->tokens)
 	{
