@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/19 17:11:35 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/14 19:29:21 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/14 20:46:07 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,9 @@ int	ft_validate_expansion(t_mini *attributes)
 		if ((token->type == t_great || token->type == t_less
 				|| token->type == t_greatgreat ) && (token->next->str[0] == '\0' && token->next->failexp == 1))
 		{
-			ft_putstr_fd("ambiguous redirect\n", 2);
-			attributes->exitcode = 1;
-			i = 0;
-			break ;
+			//ft_putstr_fd("ambiguous redirect\n", 2);
+			//attributes->exitcode = 1;
+			i = 1;
 		}
 		token = token->next;
 	}

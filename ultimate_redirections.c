@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/11 19:54:23 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/11 21:11:33 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2025/01/14 21:09:34 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,11 @@ static int	ultimate_check_infile(t_cmd_table *node, t_mini *attributes, int inde
 	int	input;
 	if (node->input_fd > 0)
 		close(node->input_fd);
+	if (node->failexp == 1)
+	{
+		ft_putstr_fd("ambiguous redirect\n", 2); // exitcode 1
+		return (1);
+	}
 	input = open(node->herefile[index], O_RDONLY);
 	if (input < 0)
 	{
@@ -40,6 +45,11 @@ static int	ultimate_check_outfile(t_cmd_table *node, t_mini *attributes, int ind
 	if (node->output_fd > 1)
 		close(node->output_fd);
 	output = open(node->herefile[index], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (node->failexp == 1)
+	{
+		ft_putstr_fd("ambiguous redirect\n", 2); // exitcode 1
+		return (1);
+	}
 	if (output < 0)
 	{
 		perror(node->herefile[index]);
@@ -59,6 +69,11 @@ static int	ultimate_check_append(t_cmd_table *node, t_mini *attributes, int inde
 	if (node->output_fd > 1)
 		close(node->output_fd);
 	ap_output = open(node->herefile[index], O_WRONLY | O_CREAT | O_APPEND, 0644);
+	if (node->failexp == 1)
+	{
+		ft_putstr_fd("ambiguous redirect\n", 2); // exitcode 1
+		return (1);
+	}
 	if (ap_output < 0)
 	{
 		perror(node->herefile[index]);

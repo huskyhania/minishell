@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 20:07:51 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/14 18:57:20 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/14 20:47:31 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ t_cmd_table	*ft_add_new(t_tokens *token)
 	new_node->type_arr = NULL;
 	new_node->last_outfile = 0;
 	new_node->last_infile = 0;
+	new_node->failexp = 0;
 	new_node->type = (token->type);
 	return(new_node);
 }

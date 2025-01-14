@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 18:12:26 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/14 19:02:14 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/14 20:45:40 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ t_cmd_table	*ft_merge_command(t_mini *attributes, t_tokens **token)
 		if (*token && ((*token)->type == t_great || (*token)->type == t_less || (*token)->type == t_lessless || (*token)->type == t_greatgreat))
 		{
 			new_node = ft_merge_redirection(attributes, token, new_node);
+			new_node->failexp = (*token)->failexp;
 			if (new_node == NULL)
 				return (NULL);
 		}
