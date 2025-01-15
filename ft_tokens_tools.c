@@ -6,15 +6,15 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 13:22:07 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/09 23:20:23 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/15 23:42:48 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int ft_skip_whitespace(char *line)
+int	ft_skip_whitespace(char *line)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (line[i] == ' ' || line[i] == '\t' || line[i] == '\n' || line[i] == '\v' || line[i] == '\f' || line[i] == '\r')
@@ -24,7 +24,7 @@ int ft_skip_whitespace(char *line)
 
 int	ft_is_special(char *line)
 {
-	if (*line == '|' || *line == '>' || *line == '<' || *line == '(' || *line == ')')
+	if (*line == '|' || *line == '>' || *line == '<')
 		return (1);
 	return (0);
 }
@@ -36,7 +36,7 @@ int	ft_is_whitespace(char *line)
 	return (0);
 }
 
-int ft_is_quote(char *line)
+int	ft_is_quote(char *line)
 {
 	if (*line == 39)
 		return (1);

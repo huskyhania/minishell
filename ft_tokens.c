@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 12:06:47 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/10 21:52:22 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/15 23:47:02 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,7 @@ int	ft_tokenization(t_mini *attributes)
 			check = ft_add_quote(&line[i], attributes);
 		if (line[i] && line[i] == '"')
 			check = ft_add_expansion(attributes, &line[i]);
-		if (line[i] && line[i] != ' ' && !ft_is_special(&line[i]) && line[i] != '"' && line[i] != '\'')
+		if (line[i] && !ft_is_whitespace(&line[i]) && !ft_is_special(&line[i]) && line[i] != '"' && line[i] != '\'')
 			check = ft_add_command(&line[i], attributes);
 		if (check == -1)
 			return (0);

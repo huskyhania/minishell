@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/09 16:48:06 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/10 14:17:53 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2025/01/15 23:00:48 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,10 +51,7 @@ void	ft_exit(char **cmd_array, t_mini *attributes)
 	exit_number = 0;
 	printf("exit\n");
 	if (cmd_array[1] == NULL)
-	{
-		exit_number = attributes->exitcode;
-		ft_final_exit(attributes, exit_number);
-	}
+		ft_final_exit(attributes, attributes->exitcode);
 	if (ft_is_exit_digit(cmd_array[1]))
 	{
 		exit_number = 2;
