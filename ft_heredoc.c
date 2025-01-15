@@ -72,7 +72,7 @@ int	here_doc_handler(t_cmd_table *node, t_mini *attributes, char *delimit)
 	return (0);
 }
 
-int	process_heredocs(t_cmd_table *node, t_mini *attributes)
+/*int	process_heredocs(t_cmd_table *node, t_mini *attributes)
 {
 	int	i;
 
@@ -98,7 +98,7 @@ int	process_heredocs(t_cmd_table *node, t_mini *attributes)
 	}
 	attributes->exitcode = 0;
 	return (0);
-}
+}*/
 
 int	check_for_heredocs(t_cmd_table *node, t_mini *attributes)
 {
@@ -106,11 +106,10 @@ int	check_for_heredocs(t_cmd_table *node, t_mini *attributes)
 	i = 0;
 	while (node->herefile[i] != NULL)
 	{
-		if (node->type_arr[i] != 5)
+		if (node->type_arr[i] != 5 || ultimate_check_heredoc(node, attributes, i))
 			i++;
-		else if (ultimate_check_heredoc(node, attributes, i))
+		else
 			return (1);
-		i++;
 	}
 	return (0);
 }

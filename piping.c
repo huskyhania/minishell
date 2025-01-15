@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/22 13:52:07 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/12 19:07:41 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2025/01/15 15:24:48 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 int	create_pipes(t_mini *attributes)
 {
 	int	i;
-	
+
 	i = 0;
 	attributes->num_pipes = attributes->cmd_index - 1;
 	attributes->pipe_arr = malloc(attributes->num_pipes * sizeof(int *));
@@ -42,7 +42,7 @@ int	create_pipes(t_mini *attributes)
 		if (pipe(attributes->pipe_arr[i]) == -1)
 		{
 			perror("piping error\n");
-			free(attributes->pipe_arr[i]);  // Free the current pip
+			free(attributes->pipe_arr[i]); // Free the current pip
 			while (--i >= 0)
 			{
 				close(attributes->pipe_arr[i][0]);
@@ -81,7 +81,9 @@ void	free_pipes(t_mini *attributes)
 
 void	handle_pipes(t_mini *attributes)
 {
-	int i = 0;
+	int i;
+
+	i = 0;
 	if (attributes->i == 1)
 	{
 		//pipe 0 

@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 19:22:47 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/16 19:21:28 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2025/01/15 00:55:35 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,8 @@ char	*find_path_in_envp(char *envp[])
 
 char	*check_command(const char *cmd, t_mini *attributes)
 {
-	struct stat path_stat;
+	struct stat	path_stat;
+
 	if (stat(cmd, &path_stat) == 0)
 	{
 		if (S_ISDIR(path_stat.st_mode))
@@ -74,10 +75,7 @@ char	*check_command(const char *cmd, t_mini *attributes)
 static int	check_access(const char *full_path, int *found)
 {
 	if (access(full_path, X_OK) == 0)
-	{
-		//px->exitcode = 0;
 		return (1);
-	}
 	else if (access(full_path, F_OK) == 0)
 	{
 		*found = 1;
@@ -101,7 +99,7 @@ static char	*check_full_path(const char *cmd, const char *dir, int *found)
 	return (NULL);
 }
 
-static char	*search_in_path(const char *cmd, char **directories, t_mini *attributes)
+static char	*search_in_path(const char *cmd, char **dirs, t_mini *attributes)
 {
 	int		i;
 	int		found;
@@ -109,17 +107,17 @@ static char	*search_in_path(const char *cmd, char **directories, t_mini *attribu
 
 	i = 0;
 	found = 0;
-	while (directories[i] != NULL)
+	while (dirs[i] != NULL)
 	{
-		result = check_full_path(cmd, directories[i], &found);
+		result = check_full_path(cmd, dirs[i], &found);
 		if (result)
 		{
-			free_array(directories);
+			free_array(dirs);
 			return (result);
 		}
 		i++;
 	}
-	free_array(directories);
+	free_array(dirs);
 	if (found)
 		set_error_and_display(126, attributes, cmd);
 	else

@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/09 13:51:27 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/09 14:30:02 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2025/01/15 00:59:53 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static int	infile_check(t_cmd_table *node)
 	return (0);
 }
 
-static int outfile_check(t_cmd_table *node)
+static int	outfile_check(t_cmd_table *node)
 {
 	int	output;
 	int	i;
@@ -73,7 +73,7 @@ static int	append_check(t_cmd_table *node)
 	output = -1;
 	if (!node->append)
 		return (0);
-	while(node->append[i] != NULL)
+	while (node->append[i] != NULL)
 	{
 		if (output > 1)
 			close(output);

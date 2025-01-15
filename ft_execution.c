@@ -17,7 +17,7 @@ void	execute_command(t_cmd_table *node, t_mini *attributes)
 	handle_pipes(attributes);
 	//fprintf(stderr, "comand no %d\n", attributes->i);
 	//fprintf(stderr, "current outout fd %d %d\n\n", node->output_fd, node->input_fd);
-	if (node->type != t_command && (node->input_fd > 0 || node->last_infile == 5))
+	if (node->type != t_command && (node->in1 || node->last_infile == 5))
 	{
 		if (node->last_infile == 3)
 			node->input_fd = open(node->in1, O_RDONLY);
@@ -27,7 +27,7 @@ void	execute_command(t_cmd_table *node, t_mini *attributes)
 			perror("dup2 fail for input");
 		close(node->input_fd);
 	}
-	if (node->output_fd > 1)
+	if (node->type != t_command && node->out1)
 	{
 		if (node->last_outfile == 2)
 			node->output_fd = open(node->out1, O_WRONLY | O_CREAT | O_TRUNC, 0644);
@@ -47,6 +47,7 @@ void	execute_command(t_cmd_table *node, t_mini *attributes)
 			free_pipes(attributes);
 			ft_free_ast(attributes);
 			envp_cleanup(attributes);
+			free(attributes->pids);
 			exit(attributes->exitcode);//exitfailure?
 		}
 	}
@@ -55,6 +56,7 @@ void	execute_command(t_cmd_table *node, t_mini *attributes)
 		envp_cleanup(attributes);
 		free_pipes(attributes);
 		ft_free_ast(attributes);
+		free(attributes->pids);
 		exit(attributes->exitcode);
 	}
 }
@@ -115,8 +117,9 @@ void	wait_for_all_processes(t_mini *attributes)
 {
 	int	status;
 	int	i;
+
 	i = 0;
-	while (attributes->pids[i])
+	while (attributes->pids[i] != 0)
 	{
 		waitpid(attributes->pids[i], &status, 0);
 		if (WIFEXITED(status))
@@ -134,6 +137,8 @@ void	handle_command(t_cmd_table *node, t_mini *attributes)
 	attributes->i++;
 	node->input_fd = 0;
 	node->output_fd = 1;
+	node->in1 = NULL;
+	node->out1 = NULL;
 	if (node->type != t_command && !node->cmd_arr)
 	{
 		if (check_files(node, attributes) == 1)
@@ -154,6 +159,7 @@ void	handle_command(t_cmd_table *node, t_mini *attributes)
 		}
 	}
 }
+
 void	handle_command_or_pipe(t_cmd_table *node, t_mini *attributes)
 {
 	if (!node)
@@ -164,15 +170,18 @@ void	handle_command_or_pipe(t_cmd_table *node, t_mini *attributes)
 		handle_command(node, attributes);
 	}
 	handle_command_or_pipe(node->right, attributes);
-}	
+}
+
 void	ft_execution(t_mini *attributes)
 {
+	attributes->pids = NULL;
 	if (!attributes || !attributes->commands)
 	{
 		printf("something went wrong\n");
 		return ;
 	}
-	attributes->pids = malloc(sizeof(int) * attributes->cmd_index);
+	attributes->pids = malloc(sizeof(int) * (attributes->cmd_index + 1));
+	attributes->pids[attributes->cmd_index] = 0;
 	if (!attributes->pids)
 	{
 		ft_putstr_fd("malloc error\n", 2);

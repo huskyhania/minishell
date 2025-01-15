@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/11 19:54:23 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/14 21:09:34 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/15 16:21:43 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,9 @@ static int	ultimate_check_infile(t_cmd_table *node, t_mini *attributes, int inde
 		perror(node->herefile[index]);
 		return (1);
 	}
+	close(input);
 	if (node->cmd_arr)
-	{
-		node->input_fd = input;
 		node->in1 = node->herefile[index];//test
-	}
 	return (0);
 }
 static int	ultimate_check_outfile(t_cmd_table *node, t_mini *attributes, int index)
@@ -55,9 +53,10 @@ static int	ultimate_check_outfile(t_cmd_table *node, t_mini *attributes, int ind
 		perror(node->herefile[index]);
 		return (1);
 	}
+	close(output);
 	if (node->cmd_arr)
 	{
-		node->output_fd = output;
+		//node->output_fd = output;
 		node->out1 = node->herefile[index];
 	}
 	return (0);
@@ -79,9 +78,10 @@ static int	ultimate_check_append(t_cmd_table *node, t_mini *attributes, int inde
 		perror(node->herefile[index]);
 		return (1);
 	}
+	close(ap_output);
 	if (node->cmd_arr)
 	{
-		node->output_fd = ap_output;
+		//node->output_fd = ap_output;
 		node->out1 = node->herefile[index];
 	}
 	return (0);
@@ -89,7 +89,6 @@ static int	ultimate_check_append(t_cmd_table *node, t_mini *attributes, int inde
 
 int	ultimate_check_heredoc(t_cmd_table *node, t_mini *attributes, int index)
 {
-	//int	here_fd;
 	if (node->input_fd > 0)
 			close (node->input_fd);
 	if (here_doc_handler(node, attributes, node->herefile[index]) < 0)
@@ -109,6 +108,7 @@ int	ultimate_check_heredoc(t_cmd_table *node, t_mini *attributes, int index)
 int	check_files(t_cmd_table *node, t_mini *attributes)
 {
 	int	i;
+
 	i = 0;
 	node->in1 = NULL;
 	node->out1 = NULL;
@@ -127,10 +127,7 @@ int	check_files(t_cmd_table *node, t_mini *attributes)
 		if (node->type_arr[i] == 4)
 		{
 			if (ultimate_check_append(node, attributes, i))
-			{
-				//printf("append check fail");
 				return (1);
-			}
 		}
 		if (node->type_arr[i] == 5 && (attributes->cmd_index == 1 || !node->cmd_arr))
 		{
