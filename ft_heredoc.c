@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 19:56:10 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/14 21:27:37 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2025/01/15 19:46:00 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,11 @@
 // cmd << DELIMITER | cmd1 >> file
 //open temporary file with flags O_CREAT | O_WRONLY | O_TRUNCT, 0644
 //int here_doc_fd should it be in attributes?
+
+void ft_heredoc_error(char *delimit)
+{
+	printf("here-document at line delimited by end-of-file (wanted `%s')\n", delimit);
+}
 
 int	here_doc_handler(t_cmd_table *node, t_mini *attributes, char *delimit)
 {
@@ -38,7 +43,9 @@ int	here_doc_handler(t_cmd_table *node, t_mini *attributes, char *delimit)
 	{
 		line = readline("heredoc> ");//or here?
 		if (!line)
+		{
 			break ;
+		}
 		if ((delimit[0] == '\0' && line[0] == '\0') || (ft_strncmp(delimit, line, ft_strlen(delimit)) == 0 && ft_strlen(delimit) == ft_strlen(line)))
 			break ;
 		write(temp_fd, line, ft_strlen(line));
@@ -47,22 +54,27 @@ int	here_doc_handler(t_cmd_table *node, t_mini *attributes, char *delimit)
 		line = NULL;
 	}
 	close(temp_fd);
-	if (g_signal == SIGINT)
+	if (g_signal == SIGINT) // Control + C should trigger this and exit back to main with exitcode 130
 	{
+		g_signal = 0;
+		dup2(saved_stdin, STDIN_FILENO);
+		close(saved_stdin);
 		attributes->exitcode = 130;
-		// reset g_signal to 0 here or later
 		ft_sigint();
 		printf("exit heredoc with ctrl+c\n");
-		// stop execution in here after ctrl+c in heredoc
+		return (-1);
 	}
 	ft_sigint();
-	if (!line)
+	if (!line) // Control + D goes here and life continues
 	{
 		//close(temp_fd);
 		//unlink("here_doc");
+		printf("exit heredoc with ctrl+d\n");
+		ft_heredoc_error(delimit);
 		dup2(saved_stdin, STDIN_FILENO);
 		close(saved_stdin);
-		return (-1); // or exit
+		close(temp_fd);
+		return (0);
 	}
 	if (line)
 		free(line);
