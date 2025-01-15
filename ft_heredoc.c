@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 19:56:10 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/15 19:46:00 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/15 20:28:57 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,9 +56,9 @@ int	here_doc_handler(t_cmd_table *node, t_mini *attributes, char *delimit)
 	close(temp_fd);
 	if (g_signal == SIGINT) // Control + C should trigger this and exit back to main with exitcode 130
 	{
-		g_signal = 0;
 		dup2(saved_stdin, STDIN_FILENO);
 		close(saved_stdin);
+		unlink("here_doc");
 		attributes->exitcode = 130;
 		ft_sigint();
 		printf("exit heredoc with ctrl+c\n");

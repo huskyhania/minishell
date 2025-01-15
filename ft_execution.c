@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 15:00:53 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/09 21:33:31 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2025/01/15 20:41:22 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,7 +154,11 @@ void	handle_command(t_cmd_table *node, t_mini *attributes)
 		if (!check_if_valid_command(node, attributes))
 		{
 			if (node->type != t_command)
+			{
 				check_for_heredocs(node, attributes);
+				if (g_signal == SIGINT)
+					return ;
+			}
 			fork_for_command(node, attributes);
 		}
 	}
@@ -164,6 +168,11 @@ void	handle_command_or_pipe(t_cmd_table *node, t_mini *attributes)
 {
 	if (!node)
 		return ;
+	if (g_signal == SIGINT)
+	{
+		g_signal = 0;
+		return ;
+	}
 	handle_command_or_pipe(node->left, attributes);
 	if (node->type != t_pipe)
 	{
@@ -201,6 +210,7 @@ void	ft_execution(t_mini *attributes)
 		wait_for_all_processes(attributes);
 		free_pipes(attributes);
 	}
+	ft_sigint();
 	ft_free_ast(attributes);
 	free(attributes->pids);
 }
