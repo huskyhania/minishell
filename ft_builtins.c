@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 16:00:04 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/10 14:18:57 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2025/01/15 15:30:05 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ void	ft_pwd(t_mini *attributes)
 void	ft_env(t_cmd_table *node, t_mini *attributes)
 {
 	int	saved_std;
+
 	(void)node;
 	saved_std = dup(STDOUT_FILENO);
 	if (attributes->cmd_index > 1)
@@ -46,8 +47,8 @@ void	ft_env(t_cmd_table *node, t_mini *attributes)
 	}	
 	if (node->output_fd > 1)
 	{
-			dup2(node->output_fd, STDOUT_FILENO);
-			close(node->output_fd);
+		dup2(node->output_fd, STDOUT_FILENO);
+		close(node->output_fd);
 	}
 	print_envp_list(attributes->envp_heap);
 	attributes->exitcode = 0;
@@ -55,7 +56,8 @@ void	ft_env(t_cmd_table *node, t_mini *attributes)
 	close(saved_std);
 }
 
-void	ft_echo(t_cmd_table *node, t_mini *attributes)//should this be an int function?
+//should this be an int function?
+void	ft_echo(t_cmd_table *node, t_mini *attributes)
 {
 	int	i;
 	int	newline;
@@ -63,7 +65,7 @@ void	ft_echo(t_cmd_table *node, t_mini *attributes)//should this be an int funct
 
 	i = 1;
 	newline = 1;
-	if (attributes->cmd_index == 1)	
+	if (attributes->cmd_index == 1)
 		saved_std = dup(STDOUT_FILENO);
 	if (attributes->cmd_index > 1)
 	{
@@ -75,7 +77,7 @@ void	ft_echo(t_cmd_table *node, t_mini *attributes)//should this be an int funct
 		if (attributes->i > 1)
 			close(attributes->pipe_arr[attributes->i - 2][READ]);
 	}
-	if (node->output_fd > 1)
+	if (node->out1)
 	{
 		if (node->last_outfile == 2)
 			node->output_fd = open(node->out1, O_WRONLY | O_CREAT | O_TRUNC, 0644);
@@ -110,8 +112,8 @@ void	ft_echo(t_cmd_table *node, t_mini *attributes)//should this be an int funct
 
 void	ft_cd(char **cmd_array, t_mini *attributes)//needs to handle edge cases and complicated relative paths
 {
-	char	*home;
 	int	i;
+	char	*home;
 
 	attributes->exitcode = 0;
 	i = 0;
@@ -164,7 +166,6 @@ void	handle_builtin(t_cmd_table *node, int flag, t_mini *attributes)
 		exit(attributes->exitcode);
 }
 
-// checks if command is one of the builtins and which one
 int	is_builtin(char *cmd_text)
 {
 	if (ft_strcmp(cmd_text, "echo") == 0)

@@ -21,10 +21,11 @@ static void	execute_single(char **cmd_array, t_mini *attributes, t_cmd_table *no
 		{
 			ft_free_ast(attributes);
 			envp_cleanup(attributes);
+			free(attributes->pids);
 			exit(EXIT_FAILURE);
 		}
 	}
-	if (node->input_fd > 0 || node->last_infile == 5)
+	if (node->in1 || node->last_infile == 5)
 	{
 		if (node->last_infile == 3)
 			node->input_fd = open(node->in1, O_RDONLY);
@@ -35,7 +36,7 @@ static void	execute_single(char **cmd_array, t_mini *attributes, t_cmd_table *no
 			perror("dup2 fail for input");
 		close(node->input_fd);
 	}
-	if (node->output_fd > 1)
+	if (node->out1)
 	{
 		if (node->last_outfile == 2)
 			node->output_fd = open(node->out1, O_WRONLY | O_CREAT | O_TRUNC, 0644);
@@ -54,6 +55,7 @@ static void	execute_single(char **cmd_array, t_mini *attributes, t_cmd_table *no
 			perror("execve error");
 			ft_free_ast(attributes);
 			envp_cleanup(attributes);
+			free(attributes->pids);
 			exit(attributes->exitcode);
 		}
 	}
@@ -61,6 +63,7 @@ static void	execute_single(char **cmd_array, t_mini *attributes, t_cmd_table *no
 	{
 		envp_cleanup(attributes);
 		ft_free_ast(attributes);
+		free(attributes->pids);
 		exit(attributes->exitcode);
 	}
 }
@@ -102,6 +105,8 @@ void	single_command(t_cmd_table *node, t_mini *attributes)
 	i = 0;
 	node->input_fd = 0;
 	node->output_fd = 1;
+	node->in1 = NULL;
+	node->out1 = NULL;
 	if (node->type != t_command)
 	{
 		if (check_files(node, attributes))
