@@ -96,24 +96,7 @@ void	fork_for_command(t_cmd_table *node, t_mini *attributes)
 			close(attributes->pipe_arr[attributes->i - 2][READ]);
 		if (attributes->i < attributes->cmd_index)
 			close(attributes->pipe_arr[attributes->i - 1][WRITE]);
-		/*if (attributes->i == 1)
-		{
-			//close(attributes->pipe_arr[0][READ]);
-			close(attributes->pipe_arr[0][WRITE]);
-		}
-		if (attributes->i > 1 && attributes->i < attributes->cmd_index)
-		{
-			close(attributes->pipe_arr[attributes->i - 2][READ]);
-			close(attributes->pipe_arr[attributes->i - 1][WRITE]);
-		}
-		if (attributes->i == attributes->cmd_index)
-			close(attributes->pipe_arr[attributes->i - 2][READ]);*/
-		//close(attributes->pipe_arr[attributes->i - 1][WRITE]);
 		attributes->pids[attributes->i - 1] = pid;
-		//if (node->input_fd > 0)
-			//close(node->input_fd);
-		//if (node->output_fd > 1)
-			//close(node->output_fd);
 	}
 }
 void	wait_for_all_processes(t_mini *attributes)
@@ -131,7 +114,7 @@ void	wait_for_all_processes(t_mini *attributes)
 			waitpid(attributes->pids[i], &status, 0);
 			if (WIFEXITED(status))
 			{
-				//printf("child exited with status %d\n", WEXITSTATUS(status));
+				printf("child exited with status %d\n", WEXITSTATUS(status));
 				if (i == attributes->cmd_index - 1)
 					attributes->exitcode = WEXITSTATUS(status);
 			}

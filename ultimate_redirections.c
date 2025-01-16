@@ -55,10 +55,7 @@ static int	ultimate_check_outfile(t_cmd_table *node, t_mini *attributes, int ind
 	}
 	close(output);
 	if (node->cmd_arr)
-	{
-		//node->output_fd = output;
 		node->out1 = node->herefile[index];
-	}
 	return (0);
 }
 static int	ultimate_check_append(t_cmd_table *node, t_mini *attributes, int index)

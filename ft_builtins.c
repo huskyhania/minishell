@@ -163,7 +163,10 @@ void	handle_builtin(t_cmd_table *node, int flag, t_mini *attributes)
 	if (flag == BUILTIN_EXIT)
 		ft_exit(node->cmd_arr, attributes);
 	if (flag != BUILTIN_EXIT && attributes->cmd_index > 1)
+	{
+		cleanup_child(attributes);
 		exit(attributes->exitcode);
+	}
 }
 
 int	is_builtin(char *cmd_text)
