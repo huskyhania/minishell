@@ -100,8 +100,7 @@ typedef struct s_minishell
 	int	**pipe_arr;
 	int	num_pipes;
 	int	i;
-	int             type_count;
-	int	here_fd;
+	int	type_count;
 	int	*pids;
 }	t_mini;
 

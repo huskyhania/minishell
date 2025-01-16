@@ -88,14 +88,11 @@ void	handle_pipes(t_mini *attributes)
 	i = 0;
 	if (attributes->i == 1)
 	{
-		//pipe 0 
-		//perror("test1");
 		dup2(attributes->pipe_arr[attributes->i - 1][WRITE], STDOUT_FILENO);
 		//close(attributes->pipe_arr[attributes->i - 1][WRITE]);
 	}
 	else if (attributes->i > 1 && attributes->i < attributes->cmd_index)
 	{
-		//perror("test2");
 		dup2(attributes->pipe_arr[attributes->i - 2][READ], STDIN_FILENO);
 		//close(attributes->pipe_arr[attributes->i - 2][READ]);
 		dup2(attributes->pipe_arr[attributes->i - 1][WRITE], STDOUT_FILENO);
@@ -103,8 +100,6 @@ void	handle_pipes(t_mini *attributes)
 	}
 	else if (attributes->i == attributes->cmd_index)
 	{
-		//perror("test3");
-		//last pipe (no of commands)
 		dup2(attributes->pipe_arr[attributes->i - 2][READ], STDIN_FILENO);
 		//close(attributes->pipe_arr[attributes->i - 2][READ]);
 	}

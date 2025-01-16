@@ -88,10 +88,6 @@ void	single_command(t_cmd_table *node, t_mini *attributes)
 	int	i;
 
 	i = 0;
-	node->input_fd = 0;
-	node->output_fd = 1;
-	node->in1 = NULL;
-	node->out1 = NULL;
 	if (node->type != t_command)
 	{
 		if (check_files(node, attributes))
@@ -110,5 +106,5 @@ void	single_command(t_cmd_table *node, t_mini *attributes)
 			if (!check_if_valid_command(node, attributes))
 				handle_single(node->cmd_arr, attributes, node);
 		}
-	}	
+	}
 }

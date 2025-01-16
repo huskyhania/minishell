@@ -50,7 +50,6 @@ void	minishell_init(char **envp, t_mini *attributes)
 	attributes->commands = NULL;
 	attributes->input_fd = STDIN_FILENO;
 	attributes->output_fd = STDOUT_FILENO;
-	attributes->here_fd = -1;
 	attributes->i = 0;
 	attributes->exitcode = 0;
 	attributes->cmd_index = 0;
@@ -58,8 +57,7 @@ void	minishell_init(char **envp, t_mini *attributes)
 
 	/*attributes->array;
 	attributes->pipe_arr; // not initialized yet / should they be?
-	attributes->num_pipes;
-	attributes->here_fd;*/
+	attributes->num_pipes;*/
 	//test
 }
 

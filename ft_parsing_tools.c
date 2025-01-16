@@ -36,6 +36,10 @@ t_cmd_table	*ft_add_new(t_tokens *token)
 	new_node->cmd_arr= NULL;
 	new_node->outfile = NULL;
 	new_node->infile = NULL;
+	new_node->input_fd = 0;
+	new_node->output_fd = 1;
+	new_node->in1 = NULL;
+	new_node->out1 = NULL;
 	new_node->here = NULL;
 	new_node->herefile = NULL;
 	new_node->append = NULL;
