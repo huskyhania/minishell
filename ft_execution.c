@@ -96,24 +96,7 @@ void	fork_for_command(t_cmd_table *node, t_mini *attributes)
 			close(attributes->pipe_arr[attributes->i - 2][READ]);
 		if (attributes->i < attributes->cmd_index)
 			close(attributes->pipe_arr[attributes->i - 1][WRITE]);
-		/*if (attributes->i == 1)
-		{
-			//close(attributes->pipe_arr[0][READ]);
-			close(attributes->pipe_arr[0][WRITE]);
-		}
-		if (attributes->i > 1 && attributes->i < attributes->cmd_index)
-		{
-			close(attributes->pipe_arr[attributes->i - 2][READ]);
-			close(attributes->pipe_arr[attributes->i - 1][WRITE]);
-		}
-		if (attributes->i == attributes->cmd_index)
-			close(attributes->pipe_arr[attributes->i - 2][READ]);*/
-		//close(attributes->pipe_arr[attributes->i - 1][WRITE]);
 		attributes->pids[attributes->i - 1] = pid;
-		//if (node->input_fd > 0)
-			//close(node->input_fd);
-		//if (node->output_fd > 1)
-			//close(node->output_fd);
 	}
 }
 void	wait_for_all_processes(t_mini *attributes)
@@ -143,10 +126,6 @@ void	wait_for_all_processes(t_mini *attributes)
 void	handle_command(t_cmd_table *node, t_mini *attributes)
 {
 	attributes->i++;
-	node->input_fd = 0;
-	node->output_fd = 1;
-	node->in1 = NULL;
-	node->out1 = NULL;
 	if (node->type != t_command && !node->cmd_arr)
 	{
 		if (check_files(node, attributes) == 1)
@@ -206,7 +185,11 @@ void	ft_execution(t_mini *attributes)
 		return ;
 	}
 	if (attributes->commands->type != t_pipe)
+	{
 		single_command(attributes->commands, attributes);
+		if (g_signal == SIGINT)
+			g_signal = 0;
+	}
 	else
 	{
 		if (create_pipes(attributes) == -1)

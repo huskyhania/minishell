@@ -33,7 +33,6 @@ void	ft_env(t_cmd_table *node, t_mini *attributes)
 {
 	int	saved_std;
 
-	(void)node;
 	saved_std = dup(STDOUT_FILENO);
 	if (attributes->cmd_index > 1)
 	{
@@ -45,8 +44,12 @@ void	ft_env(t_cmd_table *node, t_mini *attributes)
 		if (attributes->i > 1)
 			close(attributes->pipe_arr[attributes->i - 2][READ]);
 	}	
-	if (node->output_fd > 1)
+	if (node->out1)
 	{
+		if (node->last_outfile == 2)
+			node->output_fd = open(node->out1, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		else if (node->last_outfile == 4)
+			node->output_fd = open(node->out1, O_WRONLY | O_CREAT | O_APPEND, 0644);
 		dup2(node->output_fd, STDOUT_FILENO);
 		close(node->output_fd);
 	}
@@ -163,7 +166,10 @@ void	handle_builtin(t_cmd_table *node, int flag, t_mini *attributes)
 	if (flag == BUILTIN_EXIT)
 		ft_exit(node->cmd_arr, attributes);
 	if (flag != BUILTIN_EXIT && attributes->cmd_index > 1)
+	{
+		cleanup_child(attributes);
 		exit(attributes->exitcode);
+	}
 }
 
 int	is_builtin(char *cmd_text)

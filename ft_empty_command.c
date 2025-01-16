@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+/*#include "minishell.h"
 
 static int	infile_check(t_cmd_table *node)
 {
@@ -103,3 +103,4 @@ int	redir_empty(t_cmd_table *node, t_mini *attributes)
 		return (1);
 	}
 }
+*/

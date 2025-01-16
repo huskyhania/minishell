@@ -100,8 +100,7 @@ typedef struct s_minishell
 	int	**pipe_arr;
 	int	num_pipes;
 	int	i;
-	int             type_count;
-	int	here_fd;
+	int	type_count;
 	int	*pids;
 }	t_mini;
 
@@ -169,6 +168,8 @@ int	check_outfile(t_cmd_table *node, t_mini *attributes);
 int	check_append(t_cmd_table *node, t_mini *attributes);
 int	redir_empty(t_cmd_table *node, t_mini *attributes);
 int	check_files(t_cmd_table *node, t_mini *attributes);
+int	redir_in(t_cmd_table *node, t_mini *attributes);
+int	redir_out(t_cmd_table *node, t_mini *attributes);
 
 
 //ft_path.c - checking for path in envp if necessary
@@ -211,7 +212,10 @@ void	cleanup_child(t_mini *attributes);
 //other general utils
 void	free_array(char **array);
 int     ft_strcmp(char *s1, char *s2);
+
+//error messages
 void	set_error_and_display(int error_code, t_mini *attributes, const char *cmd);
+void	syscall_fail(int err_code, t_mini *attributes, const char *message);
 
 //delete from final product
 void ft_print_table(t_mini *attributes);
