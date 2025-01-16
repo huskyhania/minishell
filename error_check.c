@@ -28,3 +28,12 @@ void	set_error_and_display(int err_code, t_mini *attributes, const char *cmd)
 			ft_putstr_fd(": No such file or directory\n", 2);
 	}
 }
+
+void	cleanup_child(t_mini *attributes)
+{
+	free_pipes(attributes);
+	ft_free_ast(attributes);
+	envp_cleanup(attributes);
+	free(attributes->pids);
+	exit(attributes->exitcode);
+}

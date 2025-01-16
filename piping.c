@@ -68,8 +68,10 @@ void	free_pipes(t_mini *attributes)
 	{
 		if (attributes->pipe_arr[i])
 		{
-			//close(attributes->pipe_arr[i][0]);
-			//close(attributes->pipe_arr[i][1]);
+			if (attributes->pipe_arr[i][0] > 0)
+				close(attributes->pipe_arr[i][0]);
+			if (attributes->pipe_arr[i][1] > 0)
+				close(attributes->pipe_arr[i][1]);
 			free(attributes->pipe_arr[i]);
 		}
 		i++;

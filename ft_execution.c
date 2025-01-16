@@ -15,8 +15,6 @@
 void	execute_command(t_cmd_table *node, t_mini *attributes)
 {
 	handle_pipes(attributes);
-	//fprintf(stderr, "comand no %d\n", attributes->i);
-	//fprintf(stderr, "current outout fd %d %d\n\n", node->output_fd, node->input_fd);
 	if (node->type != t_command && (node->in1 || node->last_infile == 5))
 	{
 		if (node->last_infile == 3)
@@ -31,7 +29,6 @@ void	execute_command(t_cmd_table *node, t_mini *attributes)
 	{
 		if (node->last_outfile == 2)
 			node->output_fd = open(node->out1, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		//printf("%d output fd\n", node->output_fd);
 		else if (node->last_outfile == 4)
 			node->output_fd = open(node->out1, O_WRONLY | O_CREAT | O_APPEND, 0644);
 		if (dup2(node->output_fd, STDOUT_FILENO) == -1)
@@ -48,7 +45,7 @@ void	execute_command(t_cmd_table *node, t_mini *attributes)
 			ft_free_ast(attributes);
 			envp_cleanup(attributes);
 			free(attributes->pids);
-			exit(attributes->exitcode);//exitfailure?
+			exit(attributes->exitcode);
 		}
 	}
 	else if (!cmd_path)
@@ -76,7 +73,13 @@ void	fork_for_command(t_cmd_table *node, t_mini *attributes)
 		if (node->type != t_command)
 		{
 			if (check_files(node, attributes))
+			{
+				envp_cleanup(attributes);
+				ft_free_ast(attributes);
+				free_pipes(attributes);
+				free(attributes->pids);
 				exit(EXIT_FAILURE);	
+			}
 		}
 		builtin_flag = is_builtin(node->cmd_arr[0]);
 		if (builtin_flag != 0)
@@ -121,14 +124,19 @@ void	wait_for_all_processes(t_mini *attributes)
 	i = 0;
 	while (attributes->pids[i] != 0)
 	{
-		waitpid(attributes->pids[i], &status, 0);
-		if (WIFEXITED(status))
+		if (attributes->pids[i] < 0)
+			i++;
+		else
 		{
-			//printf("child exited with status %d\n", WEXITSTATUS(status));
-			if (i == attributes->cmd_index - 1)
-				attributes->exitcode = WEXITSTATUS(status);
+			waitpid(attributes->pids[i], &status, 0);
+			if (WIFEXITED(status))
+			{
+				//printf("child exited with status %d\n", WEXITSTATUS(status));
+				if (i == attributes->cmd_index - 1)
+					attributes->exitcode = WEXITSTATUS(status);
+			}
+			i++;
 		}
-		i++;
 	}
 }
 
@@ -143,9 +151,7 @@ void	handle_command(t_cmd_table *node, t_mini *attributes)
 	{
 		if (check_files(node, attributes) == 1)
 		{
-			//fprintf(stderr, "check file fail\n");
 			attributes->exitcode = 1;
-			//fprintf(stderr, "exitcode is %d\n", attributes->exitcode);
 			return ;
 		}
 	}
@@ -161,6 +167,8 @@ void	handle_command(t_cmd_table *node, t_mini *attributes)
 			}
 			fork_for_command(node, attributes);
 		}
+		else
+			attributes->pids[attributes->i - 1] = -1;
 	}
 }
 
@@ -170,7 +178,7 @@ void	handle_command_or_pipe(t_cmd_table *node, t_mini *attributes)
 		return ;
 	if (g_signal == SIGINT)
 	{
-		g_signal = 0;
+		//g_signal = 0;
 		return ;
 	}
 	handle_command_or_pipe(node->left, attributes);
@@ -202,12 +210,14 @@ void	ft_execution(t_mini *attributes)
 	{
 		if (create_pipes(attributes) == -1)
 		{
-			printf("pipe creation error\n");//clean up;
+			printf("pipe creation error\n");
 			return ;
 		}
 		handle_command_or_pipe(attributes->commands, attributes);
-		//close pipes here?
-		wait_for_all_processes(attributes);
+		if (g_signal == SIGINT)
+			g_signal = 0;
+		else
+			wait_for_all_processes(attributes);
 		free_pipes(attributes);
 	}
 	ft_sigint();

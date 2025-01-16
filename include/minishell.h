@@ -204,6 +204,7 @@ int	ultimate_check_heredoc(t_cmd_table *node, t_mini *attributes, int index);
 //cleanup
 void	envp_cleanup(t_mini *attributes);
 void	clean_envp_ll(t_envp **envp_heap);
+void	cleanup_child(t_mini *attributes);
 
 //other general utils
 void	free_array(char **array);

@@ -117,7 +117,6 @@ void	single_command(t_cmd_table *node, t_mini *attributes)
 	}
 	if (node->cmd_arr)
 	{
-		//printf("comand string is %s", node->cmd_arr[0]);
 		builtin_flag = is_builtin(node->cmd_arr[0]);
 		if (builtin_flag != 0)
 			handle_builtin(node, builtin_flag, attributes);

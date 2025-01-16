@@ -84,34 +84,6 @@ int	here_doc_handler(t_cmd_table *node, t_mini *attributes, char *delimit)
 	return (0);
 }
 
-/*int	process_heredocs(t_cmd_table *node, t_mini *attributes)
-{
-	int	i;
-
-	i = 0;
-	while (node->here[i] != NULL)
-	{
-		if (attributes->here_fd > 0)
-			close(attributes->here_fd);
-		if (here_doc_handler(node, attributes, node->here[i]) < 0)
-		{
-			perror(node->here[i]);
-			attributes->exitcode = 1;
-			return (1);
-		}
-		attributes->here_fd = open("here_doc", O_RDONLY);
-		if (attributes->here_fd < 0)
-		{
-			perror(node->here[i]);
-			attributes->exitcode = 1;
-			return (1);
-		}
-		i++;
-	}
-	attributes->exitcode = 0;
-	return (0);
-}*/
-
 int	check_for_heredocs(t_cmd_table *node, t_mini *attributes)
 {
 	int	i;

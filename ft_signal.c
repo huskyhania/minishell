@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/01 17:31:31 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/15 23:16:31 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/16 17:20:32 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	ft_handle_sigint(int sig)
 	//write(1, "AA", 2);
 	//rl_replace_line("", 0);
 	//write(1,"\n", 1);
-	ft_putstr_fd("\n", STDOUT_FILENO);
+	ft_putstr_fd("\n", 1);
 	rl_on_new_line();
 	rl_replace_line("", 0);
 	rl_redisplay();
@@ -34,7 +34,7 @@ void	ft_heredoc_sighandler(int sig)
 {
 	if (sig == SIGINT)
 	{
-		write(1, "BB", 2);
+		//write(1, "BB", 2);
 		g_signal = SIGINT;
 		printf("\n");
 		rl_on_new_line();
