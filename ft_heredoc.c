@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 19:56:10 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/15 22:53:43 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/16 23:37:56 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,11 +42,9 @@ int	here_doc_handler(t_cmd_table *node, t_mini *attributes, char *delimit)
 	while (1)
 	{
 		line = readline("heredoc> ");//or here?
-		if (!line)
-		{
-			break ;
-		}
-		if ((delimit[0] == '\0' && line[0] == '\0') || (ft_strncmp(delimit, line, ft_strlen(delimit)) == 0 && ft_strlen(delimit) == ft_strlen(line)))
+		//if (!line)
+		//	break ;
+		if (!line || (delimit[0] == '\0' && line[0] == '\0') || (ft_strncmp(delimit, line, ft_strlen(delimit)) == 0 && ft_strlen(delimit) == ft_strlen(line)))
 			break ;
 		write(temp_fd, line, ft_strlen(line));
 		write(temp_fd, "\n", 1);
@@ -54,33 +52,32 @@ int	here_doc_handler(t_cmd_table *node, t_mini *attributes, char *delimit)
 		line = NULL;
 	}
 	close(temp_fd);
+	ft_resetsignal();
 	if (g_signal == SIGINT) // Control + C should trigger this and exit back to main with exitcode 130
 	{
 		dup2(saved_stdin, STDIN_FILENO);
 		close(saved_stdin);
 		unlink("here_doc");
 		attributes->exitcode = 130;
-		ft_sigint();
-		//printf("exit heredoc with ctrl+c\n");
+		ft_resetposthere();
+		printf("exit heredoc with ctrl+c\n");
 		return (-1);
 	}
-	ft_sigint();
 	if (!line) // Control + D goes here and life continues
 	{
-		//close(temp_fd);
-		//unlink("here_doc");
-		//printf("exit heredoc with ctrl+d\n");
+		printf("exit heredoc with ctrl+d\n");
 		ft_heredoc_error(delimit);
+		ft_resetposthere();
 		dup2(saved_stdin, STDIN_FILENO);
 		close(saved_stdin);
-		close(temp_fd);
 		return (0);
 	}
+	ft_sigint();
 	if (line)
 		free(line);
 	dup2(saved_stdin, STDIN_FILENO);
 	close(saved_stdin);
-	close(temp_fd);
+	//close(temp_fd);
 	return (0);
 }
 

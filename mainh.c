@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:37:20 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/11 18:30:01 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/16 21:34:03 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void	minishell_init(char **envp, t_mini *attributes)
 	//test
 }
 
-void	ft_readline_loop(t_mini *attributes)
+void	ft_readline_loop(t_mini *attributes, char **envp)
 {
 	while (1)
 	{
@@ -82,7 +82,7 @@ void	ft_readline_loop(t_mini *attributes)
 			{
 				//printf("muted exec\n");
 				ft_execution(attributes);
-				//minishell_init(attributes); reset here?
+				minishell_init(envp, attributes);
 			}
 		}
 	}
@@ -104,7 +104,7 @@ int	main(int argc, char **argv, char **envp)
 	{
 		minishell_init(envp, &attributes);
 		ft_sigint();
-		ft_readline_loop(&attributes);
+		ft_readline_loop(&attributes, envp);
 	}
 	return (0);
 }

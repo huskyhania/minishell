@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 15:00:53 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/15 20:41:22 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/17 00:06:36 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,6 +191,7 @@ void	handle_command_or_pipe(t_cmd_table *node, t_mini *attributes)
 
 void	ft_execution(t_mini *attributes)
 {
+	ft_sigint();
 	attributes->pids = NULL;
 	if (!attributes || !attributes->commands)
 	{
@@ -220,7 +221,7 @@ void	ft_execution(t_mini *attributes)
 			wait_for_all_processes(attributes);
 		free_pipes(attributes);
 	}
-	ft_sigint();
+	//ft_sigint();
 	ft_free_ast(attributes);
 	free(attributes->pids);
 }

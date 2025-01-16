@@ -108,6 +108,8 @@ typedef struct s_minishell
 //ft_signal.c
 void ft_sigint(void);
 void ft_heresignal(void);
+void    ft_resetsignal(void);
+void	ft_resetposthere(void);
 
 //ft_tokens.c
 int	ft_tokenization(t_mini *attributes);
