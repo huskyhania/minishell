@@ -109,6 +109,8 @@ int	check_files(t_cmd_table *node, t_mini *attributes)
 	i = 0;
 	node->in1 = NULL;
 	node->out1 = NULL;
+	if (!node->herefile)
+		return (0);
 	while (node->herefile[i] != NULL)
 	{
 		if (node->type_arr[i] == 3)

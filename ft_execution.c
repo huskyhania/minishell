@@ -114,7 +114,7 @@ void	wait_for_all_processes(t_mini *attributes)
 			waitpid(attributes->pids[i], &status, 0);
 			if (WIFEXITED(status))
 			{
-				printf("child exited with status %d\n", WEXITSTATUS(status));
+				//printf("child exited with status %d\n", WEXITSTATUS(status));
 				if (i == attributes->cmd_index - 1)
 					attributes->exitcode = WEXITSTATUS(status);
 			}

@@ -27,25 +27,13 @@ static void	execute_single(char **cmd_array, t_mini *attributes, t_cmd_table *no
 	}
 	if (node->in1 || node->last_infile == 5)
 	{
-		if (node->last_infile == 3)
-			node->input_fd = open(node->in1, O_RDONLY);
-		//printf("%d input fd\n", node->input_fd);
-		if (node->last_infile == 5)
-			node->input_fd = open("here_doc", O_RDONLY);
-		if (dup2(node->input_fd, STDIN_FILENO) == -1)
-			perror("dup2 fail for input");
-		close(node->input_fd);
+		if (redir_in(node, attributes))
+			cleanup_child(attributes);
 	}
 	if (node->out1)
 	{
-		if (node->last_outfile == 2)
-			node->output_fd = open(node->out1, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		//printf("%d output fd\n", node->output_fd);
-		else if (node->last_outfile == 4)
-			node->output_fd = open(node->out1, O_WRONLY | O_CREAT | O_APPEND, 0644);
-		if (dup2(node->output_fd, STDOUT_FILENO) == -1)
-			perror("dup2 fail for output");
-		close(node->output_fd);
+		if (redir_out(node, attributes))
+			cleanup_child(attributes);
 	}
 	cmd_path = get_command_path(cmd_array[0], attributes);
 	if (cmd_path)
@@ -79,10 +67,7 @@ static void	handle_single(char **cmd_array, t_mini *attributes, t_cmd_table *nod
 		return ; // might require closing fds, freeing memory
 	}
 	if (pid == 0)
-	{
-		//perror("child process");
 		execute_single(cmd_array, attributes, node);
-	}
 	else
 	{
 		//close(attributes->here_fd);

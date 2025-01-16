@@ -12,129 +12,44 @@
 
 #include "minishell.h"
 
-int	check_infile(t_cmd_table *node, t_mini *attributes)
+//should dup2 fail interrupt the execution? should close fail be checked?
+
+int	redir_in(t_cmd_table *node, t_mini *attributes)
 {
-	int	input;
-	int	i;
-
-	i = 0;
-	input = -1;
-	while (node->infile[i] != NULL)
+	if (node->last_infile == 3)
+		node->input_fd = open(node->in1, O_RDONLY);
+	else if (node->last_infile == 5)
+		node->input_fd = open("here_doc", O_RDONLY);
+	if (node->input_fd < 0)
 	{
-		if (input >= 0)
-			close(input);
-		input = open(node->infile[i], O_RDONLY);
-		if (input < 0)
-		{
-			set_error_and_display(1, attributes, node->infile[i]);
-			return (1);
-		}
-		i++;
-	}
-	if (node->last_infile == 3 && input >= 0)
-		dup2(input, STDIN_FILENO);
-	if (input >= 0)
-		close(input);
-	return (0);
-}
-
-int	check_outfile(t_cmd_table *node, t_mini *attributes)
-{
-	int	output;
-	int	i;
-
-	i = 0;
-	output = -1;
-	while (node->outfile[i] != NULL)
-	{
-		if (output >= 0)
-			close(output);
-		output = open(node->outfile[i], O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		if (output < 0)
-		{
-			set_error_and_display(1, attributes, node->outfile[i]);
-			return (1);
-		}
-		i++;
-	}
-	if (node->last_outfile == 2 && output >= 0)
-		dup2(output, STDOUT_FILENO);
-	if (output >= 0)
-		close(output);
-	return (0);
-}
-
-int	check_append(t_cmd_table *node, t_mini *attributes)
-{
-	int	output;
-	int	i;
-
-	i = 0;
-	output = -1;
-	while(node->append[i] != NULL)
-	{
-		if (output >= 0)
-			close(output);
-		output = open(node->append[i], O_WRONLY | O_CREAT | O_APPEND, 0644);
-		if (output < 0)
-		{
-			set_error_and_display(1, attributes, node->append[i]);
-			return (1);
-		}
-		i++;
-	}
-	if (node->last_outfile == 4 && output >= 0)
-		dup2(output, STDOUT_FILENO);
-	if (output >= 0)
-		close(output);
-	return (0);
-}
-
-int	check_heredoc(t_cmd_table *node, t_mini *attributes)
-{
-	attributes->here_fd = open("here_doc", O_RDONLY);
-	if (attributes->here_fd < 0)
-	{
-		set_error_and_display(1, attributes, "here_doc");
+		syscall_fail(1, attributes, "open");
 		return (1);
 	}
-	if (node->last_infile == 5)
+	if (dup2(node->input_fd, STDIN_FILENO) == -1)
 	{
-		if (dup2(attributes->here_fd, STDIN_FILENO) < 0)
-		{
-			perror("dup2 error");
-			return (1);
-		}
+		syscall_fail(1, attributes, "input dup2");
+		return (1);
 	}
-	close(attributes->here_fd);
+	close(node->input_fd);
 	return (0);
 }
 
-int	check_redirs(t_cmd_table *node, t_mini *attributes)
+int	redir_out(t_cmd_table *node, t_mini *attributes)
 {
-	if (node->infile && node->infile[0])
+	if (node->last_outfile == 2)
+		node->output_fd = open(node->out1, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	else if (node->last_outfile == 4)
+		node->output_fd = open(node->out1, O_WRONLY | O_CREAT | O_APPEND, 0644);
+	if (node->output_fd < 0)
 	{
-		//perror("got into infile check");
-		if (check_infile(node, attributes))
-			return (1);
+		syscall_fail(1, attributes, "open");
+		return (1);
 	}
-	if (node->here && node->here[0])
+	if (dup2(node->output_fd, STDOUT_FILENO) == -1)
 	{
-		//perror("got into heredoc check");
-		if (check_heredoc(node, attributes))
-			return (1);
+		syscall_fail(1, attributes, "output dup2");
+		return (1);
 	}
-	if (node->outfile && node->outfile[0])
-	{
-		//perror("got into outfile check");
-		if (check_outfile(node, attributes))
-			return (1);
-	}
-	if (node->append && node->append[0])
-	{
-		//perror("got into append check");
-		if (check_append(node, attributes))
-			return (1);
-	}
+	close(node->output_fd);
 	return (0);
 }
