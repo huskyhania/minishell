@@ -51,24 +51,22 @@ void	execute_command(t_cmd_table *node, t_mini *attributes)
 void	fork_for_command(t_cmd_table *node, t_mini *attributes)
 {
 	int	pid;
-	//int	status;
 	int	builtin_flag;
+
 	pid = fork();
 	if (pid < 0)
 	{
-		perror("fork error");
+		syscall_fail(1, attributes, "fork");
 		exit(EXIT_FAILURE);//might require closing fds, freeing memory)
 	}
 	if (pid == 0)
 	{
+		ft_resetsignal();
 		if (node->type != t_command)
 		{
 			if (check_files(node, attributes))
 			{
-				envp_cleanup(attributes);
-				ft_free_ast(attributes);
-				free_pipes(attributes);
-				free(attributes->pids);
+				cleanup_child(attributes);
 				exit(EXIT_FAILURE);	
 			}
 		}
@@ -94,8 +92,10 @@ void	wait_for_all_processes(t_mini *attributes)
 {
 	int	status;
 	int	i;
+	int	signal_no;
 
 	i = 0;
+	status = 0x7F;
 	while (attributes->pids[i] != 0)
 	{
 		if (attributes->pids[i] < 0)
@@ -103,6 +103,15 @@ void	wait_for_all_processes(t_mini *attributes)
 		else
 		{
 			waitpid(attributes->pids[i], &status, 0);
+			if (WIFSIGNALED(status))
+			{
+				signal_no = WTERMSIG(status);
+				//printf("%d signal noo \n", signal_no);
+				attributes->exitcode = signal_no + 128;
+				//printf("child exited with signal\n");
+				if (signal_no != 13)
+					return ;
+			}
 			if (WIFEXITED(status))
 			{
 				//printf("child exited with status %d\n", WEXITSTATUS(status));
@@ -121,7 +130,10 @@ void	handle_command(t_cmd_table *node, t_mini *attributes)
 	{
 		if (check_files(node, attributes) == 1)
 		{
-			attributes->exitcode = 1;
+			if (g_signal == SIGINT)
+				attributes->exitcode = 130;
+			else
+				attributes->exitcode = 1;
 			return ;
 		}
 	}
@@ -147,15 +159,10 @@ void	handle_command_or_pipe(t_cmd_table *node, t_mini *attributes)
 	if (!node)
 		return ;
 	if (g_signal == SIGINT)
-	{
-		//g_signal = 0;
 		return ;
-	}
 	handle_command_or_pipe(node->left, attributes);
 	if (node->type != t_pipe)
-	{
 		handle_command(node, attributes);
-	}
 	handle_command_or_pipe(node->right, attributes);
 }
 
@@ -164,17 +171,11 @@ void	ft_execution(t_mini *attributes)
 	ft_sigint();
 	attributes->pids = NULL;
 	if (!attributes || !attributes->commands)
-	{
-		printf("something went wrong\n");
-		return ;
-	}
+		return (syscall_fail(1, attributes, "attributes struct or node creation"));
 	attributes->pids = malloc(sizeof(int) * (attributes->cmd_index + 1));
-	attributes->pids[attributes->cmd_index] = 0;
 	if (!attributes->pids)
-	{
-		ft_putstr_fd("malloc error\n", 2);
-		return ;
-	}
+		return (syscall_fail(1, attributes, "malloc"));
+	attributes->pids[attributes->cmd_index] = 0;
 	if (attributes->commands->type != t_pipe)
 	{
 		single_command(attributes->commands, attributes);
@@ -184,10 +185,7 @@ void	ft_execution(t_mini *attributes)
 	else
 	{
 		if (create_pipes(attributes) == -1)
-		{
-			printf("pipe creation error\n");
-			return ;
-		}
+			return(syscall_fail(1, attributes, "pipe"));
 		handle_command_or_pipe(attributes->commands, attributes);
 		if (g_signal == SIGINT)
 			g_signal = 0;
@@ -195,7 +193,6 @@ void	ft_execution(t_mini *attributes)
 			wait_for_all_processes(attributes);
 		free_pipes(attributes);
 	}
-	//ft_sigint();
 	ft_free_ast(attributes);
 	free(attributes->pids);
 	attributes->pids = NULL;

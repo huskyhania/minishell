@@ -67,6 +67,7 @@ void	ft_heredoc_sighandler(int sig)
 		rl_on_new_line();
 		rl_replace_line("", 0);
 		//rl_done = 1;
+		(ft_attributes()->exitcode) = 130;
 		close(STDIN_FILENO);
 	}
 }

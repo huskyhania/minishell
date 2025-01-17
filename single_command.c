@@ -62,6 +62,9 @@ static void	handle_single(char **cmd_array, t_mini *attributes, t_cmd_table *nod
 {
 	int	pid;
 	int	status;
+	int	signal_no;
+
+	status = 0x7F;
 	pid = fork();
 	if (pid < 0)
 	{
@@ -69,10 +72,19 @@ static void	handle_single(char **cmd_array, t_mini *attributes, t_cmd_table *nod
 		return ; // might require closing fds, freeing memory
 	}
 	if (pid == 0)
+	{
+		ft_resetsignal();
 		execute_single(cmd_array, attributes, node);
+	}
 	else
 	{
 		waitpid(pid, &status, 0);
+		if (WIFSIGNALED(status))
+		{
+			signal_no = WTERMSIG(status);
+			attributes->exitcode = signal_no + 128;
+			printf("exited with signal\n");
+		}
 		if (WIFEXITED(status))
 		{
 			//printf("child exited with status %d\n", WEXITSTATUS(status));
@@ -93,7 +105,10 @@ void	single_command(t_cmd_table *node, t_mini *attributes)
 	{
 		if (check_files(node, attributes))
 		{
-			attributes->exitcode = 1;
+			if (g_signal == SIGINT)
+				attributes->exitcode = 130;
+			else
+				attributes->exitcode = 1;
 			return;
 		}
 	}
