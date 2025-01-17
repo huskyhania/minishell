@@ -59,63 +59,9 @@ void	ft_env(t_cmd_table *node, t_mini *attributes)
 	close(saved_std);
 }
 
-//should this be an int function?
-void	ft_echo(t_cmd_table *node, t_mini *attributes)
-{
-	int	i;
-	int	newline;
-	int	saved_std;
-
-	i = 1;
-	newline = 1;
-	if (attributes->cmd_index == 1)
-		saved_std = dup(STDOUT_FILENO);
-	if (attributes->cmd_index > 1)
-	{
-		if (attributes->i < attributes->cmd_index)
-		{
-			dup2(attributes->pipe_arr[attributes->i - 1][WRITE], STDOUT_FILENO);
-			close(attributes->pipe_arr[attributes->i - 1][WRITE]);
-		}
-		if (attributes->i > 1)
-			close(attributes->pipe_arr[attributes->i - 2][READ]);
-	}
-	if (node->out1)
-	{
-		if (node->last_outfile == 2)
-			node->output_fd = open(node->out1, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		//printf("%d output fd\n", node->output_fd);
-		else if (node->last_outfile == 4)
-			node->output_fd = open(node->out1, O_WRONLY | O_CREAT | O_APPEND, 0644);
-		if (dup2(node->output_fd, STDOUT_FILENO) == -1)
-			perror("dup2 fail for output");
-		close(node->output_fd);
-	}
-	if (node->cmd_arr[i] && ft_strcmp(node->cmd_arr[i], "-n") == 0)
-	{
-		newline = 0;
-		i++;
-	}
-	while (node->cmd_arr[i] != NULL)
-	{
-		printf("%s", node->cmd_arr[i]);
-		if (node->cmd_arr[i + 1] != NULL)
-			printf(" ");
-		i++;
-	}
-	if (newline)
-		printf("\n");
-	if (attributes->cmd_index == 1)
-	{
-		dup2(saved_std, STDOUT_FILENO);
-		close(saved_std);
-		attributes->exitcode = 0;
-	}
-}
-
 void	ft_cd(char **cmd_array, t_mini *attributes)//needs to handle edge cases and complicated relative paths
 {
-	int	i;
+	int		i;
 	char	*home;
 
 	attributes->exitcode = 0;
