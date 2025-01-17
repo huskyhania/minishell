@@ -6,16 +6,11 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/01 17:31:31 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/17 18:13:05 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/17 21:09:58 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int ft_set_exit(void)
-{
-	return (0);
-}
 
 void	ft_handle_post_here(int sig)
 {
@@ -76,9 +71,9 @@ void	ft_resetsignal(void)
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
 }
+
 void	ft_heresignal(void)
 {
-	//rl_event_hook = ft_event;
 	signal(SIGINT, ft_heredoc_sighandler);
 	signal(SIGQUIT, SIG_IGN);
 }

@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/26 14:59:32 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/10 19:09:13 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/17 23:28:12 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int	ft_check_redirection(t_tokens *token, t_mini *attributes)
 		attributes->exitcode = 2;
 		return (0);
 	}
-	if ((token->type == t_great || token->type == t_greatgreat)
+	if ((token->type == t_great || token->type == t_greatgreat || token->type == t_lessless)
 		&& token->next->type != t_command)
 	{
 		if (token->next->type == t_great)
@@ -119,11 +119,15 @@ int ft_syntax_check(t_mini *attributes)
 	while (token)
 	{
 		if (token->type == t_pipe)
+		{
 			if(!(ft_check_pipe(token, attributes)))
 				return (0);
-		if (token->type == t_great || token->type == t_less || token->type == t_greatgreat || token->type == t_lessless)
+		}
+		else if (token->type == t_great || token->type == t_less || token->type == t_greatgreat || token->type == t_lessless)
+		{
 			if(!(ft_check_redirection(token, attributes)))
 				return (0);
+		}
 		token = token->next;
 	}
 	return (1);
