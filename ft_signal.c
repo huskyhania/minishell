@@ -6,13 +6,13 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/01 17:31:31 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/16 23:52:56 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/17 18:13:05 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int ft_event(void)
+int ft_set_exit(void)
 {
 	return (0);
 }
@@ -24,6 +24,7 @@ void	ft_handle_post_here(int sig)
 		rl_on_new_line();
 		rl_replace_line("", 0);
 		rl_redisplay();
+		(ft_attributes()->exitcode) = 130;
 	}
 }
 
@@ -35,6 +36,7 @@ void	ft_handle_sigint(int sig)
 		ft_putstr_fd("\n", STDOUT_FILENO);
 		rl_on_new_line();
 		rl_redisplay();
+		(ft_attributes()->exitcode) = 130;
 	}
 }
 

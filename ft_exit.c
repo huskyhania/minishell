@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/09 16:48:06 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/15 23:00:48 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/17 18:55:06 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,11 @@
 
 void	ft_final_exit(t_mini *attributes, int exit_number)
 {
+	rl_clear_history();
 	envp_cleanup(attributes);
 	ft_free_ast(attributes);
-	free(attributes->pids);
+	if (attributes->pids)
+		free(attributes->pids);
 	if (attributes->cmd_index > 1)
 		free_pipes(attributes);
 	exit(exit_number);
