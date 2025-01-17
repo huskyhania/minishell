@@ -17,23 +17,19 @@ void	execute_command(t_cmd_table *node, t_mini *attributes)
 	handle_pipes(attributes);
 	if (node->type != t_command && (node->in1 || node->last_infile == 5))
 	{
-		if (node->last_infile == 3)
-			node->input_fd = open(node->in1, O_RDONLY);
-		if (node->last_infile == 5)
-			node->input_fd = open("here_doc", O_RDONLY);
-		if (dup2(node->input_fd, STDIN_FILENO) == -1)
-			perror("dup2 fail for input");
-		close(node->input_fd);
+		if (redir_in(node, attributes))
+		{
+			cleanup_child(attributes);
+			exit(EXIT_FAILURE);
+		}
 	}
 	if (node->type != t_command && node->out1)
 	{
-		if (node->last_outfile == 2)
-			node->output_fd = open(node->out1, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		else if (node->last_outfile == 4)
-			node->output_fd = open(node->out1, O_WRONLY | O_CREAT | O_APPEND, 0644);
-		if (dup2(node->output_fd, STDOUT_FILENO) == -1)
-			perror("dup2 fail for output");
-		close(node->output_fd);
+		if (redir_out(node, attributes))
+		{
+			cleanup_child(attributes);
+			exit(EXIT_FAILURE);
+		}
 	}
 	char *cmd_path = get_command_path(node->cmd_arr[0], attributes);
 	if (cmd_path)
@@ -41,22 +37,17 @@ void	execute_command(t_cmd_table *node, t_mini *attributes)
 		if (execve(cmd_path, node->cmd_arr, attributes->envp_arr) == -1)
 		{
 			free(cmd_path);
-			free_pipes(attributes);
-			ft_free_ast(attributes);
-			envp_cleanup(attributes);
-			free(attributes->pids);
+			cleanup_child(attributes);
 			exit(attributes->exitcode);
 		}
 	}
 	else if (!cmd_path)
 	{
-		envp_cleanup(attributes);
-		free_pipes(attributes);
-		ft_free_ast(attributes);
-		free(attributes->pids);
+		cleanup_child(attributes);
 		exit(attributes->exitcode);
 	}
 }
+
 void	fork_for_command(t_cmd_table *node, t_mini *attributes)
 {
 	int	pid;

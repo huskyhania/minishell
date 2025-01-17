@@ -63,6 +63,7 @@ void	minishell_init(char **envp, t_mini *attributes)
 
 void	ft_readline_loop(t_mini *attributes, char **envp)
 {
+	(void)envp;
 	while (1)
 	{
 		if (!(attributes->readret = readline(PROMPT)))
@@ -80,7 +81,7 @@ void	ft_readline_loop(t_mini *attributes, char **envp)
 			{
 				//printf("muted exec\n");
 				ft_execution(attributes);
-				minishell_init(envp, attributes);
+				//minishell_init(envp, attributes);
 			}
 		}
 	}

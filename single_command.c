@@ -28,30 +28,32 @@ static void	execute_single(char **cmd_array, t_mini *attributes, t_cmd_table *no
 	if (node->in1 || node->last_infile == 5)
 	{
 		if (redir_in(node, attributes))
+		{
 			cleanup_child(attributes);
+			exit(EXIT_FAILURE);
+		}
 	}
 	if (node->out1)
 	{
 		if (redir_out(node, attributes))
+		{
 			cleanup_child(attributes);
+			exit(EXIT_FAILURE);
+		}
 	}
 	cmd_path = get_command_path(cmd_array[0], attributes);
 	if (cmd_path)
 	{
 		if (execve(cmd_path, cmd_array, NULL) == -1)
 		{
-			perror("execve error");
-			ft_free_ast(attributes);
-			envp_cleanup(attributes);
-			free(attributes->pids);
+			free(cmd_path);
+			cleanup_child(attributes);
 			exit(attributes->exitcode);
 		}
 	}
 	else
 	{
-		envp_cleanup(attributes);
-		ft_free_ast(attributes);
-		free(attributes->pids);
+		cleanup_child(attributes);
 		exit(attributes->exitcode);
 	}
 }
@@ -70,7 +72,6 @@ static void	handle_single(char **cmd_array, t_mini *attributes, t_cmd_table *nod
 		execute_single(cmd_array, attributes, node);
 	else
 	{
-		//close(attributes->here_fd);
 		waitpid(pid, &status, 0);
 		if (WIFEXITED(status))
 		{
