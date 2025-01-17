@@ -104,6 +104,8 @@ typedef struct s_minishell
 	int	*pids;
 }	t_mini;
 
+t_mini *ft_attributes(void);
+
 //ft_signal.c
 void ft_sigint(void);
 void ft_heresignal(void);

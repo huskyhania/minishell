@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 17:07:16 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/12 20:56:31 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/17 18:53:04 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,5 +59,6 @@ int ft_free_ast(t_mini *attributes)
 			free(table);
 		table = temp;
 	}
+	attributes->commands = NULL;
 	return (1);
 }

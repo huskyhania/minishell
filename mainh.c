@@ -6,11 +6,13 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:37:20 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/16 21:34:03 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/17 19:25:27 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void    ft_final_exit(t_mini *attributes, int exit_number);
 
 int	g_signal = 0;
 
@@ -68,15 +70,15 @@ void	ft_readline_loop(t_mini *attributes, char **envp)
 	{
 		if (!(attributes->readret = readline(PROMPT)))
 		{
-			printf("exit\n");
+			ft_final_exit(attributes, 0);
+			/*printf("exit\n");
 			rl_clear_history();
 			envp_cleanup(attributes);
-			exit(0); // check that the exit number is correct for ctrl+d, also million things need to be freed here??
+			exit(0); // check that the exit number is correct for ctrl+d, also million things need to be freed here??*/
 		}
 		if (attributes->readret && attributes->readret[0] != '\0')
 		{
 			add_history(attributes->readret);
-			//printf("\nyour shitty input was %s\n", attributes->readret);
 			if (ft_check_everything(attributes))
 			{
 				//printf("muted exec\n");
@@ -89,9 +91,16 @@ void	ft_readline_loop(t_mini *attributes, char **envp)
 	envp_cleanup(attributes);
 }
 
+t_mini *ft_attributes(void)
+{
+	static t_mini attributes;
+	
+	return (&attributes);
+}
+
 int	main(int argc, char **argv, char **envp)
 {
-	t_mini	attributes;
+	t_mini	*attributes;
 
 	(void)argv;
 	if (argc > 1)
@@ -101,9 +110,10 @@ int	main(int argc, char **argv, char **envp)
 	}
 	else
 	{
-		minishell_init(envp, &attributes);
+		attributes = ft_attributes();
+		minishell_init(envp, attributes);
 		ft_sigint();
-		ft_readline_loop(&attributes, envp);
+		ft_readline_loop(attributes, envp);
 	}
 	return (0);
 }
