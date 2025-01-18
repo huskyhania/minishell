@@ -44,7 +44,7 @@ static void	execute_single(char **cmd_array, t_mini *attributes, t_cmd_table *no
 	cmd_path = get_command_path(cmd_array[0], attributes);
 	if (cmd_path)
 	{
-		if (execve(cmd_path, cmd_array, NULL) == -1)
+		if (execve(cmd_path, cmd_array, attributes->envp_arr) == -1)
 		{
 			free(cmd_path);
 			cleanup_child(attributes);

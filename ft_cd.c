@@ -70,7 +70,10 @@ void	ft_cd(char **cmd_array, t_mini *attributes)
 	else
 	{
 		if (chdir(cmd_array[1]) == -1)
-			return (syscall_fail(1, attributes, "chdir"));
+		{
+			ft_putstr_fd(" No such file or directory\n", 2);
+			return(update_exitcode(1, attributes));
+		}
 	}
 	update_oldpwd(&attributes->envp_heap, old_pwd);
 }

@@ -12,6 +12,22 @@
 
 #include "minishell.h"
 
+void	builtin_pipe(t_mini *attributes)
+{
+	if (attributes->i < attributes->cmd_index)
+	{
+		if (dup2(attributes->pipe_arr[attributes->i - 1][WRITE], STDOUT_FILENO) == -1)
+		{
+			//syscall_fail(1, attributes, "dup2");
+			perror("dup2");
+			fprintf(stderr, "cmd fail no %d\n", attributes->i);
+		}
+		close(attributes->pipe_arr[attributes->i - 1][WRITE]);
+	}
+	if (attributes->i > 1)
+		close(attributes->pipe_arr[attributes->i - 2][READ]);
+}
+
 int	create_pipes(t_mini *attributes)
 {
 	int	i;
@@ -88,25 +104,38 @@ void	handle_pipes(t_mini *attributes)
 	i = 0;
 	if (attributes->i == 1)
 	{
-		dup2(attributes->pipe_arr[attributes->i - 1][WRITE], STDOUT_FILENO);
-		//close(attributes->pipe_arr[attributes->i - 1][WRITE]);
+		if (dup2(attributes->pipe_arr[attributes->i - 1][WRITE], STDOUT_FILENO) == -1)
+		{
+			perror("dup2");
+			fprintf(stderr, "command %d\n", attributes->i);
+		}//close(attributes->pipe_arr[attributes->i - 1][WRITE]);
 	}
 	else if (attributes->i > 1 && attributes->i < attributes->cmd_index)
 	{
-		dup2(attributes->pipe_arr[attributes->i - 2][READ], STDIN_FILENO);
+		if (dup2(attributes->pipe_arr[attributes->i - 2][READ], STDIN_FILENO) == -1)
+		{
+			perror("dup2");
+			fprintf(stderr, "command %d\n", attributes->i);
+		}
 		//close(attributes->pipe_arr[attributes->i - 2][READ]);
 		dup2(attributes->pipe_arr[attributes->i - 1][WRITE], STDOUT_FILENO);
 		//close(attributes->pipe_arr[attributes->i - 1][WRITE]);
 	}
 	else if (attributes->i == attributes->cmd_index)
 	{
-		dup2(attributes->pipe_arr[attributes->i - 2][READ], STDIN_FILENO);
+		if (dup2(attributes->pipe_arr[attributes->i - 2][READ], STDIN_FILENO) == -1)
+		{
+			perror("dup2");
+			fprintf(stderr, "command %d\n", attributes->i);
+		}
 		//close(attributes->pipe_arr[attributes->i - 2][READ]);
 	}
 	while (i < attributes->cmd_index - 1)
 	{
-		close(attributes->pipe_arr[i][READ]);
-		close(attributes->pipe_arr[i][WRITE]);
+		if (attributes->pipe_arr[i][READ] > 0)
+			close(attributes->pipe_arr[i][READ]);
+		if (attributes->pipe_arr[i][WRITE] > 1)
+			close(attributes->pipe_arr[i][WRITE]);
 		i++;
 	}
 }

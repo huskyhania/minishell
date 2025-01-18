@@ -34,27 +34,13 @@ void	ft_env(t_cmd_table *node, t_mini *attributes)
 	int	saved_std;
 
 	saved_std = dup(STDOUT_FILENO);
-	if (attributes->cmd_index > 1)
-	{
-		if (attributes->i < attributes->cmd_index)
-		{
-			dup2(attributes->pipe_arr[attributes->i - 1][WRITE], STDOUT_FILENO);
-			close(attributes->pipe_arr[attributes->i - 1][WRITE]);
-		}
-		if (attributes->i > 1)
-			close(attributes->pipe_arr[attributes->i - 2][READ]);
-	}	
 	if (node->out1)
 	{
-		if (node->last_outfile == 2)
-			node->output_fd = open(node->out1, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		else if (node->last_outfile == 4)
-			node->output_fd = open(node->out1, O_WRONLY | O_CREAT | O_APPEND, 0644);
-		dup2(node->output_fd, STDOUT_FILENO);
-		close(node->output_fd);
+		if (redir_out(node, attributes))
+			return ; 
 	}
 	print_envp_list(attributes->envp_heap);
-	attributes->exitcode = 0;
+	update_exitcode(0, attributes);
 	dup2(saved_std, STDOUT_FILENO);
 	close(saved_std);
 }

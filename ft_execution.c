@@ -14,7 +14,6 @@
 
 void	execute_command(t_cmd_table *node, t_mini *attributes)
 {
-	handle_pipes(attributes);
 	if (node->type != t_command && (node->in1 || node->last_infile == 5))
 	{
 		if (redir_in(node, attributes))
@@ -62,6 +61,7 @@ void	fork_for_command(t_cmd_table *node, t_mini *attributes)
 	if (pid == 0)
 	{
 		ft_resetsignal();
+		handle_pipes(attributes);
 		if (node->type != t_command)
 		{
 			if (check_files(node, attributes))
@@ -73,7 +73,7 @@ void	fork_for_command(t_cmd_table *node, t_mini *attributes)
 		builtin_flag = is_builtin(node->cmd_arr[0]);
 		if (builtin_flag != 0)
 		{
-			handle_pipes(attributes);
+			//handle_pipes(attributes);
 			handle_builtin(node, builtin_flag, attributes);
 		}	
 		else

@@ -162,6 +162,7 @@ void	single_command(t_cmd_table *node, t_mini *attributes);
 int	create_pipes(t_mini *attributes);
 void	free_pipes(t_mini *attributes);
 void	handle_pipes(t_mini *attributes);
+void	builtin_pipe(t_mini *attributes);
 
 //redirections
 int	check_redirs(t_cmd_table *node, t_mini *attributes);

@@ -12,8 +12,6 @@
 
 #include "minishell.h"
 
-//should dup2 fail interrupt the execution? should close fail be checked?
-
 int	redir_in(t_cmd_table *node, t_mini *attributes)
 {
 	if (node->last_infile == 3)
