@@ -49,5 +49,4 @@ void	update_exitcode(int err_code, t_mini *attributes)
 {
 	if (attributes->cmd_index == 1 || attributes->i == attributes->cmd_index)
 		attributes->exitcode = err_code;
-
 }

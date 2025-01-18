@@ -48,17 +48,15 @@ static int	update_oldpwd(t_envp **envp_heap, char *old_pwd)
 	return (1);
 }	
 
-void	ft_cd(char **cmd_array, t_mini *attributes)
+void	ft_cd(char **cmd_array, int i, t_mini *attributes)
 {
-	int		i;
 	char	*old_pwd;
 
-	i = 0;
 	while (cmd_array[i])
 		i++;
 	if (i > 2)
 	{
-		ft_putstr_fd(" too many arguments\n", 2);
+		ft_putstr_fd("cd: too many arguments\n", 2);
 		return (update_exitcode(1, attributes));
 	}
 	old_pwd = getcwd(NULL, 0);
@@ -72,7 +70,7 @@ void	ft_cd(char **cmd_array, t_mini *attributes)
 		if (chdir(cmd_array[1]) == -1)
 		{
 			ft_putstr_fd(" No such file or directory\n", 2);
-			return(update_exitcode(1, attributes));
+			return (update_exitcode(1, attributes));
 		}
 	}
 	update_oldpwd(&attributes->envp_heap, old_pwd);

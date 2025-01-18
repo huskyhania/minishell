@@ -19,7 +19,6 @@ int	remove_env_var(char **cmd_array, t_mini *attributes)
 
 	if (!cmd_array[1] || !attributes || !attributes->envp_heap)
 		return (-1);
-	attributes->exitcode = 0;
 	current = attributes->envp_heap;
 	while (current)
 	{
@@ -35,7 +34,7 @@ int	remove_env_var(char **cmd_array, t_mini *attributes)
 			free(to_delete->key);
 			free(to_delete->value);
 			free(to_delete);
-			return (0);
+			return (update_exitcode(0, attributes));
 		}
 		current = current->next;
 	}
@@ -44,7 +43,7 @@ int	remove_env_var(char **cmd_array, t_mini *attributes)
 
 char	*get_env_value(t_mini *attributes, char *key)
 {
-	t_envp *current;
+	t_envp	*current;
 
 	if (!attributes || !attributes->envp_heap || !key)
 		return (NULL);

@@ -37,7 +37,7 @@ void	ft_env(t_cmd_table *node, t_mini *attributes)
 	if (node->out1)
 	{
 		if (redir_out(node, attributes))
-			return ; 
+			return ;
 	}
 	print_envp_list(attributes->envp_heap);
 	update_exitcode(0, attributes);
@@ -50,7 +50,7 @@ void	handle_builtin(t_cmd_table *node, int flag, t_mini *attributes)
 	if (flag == BUILTIN_ECHO)
 		ft_echo(node, attributes);
 	if (flag == BUILTIN_CD)
-		ft_cd(node->cmd_arr, attributes);
+		ft_cd(node->cmd_arr, 0, attributes);
 	if (flag == BUILTIN_PWD)
 		ft_pwd(attributes);
 	if (flag == BUILTIN_EXPORT)

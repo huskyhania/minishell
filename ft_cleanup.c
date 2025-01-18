@@ -18,7 +18,7 @@ void	clean_envp_ll(t_envp **envp_heap)
 	t_envp	*next_node;
 
 	if (!envp_heap || !(*envp_heap))
-		return;
+		return ;
 	current = *envp_heap;
 	while (current)
 	{
