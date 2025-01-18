@@ -96,6 +96,8 @@ void	wait_for_all_processes(t_mini *attributes)
 
 	i = 0;
 	status = 0x7F;
+	if (!attributes->pids)
+		return ;
 	while (attributes->pids[i] != 0)
 	{
 		if (attributes->pids[i] < 0)

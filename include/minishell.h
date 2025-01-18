@@ -196,6 +196,7 @@ void	print_envp_list(t_envp *envp_heap);
 char	*get_key(char *s);
 char	*get_value(char *s);
 void	ft_echo(t_cmd_table *node, t_mini *attributes);
+void	ft_cd(char **cmd_array, t_mini *attributes);
 
 //ft_exit.c
 void    ft_exit(char **cmd_array, t_mini *attributes);
@@ -219,6 +220,7 @@ int     ft_strcmp(char *s1, char *s2);
 //error messages
 void	set_error_and_display(int error_code, t_mini *attributes, const char *cmd);
 void	syscall_fail(int err_code, t_mini *attributes, const char *message);
+void    update_exitcode(int err_code, t_mini *attributes);
 
 //delete from final product
 void ft_print_table(t_mini *attributes);

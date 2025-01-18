@@ -40,7 +40,14 @@ void	cleanup_child(t_mini *attributes)
 
 void	syscall_fail(int err_code, t_mini *attributes, const char *message)
 {
-	attributes->exitcode = err_code;
+	update_exitcode(err_code, attributes);
 	ft_putstr_fd((char *)message, 2);
 	ft_putstr_fd(" call failed\n", 2);
+}
+
+void	update_exitcode(int err_code, t_mini *attributes)
+{
+	if (attributes->cmd_index == 1 || attributes->i == attributes->cmd_index)
+		attributes->exitcode = err_code;
+
 }

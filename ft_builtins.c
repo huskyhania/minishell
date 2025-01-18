@@ -59,42 +59,6 @@ void	ft_env(t_cmd_table *node, t_mini *attributes)
 	close(saved_std);
 }
 
-void	ft_cd(char **cmd_array, t_mini *attributes)//needs to handle edge cases and complicated relative paths
-{
-	int		i;
-	char	*home;
-
-	attributes->exitcode = 0;
-	i = 0;
-	while (cmd_array[i])
-		i++;
-	if (i > 2)
-	{
-		ft_putstr_fd(" too many arguments\n", 2);
-		attributes->exitcode = 1;
-		return ;
-	}
-	if (cmd_array[1] == NULL)
-	{
-		home = get_env_value(attributes, "HOME");
-		if (!home || home[0] == '\0')
-		{
-			ft_putstr_fd("cd: HOME not set\n", 2);
-			attributes->exitcode = 1;
-			return ;
-		}
-		chdir(home);
-	}
-	else
-	{
-		if (chdir(cmd_array[1]) == -1)
-		{	
-			perror("cd");
-			attributes->exitcode = 1;
-		}
-	}
-}
-
 void	handle_builtin(t_cmd_table *node, int flag, t_mini *attributes)
 {
 	if (flag == BUILTIN_ECHO)
