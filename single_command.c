@@ -98,9 +98,9 @@ static void	handle_single(char **cmd_array, t_mini *attributes, t_cmd_table *nod
 void	single_command(t_cmd_table *node, t_mini *attributes)
 {
 	int	builtin_flag;
-	int	i;
+	//int	i;
 
-	i = 0;
+	//i = 0;
 	if (node->type != t_command)
 	{
 		if (check_files(node, attributes))

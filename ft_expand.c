@@ -143,6 +143,19 @@ int	ft_expand_word(t_mini *attributes, t_tokens *t, int j)
 	return (1);
 }
 
+void	ft_convert(t_mini *attributes)
+{
+	t_tokens        *token;
+
+        token = attributes->tokens;
+        while (token)
+	{
+		if (token->type == t_quote)
+			token->type = t_command;
+		token = token->next;
+	}
+}
+
 int	ft_expand(t_mini *attributes)
 {		
 	t_tokens	*token;
@@ -165,5 +178,6 @@ int	ft_expand(t_mini *attributes)
 	//if (!(ft_validate_expansion(attributes)))
 	//	return (0);
 	ft_merge_tokens(attributes);
+	ft_convert(attributes);
 	return (1);
 }

@@ -55,6 +55,8 @@ int	ft_check_redirection(t_tokens *token, t_mini *attributes)
 			ft_putstr_fd(" syntax error near unexpected token `<'\n", 2);
 		else if (token->next->type == t_lessless)
 			ft_putstr_fd(" syntax error near unexpected token `<'\n", 2);
+		else if (token->next->type == t_pipe || token->next->type == t_quote)
+			return (1);
 		attributes->exitcode = 2;
 		return (0);
 	}
