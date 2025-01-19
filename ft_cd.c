@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/18 14:37:58 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/18 16:00:16 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2025/01/19 15:17:31 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void	ft_cd(char **cmd_array, int i, t_mini *attributes)
 		return (update_exitcode(1, attributes));
 	}
 	old_pwd = getcwd(NULL, 0);
-	if (cmd_array[1] == NULL)
+	if (cmd_array[1] == NULL || (ft_strcmp(cmd_array[1], "--") == 0))
 	{
 		if (cd_home(attributes))
 			return (syscall_fail(1, attributes, "chdir"));

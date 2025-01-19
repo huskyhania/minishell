@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/26 14:59:32 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/19 13:36:10 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/19 17:18:23 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int	ft_check_redirection(t_tokens *token, t_mini *attributes)
 {
 	if (token->next == NULL)
 	{
-		ft_putstr_fd("syntax error near unexpected token `newline'\n", 2);
+		ft_putstr_fd(" syntax error near unexpected token `newline'\n", 2);
 		attributes->exitcode = 2;
 		return (0);
 	}

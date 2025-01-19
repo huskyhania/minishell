@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:37:20 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/17 19:25:27 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2025/01/19 16:33:40 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ void	ft_readline_loop(t_mini *attributes, char **envp)
 	{
 		if (!(attributes->readret = readline(PROMPT)))
 		{
-			ft_final_exit(attributes, 0);
+			ft_final_exit(attributes, attributes->exitcode);
 			/*printf("exit\n");
 			rl_clear_history();
 			envp_cleanup(attributes);

@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 16:00:04 by hskrzypi          #+#    #+#             */
-/*   Updated: 2024/12/18 17:13:48 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2025/01/19 08:52:32 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int	remove_env_var(char **cmd_array, t_mini *attributes)
 			free(to_delete->key);
 			free(to_delete->value);
 			free(to_delete);
-			return (update_exitcode(0, attributes));
+			//return (update_exitcode(0, attributes));
 		}
 		current = current->next;
 	}
