@@ -34,7 +34,7 @@ int	remove_env_var(char **cmd_array, t_mini *attributes)
 			free(to_delete->key);
 			free(to_delete->value);
 			free(to_delete);
-			return (update_exitcode(0, attributes));
+			return (0);
 		}
 		current = current->next;
 	}

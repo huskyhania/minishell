@@ -47,9 +47,13 @@ int	env_var_exists(char *export, t_envp **envp_heap)
 	while (current)
 	{
 		if (ft_strcmp(key, current->key) == 0)
+		{
+			free(key);
 			return (1);
+		}
 		current = current->next;
 	}
+	free(key);
 	return (0);
 }
 
@@ -79,8 +83,14 @@ int	replace_append(char *export, t_envp **envp_heap)
 	current = *envp_heap;
 	key = get_key(export);
 	value = get_value(export);
-	if (!value) // should this include a check for key?
+	if (!key || !value)
+	{
+		if (key)
+			free(key);
+		if (value)
+			free(value);
 		return (0);
+	}
 	while (current)
 	{
 		if (ft_strcmp(key, current->key) == 0)//maybe use strncmp with current key len?
@@ -90,11 +100,13 @@ int	replace_append(char *export, t_envp **envp_heap)
 				join = ft_strjoin(current->value, value);
 				if (!join)
 				{
+					free(key);
 					free(value);
 					return (0);
 				}
 				free(current->value);
 				free(value);
+				free(key);
 				current->value = join;
 				return (1);
 			}
@@ -103,11 +115,14 @@ int	replace_append(char *export, t_envp **envp_heap)
 				free(current->value);
 				current->value = ft_strdup(value);
 				free(value);
+				free(key);
 				return (1);
 			}
 		}
 		current = current->next;
 	}
+	free(key);
+	free(value);
 	return (0);
 }
 

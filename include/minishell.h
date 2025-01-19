@@ -174,13 +174,14 @@ int	redir_empty(t_cmd_table *node, t_mini *attributes);
 int	check_files(t_cmd_table *node, t_mini *attributes);
 int	redir_in(t_cmd_table *node, t_mini *attributes);
 int	redir_out(t_cmd_table *node, t_mini *attributes);
-
+void	redirect_child(t_cmd_table *node, t_mini *attributes);
 
 //ft_path.c - checking for path in envp if necessary
 char	*get_command_path(const char *cmd, t_mini *attributes);
 char	*check_command(const char *cmd, t_mini *attributes);
 char	*join_paths(const char *dir, const char *cmd);
 char	*find_path_in_envp(char *envp[]);
+int		check_access(const char *full_path, int *found);
 
 //builtins
 int	is_builtin(char *cmd_text);

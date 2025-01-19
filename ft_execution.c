@@ -14,37 +14,18 @@
 
 void	execute_command(t_cmd_table *node, t_mini *attributes)
 {
-	if (node->type != t_command && (node->in1 || node->last_infile == 5))
-	{
-		if (redir_in(node, attributes))
-		{
-			cleanup_child(attributes);
-			exit(EXIT_FAILURE);
-		}
-	}
-	if (node->type != t_command && node->out1)
-	{
-		if (redir_out(node, attributes))
-		{
-			cleanup_child(attributes);
-			exit(EXIT_FAILURE);
-		}
-	}
-	char *cmd_path = get_command_path(node->cmd_arr[0], attributes);
+	char	*cmd_path;
+
+	if (node->type != t_command)
+		redirect_child(node, attributes);
+	cmd_path = get_command_path(node->cmd_arr[0], attributes);
 	if (cmd_path)
 	{
 		if (execve(cmd_path, node->cmd_arr, attributes->envp_arr) == -1)
-		{
 			free(cmd_path);
-			cleanup_child(attributes);
-			exit(attributes->exitcode);
-		}
 	}
-	else if (!cmd_path)
-	{
-		cleanup_child(attributes);
-		exit(attributes->exitcode);
-	}
+	cleanup_child(attributes);
+	exit(attributes->exitcode);
 }
 
 void	fork_for_command(t_cmd_table *node, t_mini *attributes)
