@@ -12,16 +12,14 @@
 
 #include "minishell.h"
 
-static void	execute_single(char **cmd_array, t_mini *attributes, t_cmd_table *node)
+void	redirect_child(t_cmd_table *node, t_mini *attributes)
 {
-	char	*cmd_path;
-	if (node->type != t_command && node->type != 5)
+	if (node->type != t_command && node->type != 5
+		&& attributes->cmd_index == 1)
 	{
 		if (check_files(node, attributes))
 		{
-			ft_free_ast(attributes);
-			envp_cleanup(attributes);
-			free(attributes->pids);
+			cleanup_child(attributes);
 			exit(EXIT_FAILURE);
 		}
 	}
@@ -41,21 +39,22 @@ static void	execute_single(char **cmd_array, t_mini *attributes, t_cmd_table *no
 			exit(EXIT_FAILURE);
 		}
 	}
-	cmd_path = get_command_path(cmd_array[0], attributes);
+}
+
+void	execute_single(char **cmd_arr, t_mini *attributes, t_cmd_table *node)
+{
+	char	*cmd_path;
+
+	if (node->type != t_command)
+		redirect_child(node, attributes);
+	cmd_path = get_command_path(cmd_arr[0], attributes);
 	if (cmd_path)
 	{
-		if (execve(cmd_path, cmd_array, attributes->envp_arr) == -1)
-		{
+		if (execve(cmd_path, cmd_arr, attributes->envp_arr) == -1)
 			free(cmd_path);
-			cleanup_child(attributes);
-			exit(attributes->exitcode);
-		}
 	}
-	else
-	{
-		cleanup_child(attributes);
-		exit(attributes->exitcode);
-	}
+	cleanup_child(attributes);
+	exit(attributes->exitcode);
 }
 
 static void	handle_single(char **cmd_array, t_mini *attributes, t_cmd_table *node)
@@ -67,10 +66,7 @@ static void	handle_single(char **cmd_array, t_mini *attributes, t_cmd_table *nod
 	status = 0x7F;
 	pid = fork();
 	if (pid < 0)
-	{
-		printf("fork call failed");
-		return ; // might require closing fds, freeing memory
-	}
+		return (syscall_fail(1, attributes, "fork"));
 	if (pid == 0)
 	{
 		ft_resetsignal();
@@ -98,9 +94,7 @@ static void	handle_single(char **cmd_array, t_mini *attributes, t_cmd_table *nod
 void	single_command(t_cmd_table *node, t_mini *attributes)
 {
 	int	builtin_flag;
-	//int	i;
 
-	//i = 0;
 	if (node->type != t_command)
 	{
 		if (check_files(node, attributes))
@@ -109,7 +103,7 @@ void	single_command(t_cmd_table *node, t_mini *attributes)
 				attributes->exitcode = 130;
 			else
 				attributes->exitcode = 1;
-			return;
+			return ;
 		}
 	}
 	if (node->cmd_arr)

@@ -35,7 +35,8 @@ void	cleanup_child(t_mini *attributes)
 		free_pipes(attributes);
 	ft_free_ast(attributes);
 	envp_cleanup(attributes);
-	free(attributes->pids);
+	if (attributes->pids)
+		free(attributes->pids);
 }
 
 void	syscall_fail(int err_code, t_mini *attributes, const char *message)

@@ -63,12 +63,18 @@ void	ft_cd(char **cmd_array, int i, t_mini *attributes)
 	if (cmd_array[1] == NULL || (ft_strcmp(cmd_array[1], "--") == 0))
 	{
 		if (cd_home(attributes))
+		{
+			if (old_pwd)
+				free(old_pwd);
 			return (syscall_fail(1, attributes, "chdir"));
+		}
 	}
 	else
 	{
 		if (chdir(cmd_array[1]) == -1)
 		{
+			if (old_pwd)
+				free(old_pwd);
 			ft_putstr_fd(" No such file or directory\n", 2);
 			return (update_exitcode(1, attributes));
 		}
