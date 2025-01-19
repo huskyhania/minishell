@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 15:11:35 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/14 21:46:38 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2025/01/19 13:23:26 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,11 @@ int	ft_expand_small(t_mini *attributes, t_tokens *token, int j)
 		}
 		free(exitcode);
 	}
+	else if (ft_isdigit(token->str[j + 1]))
+	{
+		path = ft_substr(token->str, j, 2);
+		token->str = ft_replace_expansion(token->str, path, "");
+	}
 	else
 	{
 		if (!(expansion = get_env_value(attributes, "SYSTEMD_EXEC_PID")))
@@ -116,14 +121,12 @@ int	ft_expand_big(t_mini *attributes, t_tokens *token, int j, int i)
 int	ft_expand_word(t_mini *attributes, t_tokens *t, int j)
 {
 	if (!t || !t->str)
-		return (0);
+		return (0); 
 	while (t->str[j] != '\0')
 	{
-		if (t->str[j] == '$' && (ft_isalpha(t->str[j + 1])
-				|| t->str[j + 1] == '_'
-				|| t->str[j + 1] == '?' || t->str[j + 1] == '$'))
+		if (t->str[j] == '$' && (ft_isalpha(t->str[j + 1]) || t->str[j + 1] == '_' || t->str[j + 1] == '?' || t->str[j + 1] == '$' || ft_isdigit(t->str[j + 1])))
 		{
-			if (t->str[j + 1] == '?' || t->str[j + 1] == '$')
+			if (t->str[j + 1] == '?' || t->str[j + 1] == '$' || ft_isdigit(t->str[j + 1]))
 			{
 				if (!ft_expand_small(attributes, t, j))
 					return (0);
@@ -164,19 +167,25 @@ int	ft_expand(t_mini *attributes)
 	while (token)
 	{
 		if (token->type == t_command)
-			if (!(ft_expand_word(attributes, token, 0)))
+		{
+			if (ft_strncmp(token->str, "$", 2) == 0 && token->merge == 1 && token->next != NULL && token->dollar == 0)
+				token->str = ft_replace_expansion(token->str, token->str, "");
+			else	if (!(ft_expand_word(attributes, token, 0)))
 			{
 				printf("Parsing error\n");
 				return (0);
 			}
+		}
 		if (token->type == t_quote)
 			token->failexp = 0;
 		if (token->type == 5)
-			token = token->next;
+			while (token->next && (token->next->type == t_command || token->next->type == t_quote))
+			{
+				token = token->next;
+				token->failexp = 0;
+			}
 		token = token->next;
 	}
-	//if (!(ft_validate_expansion(attributes)))
-	//	return (0);
 	ft_merge_tokens(attributes);
 	ft_convert(attributes);
 	return (1);

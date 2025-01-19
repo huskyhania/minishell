@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/19 17:11:35 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/15 23:48:22 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/19 10:02:52 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,7 @@ t_tokens	*ft_add_token(t_mini *attributes)
 	new_token->next = NULL;
 	new_token->merge = 0;
 	new_token->failexp = -1;
+	new_token->dollar = 0;
 	new_token->str = NULL; // ned addition might fuck up things?
 	if (!attributes->tokens)
 	{

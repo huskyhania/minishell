@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 12:06:47 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/18 00:09:39 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/19 10:01:52 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,6 +107,8 @@ int	ft_add_expansion(t_mini *attributes, char *line)
 	new_command->str = ft_substr(line, 1, i - 1);
 	if (new_command->str == NULL)
 		return (-1);
+	if (ft_strncmp(new_command->str, "$", 2) == 0)
+		new_command->dollar = 1;
 	return (i + 1);
 }
 

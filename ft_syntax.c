@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/26 14:59:32 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/17 23:28:12 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/19 13:36:10 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,12 @@ int	ft_check_pipe(t_tokens *token, t_mini *attributes)
 		attributes->exitcode = 2;
 		return (0);
 	}
+	if (token->prev->type == t_great)
+	{
+		ft_putstr_fd(" syntax error near unexpected token `|'\n", 2);
+		attributes->exitcode = 2;
+		return (0);
+	}
 	return (1);
 }
 
@@ -105,6 +111,8 @@ void ft_merge_tokens(t_mini *attributes)
 			free(token->next->str); // Last addition remove if shit is broken
 			token->str = NULL;
 			token->str = new_str;
+			if (token->failexp == 0 || token->next->failexp == 0)
+				token->failexp = 0;
 			token->merge = token->next->merge;
 			ft_delete_token(token);
 		}

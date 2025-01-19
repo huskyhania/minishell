@@ -50,6 +50,7 @@ typedef struct s_tokens {
 	int 			dir_flag;
 	int				merge;
 	int				failexp;
+	int				dollar;
 	struct s_tokens	*next;
 	struct s_tokens	*prev;
 } t_tokens;
