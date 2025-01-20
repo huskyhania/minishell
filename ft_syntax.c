@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/26 14:59:32 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/19 17:18:23 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/20 08:18:11 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int	ft_check_redirection(t_tokens *token, t_mini *attributes)
 		attributes->exitcode = 2;
 		return (0);
 	}
-	if ((token->type == t_great || token->type == t_greatgreat || token->type == t_lessless)
+	if ((token->type == t_great || token->type == t_greatgreat || token->type == t_lessless || token->type == t_less)
 		&& token->next->type != t_command)
 	{
 		if (token->next->type == t_great)
@@ -55,7 +55,7 @@ int	ft_check_redirection(t_tokens *token, t_mini *attributes)
 			ft_putstr_fd(" syntax error near unexpected token `<'\n", 2);
 		else if (token->next->type == t_lessless)
 			ft_putstr_fd(" syntax error near unexpected token `<'\n", 2);
-		else if (token->next->type == t_pipe || token->next->type == t_quote)
+		else if ((token->next->type == t_pipe && token->type != t_great) || token->next->type == t_quote)
 			return (1);
 		attributes->exitcode = 2;
 		return (0);
@@ -67,13 +67,13 @@ int	ft_check_pipe(t_tokens *token, t_mini *attributes)
 {
 	if (token->next == NULL || token->prev == NULL
 		|| token->next->type == t_pipe || token->prev->type == t_less
-		|| token->prev->type == t_lessless)
+		|| token->prev->type == t_lessless || token->prev->type == t_greatgreat)
 	{
 		ft_putstr_fd(" syntax error near unexpected token `|'\n", 2);
 		attributes->exitcode = 2;
 		return (0);
 	}
-	if (token->prev->type == t_great)
+	if (token->prev->type == t_great && token->next == NULL)
 	{
 		ft_putstr_fd(" syntax error near unexpected token `|'\n", 2);
 		attributes->exitcode = 2;
