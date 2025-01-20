@@ -68,11 +68,7 @@ static void	handle_single(char **cmd_array, t_mini *attribs, t_cmd_table *node)
 		execute_single(cmd_array, attribs, node);
 	}
 	else
-	{
 		wait_for_all_processes(attribs);
-		if (access("here_doc", F_OK) == 0)
-			unlink("here_doc");
-	}
 }
 
 void	single_command(t_cmd_table *node, t_mini *attributes)

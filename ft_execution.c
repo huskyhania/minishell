@@ -110,6 +110,7 @@ void	handle_command(t_cmd_table *node, t_mini *attributes)
 		if (check_files(node, attributes) == 1)
 		{
 			update_exit_recursion(attributes);
+			attributes->pids[attributes->i - 1] = -1;
 			return ;
 		}
 	}
@@ -142,14 +143,29 @@ void	handle_command_or_pipe(t_cmd_table *node, t_mini *attributes)
 	handle_command_or_pipe(node->right, attributes);
 }
 
-void	ft_execution(t_mini *attributes)
+int	create_pids_array(t_mini *attributes)
 {
-	ft_sigint();
+	int	i;
+
+	i = 0;
 	attributes->pids = NULL;
 	attributes->pids = malloc(sizeof(int) * (attributes->cmd_index + 1));
 	if (!attributes->pids)
-		return (syscall_fail(1, attributes, "malloc"));
+		return (1);
+	while (i < attributes->cmd_index)
+	{
+		attributes->pids[i] = -1;
+		i++;
+	}
 	attributes->pids[attributes->cmd_index] = 0;
+	return (0);
+}
+
+void	ft_execution(t_mini *attributes)
+{
+	ft_sigint();
+	if (create_pids_array(attributes))
+		return (syscall_fail(1, attributes, "malloc"));
 	if (attributes->commands->type != t_pipe)
 	{
 		single_command(attributes->commands, attributes);
