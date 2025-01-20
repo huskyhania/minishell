@@ -34,6 +34,7 @@ char	*check_command(const char *cmd, t_mini *attributes)
 	{
 		if (S_ISDIR(path_stat.st_mode))
 		{
+			ft_putstr_fd((char *)cmd, 2);
 			ft_putstr_fd(": Is a directory\n", 2);
 			attributes->exitcode = 126;
 			return (NULL);

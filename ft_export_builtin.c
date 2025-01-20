@@ -6,34 +6,11 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/07 16:18:06 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/10 14:08:50 by hskrzypi         ###   ########.fr       */
+/*   Updated: 2025/01/19 19:48:26 by hskrzypi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	is_valid_export(char *export)
-{
-	int	i;
-	i = 0;
-	if (export[i] != '_' && !ft_isalpha(export[i]))
-		return (1);
-	i++;
-	while (export[i] != '+' && export[i] != '=' && export[i] != '\0')
-	{
-		if (!ft_isalnum(export[i]) && export [i] != '_')
-			return (1);
-		i++;
-	}
-	if (export[i] == '+')
-	{
-		if (export[i + 1] != '=')
-			return (1);
-	}
-	if (export[i] == '=')
-		return (0);
-	return (0);
-}
 
 int	env_var_exists(char *export, t_envp **envp_heap)
 {
@@ -73,60 +50,68 @@ int	export_mode(char *export)
 	return (2);
 }
 
+static void	free_key_value(char *key, char *value)
+{
+	if (key)
+		free(key);
+	if (value)
+		free(value);
+}
+
+static int	update_value(char *key, char *value, t_envp *current, char *export)
+{
+	char	*join;
+
+	if (export_mode(export) == 1)
+	{
+		join = ft_strjoin(current->value, value);
+		if (!join)
+		{
+			free_key_value(key, value);
+			return (0);
+		}
+		free(current->value);
+		free_key_value(key, value);
+		current->value = join;
+		return (1);
+	}
+	else if (export_mode(export) == 2)
+	{
+		free(current->value);
+		current->value = ft_strdup(value);
+		free_key_value(key, value);
+		if (!current->value)
+			return (0);
+		return (1);
+	}
+	return (0);
+}
+
 int	replace_append(char *export, t_envp **envp_heap)
 {
 	char	*key;
 	char	*value;
 	t_envp	*current;
-	char	*join;
 
 	current = *envp_heap;
 	key = get_key(export);
 	value = get_value(export);
 	if (!key || !value)
 	{
-		if (key)
-			free(key);
-		if (value)
-			free(value);
+		free_key_value(key, value);
 		return (0);
 	}
 	while (current)
 	{
-		if (ft_strcmp(key, current->key) == 0)//maybe use strncmp with current key len?
-		{
-			if (export_mode(export) == 1)
-			{
-				join = ft_strjoin(current->value, value);
-				if (!join)
-				{
-					free(key);
-					free(value);
-					return (0);
-				}
-				free(current->value);
-				free(value);
-				free(key);
-				current->value = join;
-				return (1);
-			}
-			if (export_mode(export) == 2)
-			{
-				free(current->value);
-				current->value = ft_strdup(value);
-				free(value);
-				free(key);
-				return (1);
-			}
-		}
+		if (ft_strcmp(key, current->key) == 0)
+			return (update_value(key, value, current, export));
 		current = current->next;
 	}
-	free(key);
-	free(value);
+	free_key_value(key, value);
 	return (0);
 }
 
-int	export_single_var(t_mini *attributes, char *export)
+/*int	export_single_var(t_mini *attributes, char *export)
 {
 	if (is_valid_export(export))
 	{
@@ -153,6 +138,7 @@ int	export_single_var(t_mini *attributes, char *export)
 void	print_export(t_mini *attributes)
 {
 	t_envp	*helper;
+
 	helper = attributes->envp_heap;
 	while (helper)
 	{
@@ -166,7 +152,7 @@ void	print_export(t_mini *attributes)
 		helper = helper->next;
 	}
 }
-//export without parameters prints out variables similar to env, otherwise adds/appends
+
 int	ft_export(char **cmd_array, t_mini *attributes)
 {
 	int	i;
@@ -187,4 +173,4 @@ int	ft_export(char **cmd_array, t_mini *attributes)
 		i++;
 	}
 	return (ret);
-}
+}*/
