@@ -6,36 +6,11 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/19 17:11:35 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/19 10:02:52 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/20 09:15:25 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	ft_validate_expansion(t_mini *attributes)
-{
-	t_tokens	*token;
-	int			i;
-
-	i = 1;
-	token = attributes->tokens;
-	while (token)
-	{
-		if (token->type == t_command && token->str[0] != '\0') // break removed;
-			i = 1;
-		if (token->type == t_lessless)
-			i = 1;
-		if ((token->type == t_great || token->type == t_less
-				|| token->type == t_greatgreat ) && (token->next->str[0] == '\0' && token->next->failexp == 1))
-		{
-			//ft_putstr_fd("ambiguous redirect\n", 2);
-			//attributes->exitcode = 1;
-			i = 1;
-		}
-		token = token->next;
-	}
-	return (i);
-}
 
 void	ft_free_tokens(t_mini *attributes)
 {
@@ -56,25 +31,13 @@ void	ft_free_tokens(t_mini *attributes)
 	}
 }
 
-t_tokens	*ft_find_last(t_tokens *stack) //tokens and parsing have same function ?? (remove one)
+t_tokens	*ft_find_last(t_tokens *stack)
 {
 	if (!stack)
 		return (NULL);
 	while (stack->next)
 		stack = stack->next;
 	return (stack);
-}
-
-void	print_tokens(t_mini *attributes) //helper fucntion will be deleted from final product
-{
-	t_tokens	*temp;
-
-	temp = attributes->tokens;
-	while (temp != NULL)
-	{
-		printf("Node type: %u Merge %d String %s \n", temp->type, temp->merge, temp->str);
-		temp = temp->next;
-	}
 }
 
 t_tokens	*ft_add_token(t_mini *attributes)
@@ -89,7 +52,7 @@ t_tokens	*ft_add_token(t_mini *attributes)
 	new_token->merge = 0;
 	new_token->failexp = -1;
 	new_token->dollar = 0;
-	new_token->str = NULL; // ned addition might fuck up things?
+	new_token->str = NULL;
 	if (!attributes->tokens)
 	{
 		attributes->tokens = new_token;

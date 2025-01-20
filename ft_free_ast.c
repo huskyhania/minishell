@@ -6,13 +6,48 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 17:07:16 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/17 18:53:04 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/20 10:49:05 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_triple_pointer(char ***arr);
+void	ft_free_cmd_array(char **array)
+{
+	int	i;
+
+	if (!array)
+		return ;
+	i = 0;
+	while (array && array[i])
+	{
+		if (array[i])
+		{
+			free(array[i]);
+			array[i] = NULL;
+		}
+		i++;
+	}
+	free(array);
+	array = NULL;
+}
+
+void	ft_triple_pointer(char ***array)
+{
+	int	i;
+
+	if (!array || !*array)
+		return ;
+	i = 0;
+	while ((*array)[i])
+	{
+		free((*array)[i]);
+		(*array)[i] = NULL;
+		i++;
+	}
+	free(*array);
+	*array = NULL;
+}
 
 void ft_check_ast_array(t_cmd_table *print)
 {

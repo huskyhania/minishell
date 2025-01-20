@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 15:11:35 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/19 13:23:26 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/20 10:12:28 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,12 @@ char	*ft_replace_expansion(char *token, char *path, char *expansion)
 		return (NULL);
 	}
 	start = ft_strnstr(token, path, ft_strlen(token)); // no malloc but can return NULL;
+	if (start == NULL)
+	{
+		free(token);
+		free(temp2);
+		return (NULL);
+	}
 	temp = ft_substr(token, 0, (start - token));
 	if (temp == NULL)
 	{
@@ -59,6 +65,7 @@ int	ft_expand_small(t_mini *attributes, t_tokens *token, int j)
 		}
 		if(!(token->str = ft_replace_expansion(token->str, path, exitcode)))
 		{
+			free(path);
 			free(exitcode);
 			return (0);
 		}
@@ -102,6 +109,11 @@ int	ft_expand_big(t_mini *attributes, t_tokens *token, int j, int i)
 	if (!expansion)
 	{
 		token->str = ft_replace_expansion(token->str, path, "");
+		if (token->str == NULL)
+		{
+			free(path);
+			return (0);
+		}
 		if (token->failexp == -1)
 			token->failexp = 1;
 		free(path);
