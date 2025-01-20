@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 12:06:47 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/19 15:46:38 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/20 09:09:57 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,8 @@ int	ft_add_command(char *line, t_mini *attributes)
 	if (new_command == NULL)
 		return (-1);
 	new_command->type = t_command;
-	while (!(ft_is_whitespace(&temp_line[i])) && !(ft_is_special(&temp_line[i])) && temp_line[i] != '"' && temp_line[i] != '\'')
+	while (!(ft_is_whitespace(&temp_line[i])) && !(ft_is_special(&temp_line[i]))
+		&& temp_line[i] != '"' && temp_line[i] != '\'')
 	{
 		if (temp_line[i] == '\0')
 			break ;
@@ -82,7 +83,7 @@ int	ft_add_quote(char *line, t_mini *attributes)
 	i++;
 	if (!ft_is_whitespace(&temp_line[i]))
 		new_command->merge = 1;
-	new_command->str = ft_substr(line, 1, i-2);
+	new_command->str = ft_substr(line, 1, i - 2);
 	if (new_command->str == NULL)
 		return (-1);
 	return (i);
@@ -100,8 +101,8 @@ int	ft_add_expansion(t_mini *attributes, char *line)
 	if (new_command == NULL)
 		return (-1);
 	new_command->type = t_command;
-	while (temp_line[i] != '"') // removed line check trust in the syntax check
-		i++; 
+	while (temp_line[i] != '"')
+		i++;
 	if (!ft_is_whitespace(&temp_line[i + 1]))
 		new_command->merge = 1;
 	new_command->str = ft_substr(line, 1, i - 1);
@@ -117,7 +118,7 @@ int	ft_tokenization(t_mini *attributes)
 	char	*line;
 	int		i;
 	int		check;
-	
+
 	i = 0;
 	attributes->tokens = NULL;
 	line = attributes->readret;
@@ -126,17 +127,17 @@ int	ft_tokenization(t_mini *attributes)
 		check = ft_skip_whitespace(&line[i]);
 		if (line[i] && ft_is_special(&line[i]))
 			check = ft_add_operator(attributes, &line[i]);
-		else if (line[i] && ft_is_quote(&line[i])) // quote function reduntant?
+		else if (line[i] && ft_is_quote(&line[i]))
 			check = ft_add_quote(&line[i], attributes);
 		else if (line[i] && line[i] == '"')
 			check = ft_add_expansion(attributes, &line[i]);
-		else if (line[i] && !ft_is_whitespace(&line[i]) && !ft_is_special(&line[i]) && line[i] != '"' && line[i] != '\'')
+		else if (line[i] && !ft_is_whitespace(&line[i])
+			&& !ft_is_special(&line[i]) && line[i] != '"' && line[i] != '\'')
 			check = ft_add_command(&line[i], attributes);
 		if (check == -1)
 			return (0);
 		else
 			i += check;
 	}
-	//print_tokens(attributes);
 	return (1);
 }

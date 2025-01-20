@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 13:22:07 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/15 23:42:48 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/20 09:03:23 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@ int	ft_skip_whitespace(char *line)
 	int	i;
 
 	i = 0;
-	while (line[i] == ' ' || line[i] == '\t' || line[i] == '\n' || line[i] == '\v' || line[i] == '\f' || line[i] == '\r')
+	while (line[i] == ' ' || line[i] == '\t' || line[i] == '\n'
+		|| line[i] == '\v' || line[i] == '\f' || line[i] == '\r')
 		i++;
 	return (i);
 }
@@ -31,7 +32,8 @@ int	ft_is_special(char *line)
 
 int	ft_is_whitespace(char *line)
 {
-	if (*line == ' ' || *line == '\t' || *line == '\n' || *line == '\v' || *line == '\f' || *line == '\r')
+	if (*line == ' ' || *line == '\t' || *line == '\n'
+		|| *line == '\v' || *line == '\f' || *line == '\r')
 		return (1);
 	return (0);
 }

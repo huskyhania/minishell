@@ -60,11 +60,11 @@ typedef struct s_cmd_table {
 	t_token_type	type;
 	char			*str;
 	char			**cmd_arr;
-//	char 			**infile;
-//	char			**outfile;
-//	char			**here;
+	char 			**infile;
+	char			**outfile;
+	char			**here;
 	char			**herefile;
-//	char			**append;
+	char			**append;
 	int				*type_arr;
 	int				last_infile;
 	int				last_outfile;
@@ -118,9 +118,7 @@ int	ft_tokenization(t_mini *attributes);
 
 //ft_tokens_memory.c
 void    ft_free_tokens(t_mini *attributes);
-void    print_tokens(t_mini *attributes);
 t_tokens    *ft_add_token(t_mini *attributes);
-int ft_validate_expansion(t_mini *attributes);
 
 //ft_tokens_tools.c
 int ft_skip_whitespace(char *line);
@@ -131,7 +129,7 @@ int ft_is_quote(char *line);
 //ft_syntax.c
 int ft_check_quotes(char *line);
 int ft_syntax_check(t_mini *attributes);
-void ft_merge_tokens(t_mini *attributes);
+int ft_merge_tokens(t_mini *attributes);
 void    ft_delete_token(t_tokens *token);
 
 //ft_expand.c
