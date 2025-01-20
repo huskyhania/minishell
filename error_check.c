@@ -47,6 +47,8 @@ void	cleanup_parent(t_mini *attributes)
 		free(attributes->pids);
 		attributes->pids = NULL;
 	}
+	if (access("here_doc", F_OK) == 0)
+		unlink("here_doc");
 }
 
 void	syscall_fail(int err_code, t_mini *attributes, const char *message)
