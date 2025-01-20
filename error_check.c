@@ -39,6 +39,16 @@ void	cleanup_child(t_mini *attributes)
 		free(attributes->pids);
 }
 
+void	cleanup_parent(t_mini *attributes)
+{
+	ft_free_ast(attributes);
+	if (attributes->pids)
+	{
+		free(attributes->pids);
+		attributes->pids = NULL;
+	}
+}
+
 void	syscall_fail(int err_code, t_mini *attributes, const char *message)
 {
 	update_exitcode(err_code, attributes);

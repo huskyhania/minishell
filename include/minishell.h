@@ -156,6 +156,8 @@ void	execute_simple_command(char **cmd_arr, t_mini *attributes, t_cmd_table *nod
 void	handle_simple_command(char **cmd_arr, t_mini *attributes, t_cmd_table *node);
 void	ft_execution(t_mini *attributes);
 void	single_command(t_cmd_table *node, t_mini *attributes);
+void	wait_for_all_processes(t_mini *attributes);
+void	close_pipes_in_parent(t_mini *attributes);
 
 //pipes
 int	create_pipes(t_mini *attributes);
@@ -215,6 +217,7 @@ int	ultimate_check_heredoc(t_cmd_table *node, t_mini *attributes, int index);
 void	envp_cleanup(t_mini *attributes);
 void	clean_envp_ll(t_envp **envp_heap);
 void	cleanup_child(t_mini *attributes);
+void	cleanup_parent(t_mini *attributes);
 
 //other general utils
 void	free_array(char **array);

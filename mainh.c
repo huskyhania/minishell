@@ -81,8 +81,8 @@ void	ft_readline_loop(t_mini *attributes, char **envp)
 			add_history(attributes->readret);
 			if (ft_check_everything(attributes))
 			{
-				//printf("muted exec\n");
-				ft_execution(attributes);
+				if (attributes->commands)//are you maybe checking for that already, Leo?
+					ft_execution(attributes);
 				//minishell_init(envp, attributes);
 			}
 		}
