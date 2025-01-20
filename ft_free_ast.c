@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 17:07:16 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/20 10:49:05 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/20 15:08:18 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,36 +49,27 @@ void	ft_triple_pointer(char ***array)
 	*array = NULL;
 }
 
-void ft_check_ast_array(t_cmd_table *print)
+void	ft_check_ast_array(t_cmd_table *print)
 {
 	if (!print)
 		return ;
 	if (print->cmd_arr)
 		ft_triple_pointer(&print->cmd_arr);
-	if (print && print->outfile)
-		ft_free_cmd_array(print->outfile);
-	if (print && print->infile)
-		ft_free_cmd_array(print->infile);
-	if (print && print->here)
-		ft_free_cmd_array(print->here);
-	if (print && print->append)
-		ft_free_cmd_array(print->append);
 	if (print && print->herefile)
 		ft_triple_pointer(&print->herefile);
 	free(print->type_arr);
 }
 
-int ft_free_ast(t_mini *attributes)
+int	ft_free_ast(t_mini *attributes)
 {
-	t_cmd_table *table;
-	t_cmd_table *temp;
+	t_cmd_table	*table;
+	t_cmd_table	*temp;
 
 	table = attributes->commands;
 	if (!attributes->commands)
 		return (0);
 	while (table)
 	{
-		//printf("free loop\n");
 		if (table->right)
 		{
 			ft_check_ast_array(table->right);

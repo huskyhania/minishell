@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 18:12:26 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/19 13:28:15 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/20 14:44:36 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int	ft_merge_pipe(t_mini *attributes, t_cmd_table *old_table)
 {
 	t_cmd_table	*new_pipe;
 
-	new_pipe = malloc(sizeof(t_cmd_table)); // use add new functon? // checked
+	new_pipe = malloc(sizeof(t_cmd_table));
 	if (new_pipe == NULL)
 		return (0);
 	new_pipe->type = t_pipe;
@@ -26,53 +26,51 @@ int	ft_merge_pipe(t_mini *attributes, t_cmd_table *old_table)
 	return (1);
 }
 
-t_cmd_table	*ft_merge_redirection(t_mini *attributes, t_tokens **token, t_cmd_table *old_table)
+t_cmd_table	*ft_merge(t_mini *attributes, t_tokens **token, t_cmd_table *old)
 {
 	attributes->type_count += 1;
-	if ((*token)->type == t_great || (*token)->type == t_greatgreat || (*token)->type == t_less || (*token)->type == t_lessless)
+	if ((*token)->type >= t_great && (*token)->type <= t_lessless)
 	{
-		old_table->herefile = ft_add_command_array(old_table->herefile, (*token)->next->str);
-		if (old_table->herefile == NULL)
+		old->herefile = ft_add_cmd_arr(old->herefile, (*token)->next->str);
+		if (old->herefile == NULL)
 			return (NULL);
 	}
-	old_table->type_arr = ft_add_type_array(attributes, old_table->type_arr, (*token)->type);
-	if (old_table->type_arr == NULL)
+	old->type_arr = ft_add_type_arr(attributes, old->type_arr, (*token)->type);
+	if (old->type_arr == NULL)
 	{
-		ft_check_ast_array(old_table);
-		free(old_table);
+		ft_check_ast_array(old);
+		free(old);
 		return (NULL);
 	}
 	*token = (*token)->next;
 	if ((*token)->prev->type == t_great || (*token)->prev->type == t_greatgreat)
-		old_table->last_outfile = (*token)->prev->type;
+		old->last_outfile = (*token)->prev->type;
 	if ((*token)->prev->type == t_less || (*token)->prev->type == t_lessless)
-		old_table->last_infile = (*token)->prev->type;
-	old_table->type = (*token)->prev->type;
-	return (old_table);
+		old->last_infile = (*token)->prev->type;
+	old->type = (*token)->prev->type;
+	return (old);
 }
 
 t_cmd_table	*ft_merge_command(t_mini *attributes, t_tokens **token)
 {
-	t_cmd_table	*new_node;
+	t_cmd_table	*node;
 
-	new_node = ft_add_new(*token); //checked
-	if (new_node == NULL)
-		return (NULL);
-	while (*token != NULL && (*token)->type != t_pipe)
+	node = ft_add_new(*token);
+	while (node && *token != NULL && (*token)->type != t_pipe)
 	{
-		if (*token && ((*token)->type == t_great || (*token)->type == t_less || (*token)->type == t_lessless || (*token)->type == t_greatgreat))
+		if ((*token)->type >= t_great && (*token)->type <= t_lessless)
 		{
-			new_node = ft_merge_redirection(attributes, token, new_node);
-			new_node->failexp = (*token)->failexp;
-			if (new_node == NULL)
+			node = ft_merge(attributes, token, node);
+			if (node == NULL)
 				return (NULL);
+			node->failexp = (*token)->failexp;
 		}
 		else if ((*token)->failexp == 0)
 		{	
-			new_node->cmd_arr = ft_add_command_array(new_node->cmd_arr, (*token)->str);
-			if (new_node->cmd_arr == NULL)
+			node->cmd_arr = ft_add_cmd_arr(node->cmd_arr, (*token)->str);
+			if (node->cmd_arr == NULL)
 			{	
-				free(new_node); // might need to free arrays int node ??
+				free(node);
 				return (NULL);
 			}
 		}
@@ -80,7 +78,7 @@ t_cmd_table	*ft_merge_command(t_mini *attributes, t_tokens **token)
 	}
 	attributes->type_count = 0;
 	attributes->cmd_index += 1;
-	return (new_node);
+	return (node);
 }
 
 int	ft_start_parsing(t_mini *attributes)
@@ -90,16 +88,16 @@ int	ft_start_parsing(t_mini *attributes)
 
 	token = attributes->tokens;
 	attributes->cmd_index = 0;
-	attributes->commands = ft_merge_command(attributes, &token); //checkedd
+	attributes->commands = ft_merge_command(attributes, &token);
 	if (attributes->commands == NULL)
 		return (0);
 	while (token != NULL && token->type == t_pipe)
 	{
 		token = token->next;
-		new_table = ft_merge_command(attributes, &token); // checked
+		new_table = ft_merge_command(attributes, &token);
 		if (new_table == NULL)
 			return (0);
-		if (!(ft_merge_pipe(attributes, new_table))) // checked
+		if (!(ft_merge_pipe(attributes, new_table)))
 		{
 			ft_check_ast_array(new_table);
 			free(new_table);
@@ -121,7 +119,6 @@ int	ft_parsing(t_mini *attributes)
 		ft_putstr_fd("Parsing error\n", 2);
 		return (0);
 	}
-	//ft_print_table(attributes);
 	ft_free_tokens(attributes);
 	return (1);
 }

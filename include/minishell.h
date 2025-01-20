@@ -113,6 +113,10 @@ void ft_heresignal(void);
 void    ft_resetsignal(void);
 void	ft_resetposthere(void);
 
+//ft_signal_handler.c
+void    ft_handle_post_here(int sig);
+void    ft_handle_sigint(int sig);
+void    ft_heredoc_sighandler(int sig);
 //ft_tokens.c
 int	ft_tokenization(t_mini *attributes);
 
@@ -140,10 +144,11 @@ int ft_parsing(t_mini *attributes);
 //ft_parsing_tools.c
 t_cmd_table *ft_find_last_parse(t_cmd_table *stack);
 t_cmd_table *ft_add_new(t_tokens *token);
-char **ft_add_command_array(char **old_array, char *str);
+char    **ft_add_cmd_arr(char **old_array, char *str);
 void	ft_free_cmd_array(char **arr);
 
-int *ft_add_type_array(t_mini *attributes, int *old_array, int type);
+//ft_type_array.c
+int *ft_add_type_arr(t_mini *attributes, int *old_array, int type);
 
 //ft_free_ast.c
 int    ft_free_ast(t_mini *attributes);
@@ -223,6 +228,4 @@ void	set_error_and_display(int error_code, t_mini *attributes, const char *cmd);
 void	syscall_fail(int err_code, t_mini *attributes, const char *message);
 void    update_exitcode(int err_code, t_mini *attributes);
 
-//delete from final product
-void ft_print_table(t_mini *attributes);
 #endif
