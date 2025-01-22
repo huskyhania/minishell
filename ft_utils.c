@@ -49,3 +49,11 @@ int	ft_strcmp(char *s1, char *s2)
 		i++;
 	return (s1[i] - s2[i]);
 }
+
+void	check_and_free_string(char *str)
+{
+	if (!str)
+		return ;
+	free(str);
+	str = NULL;
+}

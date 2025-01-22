@@ -242,7 +242,10 @@ void	cleanup_parent(t_mini *attributes);
 
 //other general utils
 void	free_array(char **array);
-int     ft_strcmp(char *s1, char *s2);
+int	ft_strcmp(char *s1, char *s2);
+int	save_stdin(t_mini *attributes);
+void	restore_stdin(int saved_stdin, t_mini *attributes);
+void check_and_free_string(char *str);
 
 //error messages
 void	set_error_and_display(int error_code, t_mini *attributes, const char *cmd);

@@ -17,9 +17,10 @@
 //open temporary file with flags O_CREAT | O_WRONLY | O_TRUNCT, 0644
 //int here_doc_fd should it be in attributes?
 
-void ft_heredoc_error(char *delimit)
+void	ft_heredoc_error(char *delimit)
 {
-	printf("here-document at line delimited by end-of-file (wanted `%s')\n", delimit);
+	printf("here-document at line delimited");
+	printf(" by end-of-file (wanted `%s')\n", delimit);
 }
 
 static int	here_doc_open(t_mini *attributes, int *temp_fd)
@@ -34,7 +35,7 @@ static int	here_doc_open(t_mini *attributes, int *temp_fd)
 	return (0);
 }
 
-static int signal_interrupt_here(t_mini *attribs, int saved_fd, char *del)
+static int	signal_interrupt_here(t_mini *attribs, int saved_fd, char *del)
 {
 	if (g_signal == SIGINT)
 	{
@@ -58,42 +59,41 @@ static int signal_interrupt_here(t_mini *attribs, int saved_fd, char *del)
 
 int	here_doc_handler(t_mini *attributes, char *delimit)
 {
-	int	temp_fd;
-	int	saved_stdin;
+	int		temp_fd;
+	int		saved_stdin;
 	char	*line;
 
-	saved_stdin = dup(STDIN_FILENO);//checks for dup
+	saved_stdin = save_stdin(attributes);
 	if (here_doc_open(attributes, &temp_fd) < 0)
 		return (-1);
 	ft_heresignal();
 	while (1)
 	{
 		line = readline("heredoc> ");
-		if (!line || (delimit[0] == '\0' && line[0] == '\0') || (ft_strncmp(delimit, line, ft_strlen(delimit)) == 0 && ft_strlen(delimit) == ft_strlen(line)))
+		if (!line || (delimit[0] == '\0' && line[0] == '\0')
+			|| (ft_strncmp(delimit, line, ft_strlen(delimit)) == 0
+				&& ft_strlen(delimit) == ft_strlen(line)))
 			break ;
-		write(temp_fd, line, ft_strlen(line));
-		write(temp_fd, "\n", 1);
-		free(line);
-		line = NULL;
+		ft_putendl_fd(line, temp_fd);
+		check_and_free_string(line);
 	}
 	close(temp_fd);
 	if (g_signal == SIGINT || !line)
 		return (signal_interrupt_here(attributes, saved_stdin, delimit));
 	ft_sigint();
-	if (line)
-		free(line);
-	dup2(saved_stdin, STDIN_FILENO);
-	close(saved_stdin);
+	check_and_free_string(line);
+	restore_stdin(saved_stdin, attributes);
 	return (0);
 }
 
-int	check_for_heredocs(t_cmd_table *node, t_mini *attributes)
+int	check_for_heredocs(t_cmd_table *node, t_mini *attribs)
 {
 	int	i;
+
 	i = 0;
 	while (node->herefile[i] != NULL)
 	{
-		if (node->type_arr[i] != 5 || !ultimate_check_heredoc(node, attributes, i))
+		if (node->type_arr[i] != 5 || !ultimate_check_heredoc(node, attribs, i))
 			i++;
 		else
 			return (1);
