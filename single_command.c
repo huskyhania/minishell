@@ -57,38 +57,18 @@ void	execute_single(char **cmd_arr, t_mini *attributes, t_cmd_table *node)
 	exit(attributes->exitcode);
 }
 
-static void	handle_single(char **cmd_array, t_mini *attributes, t_cmd_table *node)
+static void	handle_single(char **cmd_array, t_mini *attribs, t_cmd_table *node)
 {
-	int	pid;
-	int	status;
-	int	signal_no;
-
-	status = 0x7F;
-	pid = fork();
-	if (pid < 0)
-		return (syscall_fail(1, attributes, "fork"));
-	if (pid == 0)
+	attribs->pids[0] = fork();
+	if (attribs->pids[0] < 0)
+		return (syscall_fail(1, attribs, "fork"));
+	if (attribs->pids[0] == 0)
 	{
 		ft_resetsignal();
-		execute_single(cmd_array, attributes, node);
+		execute_single(cmd_array, attribs, node);
 	}
 	else
-	{
-		waitpid(pid, &status, 0);
-		if (WIFSIGNALED(status))
-		{
-			signal_no = WTERMSIG(status);
-			attributes->exitcode = signal_no + 128;
-			printf("exited with signal\n");
-		}
-		if (WIFEXITED(status))
-		{
-			//printf("child exited with status %d\n", WEXITSTATUS(status));
-			attributes->exitcode = WEXITSTATUS(status);
-		}
-		if (access("here_doc", F_OK) == 0)
-			unlink("here_doc");
-	}
+		wait_for_all_processes(attribs);
 }
 
 void	single_command(t_cmd_table *node, t_mini *attributes)

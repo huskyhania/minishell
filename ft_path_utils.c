@@ -30,28 +30,24 @@ char	*check_command(const char *cmd, t_mini *attributes)
 {
 	struct stat	path_stat;
 
-	if (stat(cmd, &path_stat) == 0)
+	if (stat(cmd, &path_stat) != 0)
 	{
-		if (S_ISDIR(path_stat.st_mode))
-		{
-			ft_putstr_fd(": Is a directory\n", 2);
-			attributes->exitcode = 126;
-			return (NULL);
-		}
-		if (access(cmd, X_OK) == 0)
-		{
-			attributes->exitcode = 0;
-			return (ft_strdup(cmd));
-		}
-		if (access(cmd, F_OK) == 0)
-			set_error_and_display(126, attributes, cmd);
-	}
-	else
-	{
-		attributes->exitcode = 127;
+		update_exitcode(127, attributes);
 		ft_putstr_fd((char *)cmd, 2);
 		ft_putstr_fd(": No such file or directory\n", 2);
+		return (NULL);
 	}
+	if (S_ISDIR(path_stat.st_mode))
+	{
+		ft_putstr_fd((char *)cmd, 2);
+		ft_putstr_fd(": Is a directory\n", 2);
+		update_exitcode(126, attributes);
+		return (NULL);
+	}
+	if (access(cmd, X_OK) == 0)
+		return (ft_strdup(cmd));
+	if (access(cmd, F_OK) == 0)
+		set_error_and_display(126, attributes, cmd);
 	return (NULL);
 }
 

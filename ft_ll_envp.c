@@ -89,23 +89,22 @@ t_envp	*create_node(char *s, t_envp **envp_heap)
 	if (!node)
 		return (NULL);
 	node->key = get_key(s);
-	node->value = get_value(s);
-	if (!node->key || !node->value)
+	if (ft_strchr(s, '='))
+		node->value = get_value(s);
+	else
+		node->value = NULL;
+	if (!node->key || (!node->value && ft_strchr(s, '=')))
 	{
 		printf("malloc error in evnp creation");
 		if (node->key)
 			free(node->key);
-		if (node->value)
-			free(node->value);
 		free(node);
 		return (NULL);
 	}
 	node->next = NULL;
+	node->prev = NULL;
 	if (!(*envp_heap))
-	{
 		*envp_heap = node;
-		node->prev = NULL;
-	}
 	else
 	{
 		last_node = find_last(*envp_heap);
@@ -121,8 +120,13 @@ void	print_envp_list(t_envp *envp_heap)
 	helper = envp_heap;
 	while (helper)
 	{
-		if (helper->value && helper->value[0] != '\0')
-			printf("%s=%s\n", helper->key, helper->value);
+		if (helper->value)
+		{
+			printf("%s", helper->key);
+			printf("=");
+			printf("%s", helper->value);
+			printf("\n");
+		}
 		helper = helper->next;
 	}
 }
