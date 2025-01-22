@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 09:41:29 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/20 09:42:13 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/22 12:01:35 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	ft_delete_token(t_tokens *token)
 int	ft_merge_tokens(t_mini *attributes)
 {
 	t_tokens	*token;
-	char *new_str;
+	char	*new_str;
 
 	token = attributes->tokens;
 	while (token && token->next)
