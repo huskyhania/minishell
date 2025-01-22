@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 18:12:26 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/20 14:44:36 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/22 17:49:46 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,6 @@ t_cmd_table	*ft_merge_command(t_mini *attributes, t_tokens **token)
 		}
 		*token = (*token)->next;
 	}
-	attributes->type_count = 0;
 	attributes->cmd_index += 1;
 	return (node);
 }
@@ -87,14 +86,15 @@ int	ft_start_parsing(t_mini *attributes)
 	t_cmd_table	*new_table;
 
 	token = attributes->tokens;
-	attributes->cmd_index = 0;
 	attributes->commands = ft_merge_command(attributes, &token);
+	attributes->type_count = 0;
 	if (attributes->commands == NULL)
 		return (0);
 	while (token != NULL && token->type == t_pipe)
 	{
 		token = token->next;
 		new_table = ft_merge_command(attributes, &token);
+		attributes->type_count = 0;
 		if (new_table == NULL)
 			return (0);
 		if (!(ft_merge_pipe(attributes, new_table)))

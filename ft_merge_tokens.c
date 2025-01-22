@@ -6,11 +6,24 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 09:41:29 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/22 12:01:35 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/22 15:08:47 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	ft_convert(t_mini *attributes)
+{
+	t_tokens	*token;
+
+	token = attributes->tokens;
+	while (token)
+	{
+		if (token->type == t_quote)
+			token->type = t_command;
+		token = token->next;
+	}
+}
 
 void	ft_delete_token(t_tokens *token)
 {
@@ -24,19 +37,17 @@ void	ft_delete_token(t_tokens *token)
 int	ft_merge_tokens(t_mini *attributes)
 {
 	t_tokens	*token;
-	char	*new_str;
+	char		*new_str;
 
 	token = attributes->tokens;
 	while (token && token->next)
 	{
-		if (token->next && token->merge == 1 && (token->next->type == t_command || token->next->type == t_quote))
+		if (token->next && token->merge == 1
+			&& (token->next->type == t_command || token->next->type == t_quote))
 		{
 			new_str = ft_strjoin(token->str, token->next->str);
 			if (!new_str)
-			{
-				ft_putstr_fd("Merging Error\n", 2);
-				return (0);
-			}
+				return (syscall_fail(2, attributes, "malloc"), 0);
 			free(token->str);
 			free(token->next->str);
 			token->str = NULL;
@@ -47,7 +58,7 @@ int	ft_merge_tokens(t_mini *attributes)
 			ft_delete_token(token);
 		}
 		else
-            token = token->next;
-    }
+			token = token->next;
+	}
 	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 20:07:51 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/20 13:59:19 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/22 14:39:34 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,15 +31,11 @@ t_cmd_table	*ft_add_new(t_tokens *token)
 	new_node->right = NULL;
 	new_node->left = NULL;
 	new_node->cmd_arr = NULL;
-	new_node->outfile = NULL;
-	new_node->infile = NULL;
 	new_node->input_fd = 0;
 	new_node->output_fd = 1;
 	new_node->in1 = NULL;
 	new_node->out1 = NULL;
-	new_node->here = NULL;
 	new_node->herefile = NULL;
-	new_node->append = NULL;
 	new_node->type_arr = NULL;
 	new_node->last_outfile = 0;
 	new_node->last_infile = 0;
