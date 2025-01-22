@@ -133,11 +133,19 @@ int ft_is_quote(char *line);
 //ft_syntax.c
 int ft_check_quotes(char *line);
 int ft_syntax_check(t_mini *attributes);
-int ft_merge_tokens(t_mini *attributes);
 void    ft_delete_token(t_tokens *token);
+
+void    ft_convert(t_mini *attributes);
+int ft_merge_tokens(t_mini *attributes);
 
 //ft_expand.c
 int    ft_expand(t_mini *attributes);
+
+char    *ft_replace_expansion(char *token, char *path, char *expansion);
+char    *ft_replace_expansion(char *token, char *path, char *expansion);
+int ft_expand_pid(t_mini *attributes, t_tokens *token, int j);
+int ft_expand_exitcode(t_mini *attributes, t_tokens *token, int j);
+
 //ft_parsing.c
 int ft_parsing(t_mini *attributes);
  

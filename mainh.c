@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:37:20 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/19 16:33:40 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/22 15:03:33 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,9 @@ int	ft_check_everything(t_mini *attributes)
 		ft_free_tokens(attributes);
 		return (0);
 	}
+	if (!(ft_merge_tokens(attributes)))
+		return (0);
+	ft_convert(attributes);
 	if (!(ft_parsing(attributes)))
 		return (0);
 	return (1);
