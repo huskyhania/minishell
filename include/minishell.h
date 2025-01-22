@@ -182,11 +182,6 @@ void	handle_pipes(t_mini *attributes);
 void	builtin_pipe(t_mini *attributes);
 
 //redirections
-int	check_redirs(t_cmd_table *node, t_mini *attributes);
-int	check_infile(t_cmd_table *node, t_mini *attributes);
-int	check_outfile(t_cmd_table *node, t_mini *attributes);
-int	check_append(t_cmd_table *node, t_mini *attributes);
-int	redir_empty(t_cmd_table *node, t_mini *attributes);
 int	check_files(t_cmd_table *node, t_mini *attributes, int i);
 int	redir_in(t_cmd_table *node, t_mini *attributes);
 int	redir_out(t_cmd_table *node, t_mini *attributes);
