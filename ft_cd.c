@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-static int	cd_home(t_mini *attributes)
+static int	cd_home(t_mini *attributes, char *old_pwd)
 {
 	char	*home;
 
@@ -22,7 +22,13 @@ static int	cd_home(t_mini *attributes)
 		ft_putstr_fd("cd: HOME not set\n", 2);
 		return (1);
 	}
-	return (chdir(home));
+	if (chdir(home) == -1)
+	{
+		if (old_pwd)
+			free(old_pwd);
+		return (1);
+	}
+	return (0);
 }
 
 static int	update_oldpwd(t_envp **envp_heap, char *old_pwd)
@@ -48,6 +54,15 @@ static int	update_oldpwd(t_envp **envp_heap, char *old_pwd)
 	return (1);
 }	
 
+static void	cd_error(int flag, t_mini *attributes)
+{
+	if (flag == 1)
+		ft_putstr_fd("cd: too many arguments\n", 2);
+	if (flag == 2)
+		ft_putstr_fd(" No such file or directory\n", 2);
+	update_exitcode(1, attributes);
+}
+
 void	ft_cd(char **cmd_array, int i, t_mini *attributes)
 {
 	char	*old_pwd;
@@ -55,19 +70,12 @@ void	ft_cd(char **cmd_array, int i, t_mini *attributes)
 	while (cmd_array[i])
 		i++;
 	if (i > 2)
-	{
-		ft_putstr_fd("cd: too many arguments\n", 2);
-		return (update_exitcode(1, attributes));
-	}
+		return (cd_error(1, attributes));
 	old_pwd = getcwd(NULL, 0);
 	if (cmd_array[1] == NULL || (ft_strcmp(cmd_array[1], "--") == 0))
 	{
-		if (cd_home(attributes))
-		{
-			if (old_pwd)
-				free(old_pwd);
+		if (cd_home(attributes, old_pwd))
 			return (syscall_fail(1, attributes, "chdir"));
-		}
 	}
 	else
 	{
@@ -75,8 +83,7 @@ void	ft_cd(char **cmd_array, int i, t_mini *attributes)
 		{
 			if (old_pwd)
 				free(old_pwd);
-			ft_putstr_fd(" No such file or directory\n", 2);
-			return (update_exitcode(1, attributes));
+			return (cd_error(2, attributes));
 		}
 	}
 	update_oldpwd(&attributes->envp_heap, old_pwd);

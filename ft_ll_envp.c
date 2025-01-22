@@ -12,23 +12,6 @@
 
 #include "minishell.h"
 
-//write list freeing for malloc fails/exiting minishell
-
-void	free_envp_list(t_envp *envp_heap)
-{
-	t_envp	*temp;
-	while (envp_heap)
-	{
-		temp = envp_heap;
-		envp_heap = envp_heap->next;
-		if (temp->key)
-			free(temp->key);
-		if (temp->value)
-			free(temp->value);
-		free(temp);
-	}
-}
-
 t_envp	*find_last(t_envp *envp_heap)
 {
 	if (!envp_heap)
@@ -40,7 +23,7 @@ t_envp	*find_last(t_envp *envp_heap)
 
 char	*get_key(char *s)
 {
-	int	i;
+	int		i;
 	char	*key;
 
 	i = 0;
@@ -62,8 +45,8 @@ char	*get_key(char *s)
 char	*get_value(char *s)
 {
 	char	*value;
-	int	i;
-	int	j;
+	int		i;
+	int		j;
 
 	i = 0;
 	j = 0;
@@ -80,10 +63,23 @@ char	*get_value(char *s)
 	return (value);
 }
 
+static void	append_node(t_envp **envp_heap, t_envp *node)
+{
+	t_envp	*last_node;
+
+	if (!(*envp_heap))
+		*envp_heap = node;
+	else
+	{
+		last_node = find_last(*envp_heap);
+		last_node->next = node;
+		node->prev = last_node;
+	}
+}
+
 t_envp	*create_node(char *s, t_envp **envp_heap)
 {
 	t_envp	*node;
-	t_envp	*last_node;
 
 	node = malloc(sizeof(t_envp));
 	if (!node)
@@ -103,86 +99,6 @@ t_envp	*create_node(char *s, t_envp **envp_heap)
 	}
 	node->next = NULL;
 	node->prev = NULL;
-	if (!(*envp_heap))
-		*envp_heap = node;
-	else
-	{
-		last_node = find_last(*envp_heap);
-		last_node->next = node;
-		node->prev = last_node;
-	}
+	append_node(envp_heap, node);
 	return (node);
-}
-
-void	print_envp_list(t_envp *envp_heap)
-{
-	t_envp	*helper;
-	helper = envp_heap;
-	while (helper)
-	{
-		if (helper->value)
-		{
-			printf("%s", helper->key);
-			printf("=");
-			printf("%s", helper->value);
-			printf("\n");
-		}
-		helper = helper->next;
-	}
-}
-
-char	**envp_to_array(t_envp *envp_heap)
-{
-	int	len;
-	len = 0;
-	t_envp	*current;
-	current = envp_heap;
-	int key_value_len;
-	while (current)
-	{
-		len++;
-		current = current->next;
-	}
-	char	**envp_array = malloc((len + 1) * sizeof(char *));
-	if (!envp_array)
-		return (NULL);
-	current = envp_heap;
-	int i = 0;
-	while (i < len)
-	{
-		key_value_len = ft_strlen(current->key) + ft_strlen(current->value) + 2;
-		envp_array[i] = malloc(key_value_len);
-		if (!envp_array[i])
-		{
-			//free array up to that point
-			return (NULL);
-		}
-		ft_strlcpy(envp_array[i], current->key, ft_strlen(current->key) + 1);
-		ft_strlcat(envp_array[i], "=", key_value_len);
-		ft_strlcat(envp_array[i], current->value, key_value_len);
-		current = current->next;
-		i++;
-	}
-	envp_array[len] = NULL;
-	return (envp_array);
-}
-t_envp	*envp_to_list(char **envp)
-{
-	t_envp	*envp_heap;
-	int	i;
-
-	envp_heap = NULL;
-	i = 0;
-	while (envp[i] != NULL)
-	{
-		if (!create_node(envp[i], &envp_heap))
-		{
-			printf("error creating node %d of envp", i);
-			free_envp_list(envp_heap);
-			return (NULL);
-		}
-		i++;
-	}
-	//print_envp_list(envp_heap);
-	return (envp_heap);
 }

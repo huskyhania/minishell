@@ -17,7 +17,7 @@ void	redirect_child(t_cmd_table *node, t_mini *attributes)
 	if (node->type != t_command && node->type != 5
 		&& attributes->cmd_index == 1)
 	{
-		if (check_files(node, attributes))
+		if (check_files(node, attributes, -1))
 		{
 			cleanup_child(attributes);
 			exit(EXIT_FAILURE);
@@ -77,7 +77,7 @@ void	single_command(t_cmd_table *node, t_mini *attributes)
 
 	if (node->type != t_command)
 	{
-		if (check_files(node, attributes))
+		if (check_files(node, attributes, -1))
 		{
 			if (g_signal == SIGINT)
 				attributes->exitcode = 130;

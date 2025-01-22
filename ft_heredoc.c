@@ -22,28 +22,53 @@ void ft_heredoc_error(char *delimit)
 	printf("here-document at line delimited by end-of-file (wanted `%s')\n", delimit);
 }
 
-int	here_doc_handler(t_cmd_table *node, t_mini *attributes, char *delimit)
+static int	here_doc_open(t_mini *attributes, int *temp_fd)
+{
+	*temp_fd = open("here_doc", O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	if (*temp_fd < 0)
+	{
+		ft_putendl_fd("cannot create heredoc file", 2);
+		update_exitcode(1, attributes);
+		return (-1);
+	}
+	return (0);
+}
+
+static int signal_interrupt_here(t_mini *attribs, int saved_fd, char *del)
+{
+	if (g_signal == SIGINT)
+	{
+		if (dup2(saved_fd, STDIN_FILENO) == -1)
+			syscall_fail(1, attribs, "dup2");
+		close(saved_fd);
+		unlink("here_doc");
+		attribs->exitcode = 130;
+		ft_resetposthere();
+		return (-1);
+	}
+	else
+	{
+		ft_heredoc_error(del);
+		ft_resetposthere();
+		dup2(saved_fd, STDIN_FILENO);
+		close(saved_fd);
+		return (0);
+	}
+}
+
+int	here_doc_handler(t_mini *attributes, char *delimit)
 {
 	int	temp_fd;
 	int	saved_stdin;
 	char	*line;
 
-	(void)node;
 	saved_stdin = dup(STDIN_FILENO);//checks for dup
-	//fprintf(stderr, "given delimiter is %s\n", delimit);
-	temp_fd = open("here_doc", O_CREAT | O_WRONLY | O_TRUNC, 0644);
-	if (temp_fd < 0)
-	{
-		ft_putendl_fd("cannot create temp file", 2);
-		attributes->exitcode = 1; //to udpate in struct and delete
+	if (here_doc_open(attributes, &temp_fd) < 0)
 		return (-1);
-	}
 	ft_heresignal();
 	while (1)
 	{
-		line = readline("heredoc> ");//or here?
-		//if (!line)
-		//	break ;
+		line = readline("heredoc> ");
 		if (!line || (delimit[0] == '\0' && line[0] == '\0') || (ft_strncmp(delimit, line, ft_strlen(delimit)) == 0 && ft_strlen(delimit) == ft_strlen(line)))
 			break ;
 		write(temp_fd, line, ft_strlen(line));
@@ -52,32 +77,13 @@ int	here_doc_handler(t_cmd_table *node, t_mini *attributes, char *delimit)
 		line = NULL;
 	}
 	close(temp_fd);
-	ft_resetsignal();
-	if (g_signal == SIGINT) // Control + C should trigger this and exit back to main with exitcode 130
-	{
-		dup2(saved_stdin, STDIN_FILENO);
-		close(saved_stdin);
-		unlink("here_doc");
-		attributes->exitcode = 130;
-		ft_resetposthere();
-		//printf("exit heredoc with ctrl+c\n");
-		return (-1);
-	}
-	if (!line) // Control + D goes here and life continues
-	{
-		//printf("exit heredoc with ctrl+d\n");
-		ft_heredoc_error(delimit);
-		ft_resetposthere();
-		dup2(saved_stdin, STDIN_FILENO);
-		close(saved_stdin);
-		return (0);
-	}
+	if (g_signal == SIGINT || !line)
+		return (signal_interrupt_here(attributes, saved_stdin, delimit));
 	ft_sigint();
 	if (line)
 		free(line);
 	dup2(saved_stdin, STDIN_FILENO);
 	close(saved_stdin);
-	//close(temp_fd);
 	return (0);
 }
 

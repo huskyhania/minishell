@@ -156,6 +156,7 @@ void ft_check_ast_array(t_cmd_table *print);
 
 //ft_execution.c - executing simple commands
 int	is_empty_or_space(const char *cmd);
+int	create_pids_array(t_mini *attributes);
 int	check_if_valid_command(t_cmd_table *node, t_mini *attributes);
 void	execute_simple_command(char **cmd_arr, t_mini *attributes, t_cmd_table *node);
 void	handle_simple_command(char **cmd_arr, t_mini *attributes, t_cmd_table *node);
@@ -176,7 +177,7 @@ int	check_infile(t_cmd_table *node, t_mini *attributes);
 int	check_outfile(t_cmd_table *node, t_mini *attributes);
 int	check_append(t_cmd_table *node, t_mini *attributes);
 int	redir_empty(t_cmd_table *node, t_mini *attributes);
-int	check_files(t_cmd_table *node, t_mini *attributes);
+int	check_files(t_cmd_table *node, t_mini *attributes, int i);
 int	redir_in(t_cmd_table *node, t_mini *attributes);
 int	redir_out(t_cmd_table *node, t_mini *attributes);
 void	redirect_child(t_cmd_table *node, t_mini *attributes);
@@ -198,22 +199,27 @@ char	*find_in_envp(char **envp, const char *key);
 int	ft_export(char **cmd_array, t_mini *attributes);
 int	env_var_exists(char *export, t_envp **envp_heap);
 int	replace_append(char *export, t_envp **envp_heap);
+int	envp_list_size(t_envp *envp_heap);
 t_envp	*envp_to_list(char **envp);
 void	print_env_value(t_mini *attributes, char *key);
+void	free_envp_list(t_envp *envp_heap);
 t_envp	*create_node(char *s, t_envp **envp_heap);
 char	**envp_to_array(t_envp *envp_heap);
+char	*create_envp_entry(t_envp *envp_node);
 void	print_envp_list(t_envp *envp_heap);
 char	*get_key(char *s);
 char	*get_value(char *s);
 void	ft_echo(t_cmd_table *node, t_mini *attributes);
 void	ft_cd(char **cmd_array, int i, t_mini *attributes);
 
+
+
 //ft_exit.c
 void    ft_exit(char **cmd_array, t_mini *attributes);
 void    ft_child_exit(char **cmd_array, t_mini *attributes);
 
 //heredoc
-int	here_doc_handler(t_cmd_table *node, t_mini *attributes, char *delimit);
+int	here_doc_handler(t_mini *attributes, char *delimit);
 int     process_heredocs(t_cmd_table *node, t_mini *attributes);
 int	check_for_heredocs(t_cmd_table *node, t_mini *attributes);
 int	ultimate_check_heredoc(t_cmd_table *node, t_mini *attributes, int index);
@@ -231,6 +237,7 @@ int     ft_strcmp(char *s1, char *s2);
 //error messages
 void	set_error_and_display(int error_code, t_mini *attributes, const char *cmd);
 void	syscall_fail(int err_code, t_mini *attributes, const char *message);
-void    update_exitcode(int err_code, t_mini *attributes);
+void	update_exitcode(int err_code, t_mini *attributes);
+void	update_exit_recursion(t_mini *attributes);
 
 #endif

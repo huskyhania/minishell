@@ -81,7 +81,7 @@ void	ft_readline_loop(t_mini *attributes, char **envp)
 			add_history(attributes->readret);
 			if (ft_check_everything(attributes))
 			{
-				if (attributes->commands)//are you maybe checking for that already, Leo?
+				if (attributes->commands)
 					ft_execution(attributes);
 				//minishell_init(envp, attributes);
 			}
