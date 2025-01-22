@@ -111,8 +111,10 @@ void	handle_command(t_cmd_table *node, t_mini *attributes)
 		{
 			update_exit_recursion(attributes);
 			attributes->pids[attributes->i - 1] = -1;
+			close_pipes_in_parent(attributes);
 			return ;
 		}
+		close_pipes_in_parent(attributes);
 	}
 	if (node->cmd_arr)
 	{

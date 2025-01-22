@@ -87,7 +87,7 @@ int	check_for_heredocs(t_cmd_table *node, t_mini *attributes)
 	i = 0;
 	while (node->herefile[i] != NULL)
 	{
-		if (node->type_arr[i] != 5 || ultimate_check_heredoc(node, attributes, i))
+		if (node->type_arr[i] != 5 || !ultimate_check_heredoc(node, attributes, i))
 			i++;
 		else
 			return (1);
