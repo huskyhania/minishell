@@ -129,6 +129,7 @@ int ft_skip_whitespace(char *line);
 int ft_is_special(char *line);
 int ft_is_whitespace(char *line);
 int ft_is_quote(char *line);
+int	ft_check_expansion(char *str, int j);
 
 //ft_syntax.c
 int ft_check_quotes(char *line);
@@ -145,6 +146,7 @@ char    *ft_replace_expansion(char *token, char *path, char *expansion);
 char    *ft_replace_expansion(char *token, char *path, char *expansion);
 int ft_expand_pid(t_mini *attributes, t_tokens *token, int j);
 int ft_expand_exitcode(t_mini *attributes, t_tokens *token, int j);
+int	ft_expand_small(t_mini *attributes, t_tokens *token, int j);
 
 //ft_parsing.c
 int ft_parsing(t_mini *attributes);

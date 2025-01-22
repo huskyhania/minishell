@@ -6,29 +6,11 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 15:11:35 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/22 15:52:12 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/22 17:47:40 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	ft_expand_small(t_mini *attributes, t_tokens *token, int j)
-{
-	char	*path;
-
-	if (token->str[j + 1] == '?')
-		ft_expand_exitcode(attributes, token, j);
-	else if (ft_isdigit(token->str[j + 1]))
-	{
-		path = ft_substr(token->str, j, 2);
-		token->str = ft_replace_expansion(token->str, path, "");
-		free(path);
-	}
-	else
-		ft_expand_pid(attributes, token, j);
-	token->failexp = 0;
-	return (1);
-}
 
 int	ft_expand_big2(t_mini *attributes, t_tokens *token, char *path)
 {
@@ -77,12 +59,13 @@ int	ft_expand_big(t_mini *attributes, t_tokens *token, int j, int i)
 int	ft_expand_word(t_mini *attributes, t_tokens *t, int j)
 {
 	if (!t || !t->str)
-		return (0); 
+		return (0);
 	while (t->str[j] != '\0')
 	{
-		if (t->str[j] == '$' && (ft_isalpha(t->str[j + 1]) || t->str[j + 1] == '_' || t->str[j + 1] == '?' || t->str[j + 1] == '$' || ft_isdigit(t->str[j + 1])))
+		if (ft_check_expansion(t->str, j))
 		{
-			if (t->str[j + 1] == '?' || t->str[j + 1] == '$' || ft_isdigit(t->str[j + 1]))
+			if (t->str[j + 1] == '?'
+				|| t->str[j + 1] == '$' || ft_isdigit(t->str[j + 1]))
 			{
 				if (!ft_expand_small(attributes, t, j))
 					return (0);
@@ -102,6 +85,20 @@ int	ft_expand_word(t_mini *attributes, t_tokens *t, int j)
 	return (1);
 }
 
+int	ft_expand_command(t_tokens *token, t_mini *attributes)
+{
+	if (ft_strncmp(token->str, "$", 2) == 0 && token->merge == 1
+		&& token->next != NULL && token->dollar == 0)
+	{
+		token->str = ft_replace_expansion(token->str, token->str, "");
+		if (token->str == NULL)
+			return (syscall_fail(2, attributes, "malloc"), 0);
+	}				
+	else if (!(ft_expand_word(attributes, token, 0)))
+		return (syscall_fail(2, attributes, "malloc"), 0);
+	return (1);
+}
+
 int	ft_expand(t_mini *attributes)
 {		
 	t_tokens	*token;
@@ -111,23 +108,20 @@ int	ft_expand(t_mini *attributes)
 	{
 		if (token->type == t_command)
 		{
-			if (ft_strncmp(token->str, "$", 2) == 0 && token->merge == 1 && token->next != NULL && token->dollar == 0)
-			{
-				token->str = ft_replace_expansion(token->str, token->str, "");
-				if (token->str == NULL)
-					return (syscall_fail(2, attributes, "malloc"), 0);
-			}				
-			else if (!(ft_expand_word(attributes, token, 0)))
-				return (syscall_fail(2, attributes, "malloc"), 0);
+			if (!(ft_expand_command(token, attributes)))
+				return (0);
 		}
-		if (token->type == t_quote)
+		else if (token->type == t_quote)
 			token->failexp = 0;
-		if (token->type == 5)
-			while (token->next && (token->next->type == t_command || token->next->type == t_quote))
+		else if (token->type == 5)
+		{
+			while (token->next && (token->next->type == t_command
+					|| token->next->type == t_quote))
 			{
 				token = token->next;
 				token->failexp = 0;
 			}
+		}
 		token = token->next;
 	}
 	return (1);
