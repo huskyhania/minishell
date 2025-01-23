@@ -118,7 +118,7 @@ void		ft_sigignore(void);
 void		ft_handle_post_here(int sig);
 void		ft_handle_sigint(int sig);
 void		ft_heredoc_sighandler(int sig);
-void		 ft_print_signal_error(int sig);
+void		ft_print_signal_error(int sig);
 
 //ft_tokens.c
 int			ft_tokenization(t_mini *attributes);

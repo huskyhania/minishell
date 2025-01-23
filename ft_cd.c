@@ -20,12 +20,12 @@ static int	cd_home(t_mini *attributes, char *old_pwd)
 	if (!home || home[0] == '\0')
 	{
 		ft_putstr_fd("cd: HOME not set\n", 2);
+		check_and_free_string(old_pwd);
 		return (1);
 	}
 	if (chdir(home) == -1)
 	{
-		if (old_pwd)
-			free(old_pwd);
+		check_and_free_string(old_pwd);
 		return (1);
 	}
 	return (0);
@@ -75,7 +75,10 @@ void	ft_cd(char **cmd_array, int i, t_mini *attributes)
 	if (cmd_array[1] == NULL || (ft_strcmp(cmd_array[1], "--") == 0))
 	{
 		if (cd_home(attributes, old_pwd))
-			return (syscall_fail(1, attributes, "chdir"));
+		{
+			update_exitcode(1, attributes);
+			return ;
+		}
 	}
 	else
 	{
