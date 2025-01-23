@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 20:07:20 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/18 00:03:54 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/23 13:42:13 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ void	execute_single(char **cmd_arr, t_mini *attributes, t_cmd_table *node)
 
 static void	handle_single(char **cmd_array, t_mini *attribs, t_cmd_table *node)
 {
+	ft_sigignore();
 	attribs->pids[0] = fork();
 	if (attribs->pids[0] < 0)
 		return (syscall_fail(1, attribs, "fork"));
@@ -69,6 +70,7 @@ static void	handle_single(char **cmd_array, t_mini *attribs, t_cmd_table *node)
 	}
 	else
 		wait_for_all_processes(attribs);
+	ft_sigint();
 }
 
 void	single_command(t_cmd_table *node, t_mini *attributes)

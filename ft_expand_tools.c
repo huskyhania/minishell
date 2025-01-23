@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 15:28:25 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/22 19:56:30 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/23 14:01:20 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,10 +98,7 @@ int	ft_expand_pid(t_mini *attributes, t_tokens *token, int j)
 		return (0);
 	token->str = ft_replace_expansion(token->str, path, expansion);
 	if (token->str == NULL)
-	{
-		free(path);
-		return (0);
-	}
+		return (check_and_free_string(path), 0);
 	free(path);
 	return (1);
 }
@@ -112,18 +109,23 @@ int	ft_expand_small(t_mini *attributes, t_tokens *token, int j)
 
 	if (token->str[j + 1] == '?')
 	{
-		if(!(ft_expand_exitcode(attributes, token, j)))
+		if (!(ft_expand_exitcode(attributes, token, j)))
 			return (0);
 	}
 	else if (ft_isdigit(token->str[j + 1]))
 	{
 		path = ft_substr(token->str, j, 2);
+		if (path == NULL)
+			return (0);
 		token->str = ft_replace_expansion(token->str, path, "");
+		if (token->str == NULL)
+			return (check_and_free_string(path), 0);
 		free(path);
+		path = NULL;
 	}
 	else
 	{
-		if(!(ft_expand_pid(attributes, token, j)))
+		if (!(ft_expand_pid(attributes, token, j)))
 			return (0);
 	}
 	token->failexp = 0;

@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:37:20 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/23 10:31:32 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/23 13:20:52 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,10 @@ void	ft_readline_loop(t_mini *attributes)
 	{
 		attributes->readret = readline(PROMPT);
 		if (!(attributes->readret))
+		{
+			ft_putstr_fd("exit\n", 1);
 			ft_final_exit(attributes, attributes->exitcode);
+		}
 		if (attributes->readret && attributes->readret[0] != '\0')
 		{
 			add_history(attributes->readret);
@@ -72,6 +75,7 @@ void	ft_readline_loop(t_mini *attributes)
 			{
 				if (attributes->commands)
 					ft_execution(attributes);
+				ft_print_signal_error(attributes->exitcode);
 			}
 		}
 	}

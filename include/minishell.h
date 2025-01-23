@@ -112,6 +112,7 @@ void ft_sigint(void);
 void ft_heresignal(void);
 void    ft_resetsignal(void);
 void	ft_resetposthere(void);
+void    ft_sigignore(void);
 
 //ft_signal_handler.c
 void    ft_handle_post_here(int sig);

@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 12:18:47 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/23 12:10:40 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/23 12:23:21 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,6 @@ void	wait_for_all_processes(t_mini *attributes)
 			{
 				signal_no = WTERMSIG(status);
 				attributes->exitcode = signal_no + 128;
-				ft_print_signal_error(signal_no);
 				if (signal_no != 13)
 					return ;
 			}
