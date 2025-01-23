@@ -12,37 +12,49 @@
 
 #include "minishell.h"
 
-void	ft_pwd(t_mini *attributes)
+void	ft_pwd(t_mini *attributes, t_cmd_table *node)
 {
 	char	*cwd;
+	int		saved_std;
 
+	saved_std = save_std(attributes, STDOUT_FILENO);
 	cwd = NULL;
 	cwd = getcwd(NULL, 0);
 	if (!cwd)
 	{
 		ft_putstr_fd("pwd: error retrieving current directory", 2);
-		attributes->exitcode = 1;
-		return ;
+		return (update_exitcode(1, attributes));
+	}
+	if (node->out1)
+	{
+		if (redir_out(node, attributes))
+		{
+			restore_std(saved_std, STDOUT_FILENO, attributes);
+			return ;
+		}
 	}
 	printf("%s\n", cwd);
 	free(cwd);
-	attributes->exitcode = 0;
+	update_exitcode(0, attributes);
+	restore_std(saved_std, STDOUT_FILENO, attributes);
 }
 
 void	ft_env(t_cmd_table *node, t_mini *attributes)
 {
 	int	saved_std;
 
-	saved_std = dup(STDOUT_FILENO);
+	saved_std = save_std(attributes, STDOUT_FILENO);
 	if (node->out1)
 	{
 		if (redir_out(node, attributes))
+		{
+			restore_std(saved_std, STDOUT_FILENO, attributes);
 			return ;
+		}
 	}
 	print_envp_list(attributes->envp_heap);
 	update_exitcode(0, attributes);
-	dup2(saved_std, STDOUT_FILENO);
-	close(saved_std);
+	restore_std(saved_std, STDOUT_FILENO, attributes);
 }
 
 void	handle_builtin(t_cmd_table *node, int flag, t_mini *attributes)
@@ -52,9 +64,9 @@ void	handle_builtin(t_cmd_table *node, int flag, t_mini *attributes)
 	if (flag == BUILTIN_CD)
 		ft_cd(node->cmd_arr, 0, attributes);
 	if (flag == BUILTIN_PWD)
-		ft_pwd(attributes);
+		ft_pwd(attributes, node);
 	if (flag == BUILTIN_EXPORT)
-		ft_export(node->cmd_arr, attributes);
+		ft_export(node, attributes);
 	if (flag == BUILTIN_UNSET)
 		remove_env_var(node->cmd_arr, attributes);
 	if (flag == BUILTIN_ENV)

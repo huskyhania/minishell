@@ -63,8 +63,8 @@ int	here_doc_handler(t_mini *attributes, char *delimit)
 	int		saved_stdin;
 	char	*line;
 
-	saved_stdin = save_stdin(attributes);
-	if (here_doc_open(attributes, &temp_fd) < 0)
+	saved_stdin = save_std(attributes, STDIN_FILENO);
+	if (saved_stdin < -1 || here_doc_open(attributes, &temp_fd) < 0)
 		return (-1);
 	ft_heresignal();
 	while (1)
@@ -82,7 +82,7 @@ int	here_doc_handler(t_mini *attributes, char *delimit)
 		return (signal_interrupt_here(attributes, saved_stdin, delimit));
 	ft_sigint();
 	check_and_free_string(line);
-	restore_stdin(saved_stdin, attributes);
+	restore_std(saved_stdin, STDIN_FILENO, attributes);
 	return (0);
 }
 
