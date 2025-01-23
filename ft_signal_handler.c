@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 11:55:19 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/23 13:44:41 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/23 14:55:29 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,6 @@ void	ft_heredoc_sighandler(int sig)
 	if (sig == SIGINT)
 	{
 		g_signal = SIGINT;
-		ft_putstr_fd("\n", STDOUT_FILENO);
 		rl_on_new_line();
 		rl_replace_line("", 0);
 		(ft_attributes()->exitcode) = 130;

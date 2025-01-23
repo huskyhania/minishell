@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 19:56:10 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/19 13:27:52 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/23 14:58:02 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ static int	signal_interrupt_here(t_mini *attribs, int saved_fd, char *del)
 		ft_heredoc_error(del);
 		ft_resetposthere();
 		dup2(saved_fd, STDIN_FILENO);
+		attribs->exitcode = 0;
 		close(saved_fd);
 		return (0);
 	}
@@ -83,7 +84,7 @@ int	here_doc_handler(t_mini *attributes, char *delimit)
 	ft_sigint();
 	check_and_free_string(line);
 	restore_std(saved_stdin, STDIN_FILENO, attributes);
-	return (0);
+	return (update_exitcode(0, attributes), 0);
 }
 
 int	check_for_heredocs(t_cmd_table *node, t_mini *attribs)
