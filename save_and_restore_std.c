@@ -12,23 +12,23 @@
 
 #include "minishell.h"
 
-int	save_stdin(t_mini *attributes)
+int	save_std(t_mini *attributes, int fd)
 {
-	int	saved_stdin;
+	int	saved_std;
 
-	saved_stdin = dup(STDIN_FILENO);
-	if (saved_stdin == -1)
+	saved_std = dup(fd);
+	if (saved_std == -1)
 	{
 		syscall_fail(1, attributes, "dup");
 		return (-1);
 	}
 	else
-		return (saved_stdin);
+		return (saved_std);
 }
 
-void	restore_stdin(int saved_stdin, t_mini *attributes)
+void	restore_std(int saved_fd, int fd, t_mini *attributes)
 {
-	if (dup2(saved_stdin, STDIN_FILENO) == -1)
+	if (dup2(saved_fd, fd) == -1)
 		syscall_fail(1, attributes, "dup2");
-	close(saved_stdin);
+	close(saved_fd);
 }

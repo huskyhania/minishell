@@ -57,31 +57,44 @@ int	export_single_var(t_mini *attributes, char *export)
 	return (0);
 }
 
-void	print_export(t_mini *attributes)
+static void	print_var(t_envp *var)
 {
-	t_envp	*helper;
-
-	helper = attributes->envp_heap;
-	while (helper)
+	if (var && var->key)
 	{
-		if (helper->key)
+		ft_putstr_fd("declare -x ", STDOUT_FILENO);
+		ft_putstr_fd(var->key, STDOUT_FILENO);
+		if (var->value)
 		{
-			ft_putstr_fd("declare -x ", STDOUT_FILENO);
-			ft_putstr_fd(helper->key, STDOUT_FILENO);
-			if (helper->value)
-			{
-				ft_putstr_fd("=", STDOUT_FILENO);
-				ft_putstr_fd("\"", STDOUT_FILENO);
-				ft_putstr_fd(helper->value, STDOUT_FILENO);
-				ft_putstr_fd("\"", STDOUT_FILENO);
-			}
-			ft_putstr_fd("\n", STDOUT_FILENO);
+			ft_putstr_fd("=", STDOUT_FILENO);
+			ft_putstr_fd("\"", STDOUT_FILENO);
+			ft_putstr_fd(var->value, STDOUT_FILENO);
+			ft_putstr_fd("\"", STDOUT_FILENO);
 		}
-		helper = helper->next;
+		ft_putstr_fd("\n", STDOUT_FILENO);
 	}
 }
 
-int	ft_export(char **cmd_array, t_mini *attributes)
+void	print_export(t_cmd_table *node, t_mini *attributes)
+{
+	t_envp	*helper;
+	int		saved_std;
+
+	helper = attributes->envp_heap;
+	saved_std = save_std(attributes, STDOUT_FILENO);
+	if (node->out1)
+	{
+		if (redir_out(node, attributes))
+			return ;
+	}
+	while (helper)
+	{
+		print_var(helper);
+		helper = helper->next;
+	}
+	restore_std(saved_std, STDOUT_FILENO, attributes);
+}
+
+int	ft_export(t_cmd_table *node, t_mini *attributes)
 {
 	int	i;
 	int	ret;
@@ -89,11 +102,11 @@ int	ft_export(char **cmd_array, t_mini *attributes)
 	i = 1;
 	ret = 0;
 	attributes->exitcode = 0;
-	if (!cmd_array[i])
-		print_export(attributes);
-	while (cmd_array[i] != NULL)
+	if (!node->cmd_arr[i])
+		print_export(node, attributes);
+	while (node->cmd_arr[i] != NULL)
 	{
-		if (export_single_var(attributes, cmd_array[i]) == 1)
+		if (export_single_var(attributes, node->cmd_arr[i]) == 1)
 		{
 			attributes->exitcode = 1;
 			ret = 1;
