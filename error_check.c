@@ -60,6 +60,6 @@ void	syscall_fail(int err_code, t_mini *attributes, const char *message)
 
 void	update_exitcode(int err_code, t_mini *attributes)
 {
-	if (attributes->cmd_index == 1 || attributes->i == attributes->cmd_index)
+	if (attributes->cmd_index < 2 || attributes->i == attributes->cmd_index)
 		attributes->exitcode = err_code;
 }

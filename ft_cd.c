@@ -26,6 +26,7 @@ static int	cd_home(t_mini *attributes, char *old_pwd)
 	if (chdir(home) == -1)
 	{
 		check_and_free_string(old_pwd);
+		syscall_fail(1, attributes, "chdir");
 		return (1);
 	}
 	return (0);

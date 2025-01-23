@@ -52,7 +52,7 @@ void	ft_echo(t_cmd_table *node, t_mini *attributes)
 	int	saved_std;
 
 	if (attributes->cmd_index == 1)
-		saved_std = dup(STDOUT_FILENO);
+		saved_std = save_std(attributes, STDOUT_FILENO);
 	if (node->out1)
 	{
 		if (redir_out(node, attributes))
@@ -62,8 +62,7 @@ void	ft_echo(t_cmd_table *node, t_mini *attributes)
 	print_arguments(node->cmd_arr, i, newline);
 	if (attributes->cmd_index == 1)
 	{
-		dup2(saved_std, STDOUT_FILENO);
-		close(saved_std);
+		restore_std(saved_std, STDOUT_FILENO, attributes);
 		attributes->exitcode = 0;
 	}
 }

@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-int	ft_check_quotes(char *line)
+int	ft_check_quotes(t_mini *attributes)
 {
 	int		i;
 	char	c;
@@ -20,19 +20,23 @@ int	ft_check_quotes(char *line)
 
 	ret = 1;
 	i = 0;
-	while (line[i] != '\0')
+	while (attributes->readret[i] != '\0')
 	{
-		if (ret && (line[i] == '\'' || line[i] == '"'))
+		if (ret && (attributes->readret[i] == '\''
+				|| attributes->readret[i] == '"'))
 		{
-			c = line[i];
+			c = attributes->readret[i];
 			ret = 0;
 		}
-		else if (!ret && line[i] == c)
+		else if (!ret && attributes->readret[i] == c)
 			ret = 1;
 		i++;
 	}
 	if (!ret)
+	{
+		attributes->exitcode = 2;
 		ft_putstr_fd("Syntax error unclosed quotes\n", 2);
+	}
 	return (ret);
 }
 

@@ -18,13 +18,13 @@ int	ft_check_everything(t_mini *attributes)
 {
 	if (is_empty_or_space(attributes->readret))
 		return (0);
-	if (!(ft_check_quotes(attributes->readret)))
+	if (!(ft_check_quotes(attributes)))
 		return (0);
 	if (!(ft_tokenization(attributes)))
 	{
 		ft_free_tokens(attributes);
 		ft_putstr_fd("Tokenization error\n", 2);
-		return (0);
+		return (update_exitcode(2, attributes), 0);
 	}
 	if (!(ft_syntax_check(attributes)))
 	{

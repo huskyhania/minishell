@@ -54,7 +54,7 @@ void	ft_exit(char **cmd_array, t_mini *attributes)
 	int	exit_number;
 
 	exit_number = 0;
-	ft_putstr_fd("exit\n", 2);
+	ft_putstr_fd("exit\n", 1);
 	if (cmd_array[1] == NULL)
 		ft_final_exit(attributes, attributes->exitcode);
 	if (ft_is_exit_digit(cmd_array[1]))

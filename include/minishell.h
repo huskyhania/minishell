@@ -135,7 +135,7 @@ int			ft_is_quote(char *line);
 int			ft_check_expansion(char *str, int j);
 
 //ft_syntax.c
-int			ft_check_quotes(char *line);
+int			ft_check_quotes(t_mini *attributes);
 int			ft_syntax_check(t_mini *attributes);
 void		ft_delete_token(t_tokens *token);
 

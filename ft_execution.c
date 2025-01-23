@@ -121,4 +121,5 @@ void	ft_execution(t_mini *attributes)
 		free_pipes(attributes);
 	}
 	cleanup_parent(attributes);
+	attributes->cmd_index = 0;
 }
