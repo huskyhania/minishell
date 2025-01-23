@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/01 17:31:31 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/23 11:45:05 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/23 13:53:23 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,14 @@ void	ft_sigint(void)
 	sa.sa_handler = ft_handle_sigint;
 	sa.sa_flags = SA_RESTART;
 	if (sigaction(SIGINT, &sa, NULL) == -1)
+		ft_putstr_fd("Failed to set signal\n", 2);
+	if (signal(SIGQUIT, SIG_IGN) == SIG_ERR)
+		ft_putstr_fd("Failed to set signal\n", 2);
+}
+
+void	ft_sigignore(void)
+{
+	if (signal(SIGINT, SIG_IGN) == SIG_ERR)
 		ft_putstr_fd("Failed to set signal\n", 2);
 	if (signal(SIGQUIT, SIG_IGN) == SIG_ERR)
 		ft_putstr_fd("Failed to set signal\n", 2);
