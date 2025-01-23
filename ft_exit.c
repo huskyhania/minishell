@@ -54,7 +54,7 @@ void	ft_exit(char **cmd_array, t_mini *attributes)
 	int	exit_number;
 
 	exit_number = 0;
-	printf("exit\n");
+	ft_putstr_fd("exit\n", 2);
 	if (cmd_array[1] == NULL)
 		ft_final_exit(attributes, attributes->exitcode);
 	if (ft_is_exit_digit(cmd_array[1]))
@@ -75,27 +75,3 @@ void	ft_exit(char **cmd_array, t_mini *attributes)
 		exit_number = ft_atoi(cmd_array[1]);
 	ft_final_exit(attributes, exit_number);
 }
-/** not necessary now?
-void	ft_child_exit(char **cmd_array, t_mini *attributes)
-{
-	int	exit_number;
-
-	exit_number = 0;
-	if (cmd_array[1] == NULL)
-		exit_number = attributes->exitcode;
-	else if (ft_is_exit_digit(cmd_array[1]))
-	{
-		exit_number = 2;
-		ft_putstr_fd("exit: ", 2);
-		ft_putstr_fd("cmd_array[1]", 2);
-		ft_putstr_fd(" : numeric argument required\n", 2);
-	}
-	else if (cmd_array[1] && cmd_array[2])
-	{
-		ft_putstr_fd("exit: too many arguments\n", 2);
-		exit_number = 1;
-	}
-	else if (cmd_array[1] && exit_number == 0)
-		exit_number = ft_atoi(cmd_array[1]);
-	attributes->exitcode = exit_number;
-}*/

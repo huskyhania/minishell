@@ -12,15 +12,15 @@
 
 #include "minishell.h"
 
-void	set_error_and_display(int err_code, t_mini *attributes, const char *cmd)
+void	set_error_and_display(int err, t_mini *attribs, const char *cmd)
 {
-	attributes->exitcode = err_code;
+	attribs->exitcode = err;
 	ft_putstr_fd((char *)cmd, 2);
-	if (err_code == 126)
+	if (err == 126)
 		ft_putstr_fd(": Permission denied\n", 2);
-	if (err_code == 127)
+	if (err == 127)
 		ft_putstr_fd(": command not found\n", 2);
-	if (err_code == 1)
+	if (err == 1)
 	{
 		if (access(cmd, F_OK) == 0)
 			ft_putstr_fd(": Permission denied\n", 2);
