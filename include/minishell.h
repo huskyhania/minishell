@@ -220,8 +220,9 @@ void	ft_cd(char **cmd_array, int i, t_mini *attributes);
 
 
 //ft_exit.c
+void	ft_final_exit(t_mini *attributes, int exit_number);
 void    ft_exit(char **cmd_array, t_mini *attributes);
-void    ft_child_exit(char **cmd_array, t_mini *attributes);
+void    ft_child_exit(char **cmd_array, t_mini *attributes); // not needecd ?
 
 //heredoc
 int	here_doc_handler(t_mini *attributes, char *delimit);

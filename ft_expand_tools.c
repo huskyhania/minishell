@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 15:28:25 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/22 16:57:39 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/22 19:56:30 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,10 @@ int	ft_expand_small(t_mini *attributes, t_tokens *token, int j)
 	char	*path;
 
 	if (token->str[j + 1] == '?')
-		ft_expand_exitcode(attributes, token, j);
+	{
+		if(!(ft_expand_exitcode(attributes, token, j)))
+			return (0);
+	}
 	else if (ft_isdigit(token->str[j + 1]))
 	{
 		path = ft_substr(token->str, j, 2);
@@ -119,7 +122,10 @@ int	ft_expand_small(t_mini *attributes, t_tokens *token, int j)
 		free(path);
 	}
 	else
-		ft_expand_pid(attributes, token, j);
+	{
+		if(!(ft_expand_pid(attributes, token, j)))
+			return (0);
+	}
 	token->failexp = 0;
 	return (1);
 }
