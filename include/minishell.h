@@ -162,6 +162,7 @@ t_cmd_table	*ft_add_new(t_tokens *token);
 
 //ft_type_array.c
 int			*ft_add_type_arr(t_mini *attributes, int *old_array, int type);
+void		ft_free_merge_fail(t_cmd_table *table);
 
 //ft_free_ast.c
 int			ft_free_ast(t_mini *attributes);
@@ -240,6 +241,7 @@ int			ft_strcmp(char *s1, char *s2);
 int			save_std(t_mini *attributes, int fd);
 void		restore_std(int saved_fd, int fd, t_mini *attributes);
 void		check_and_free_string(char *str);
+void		check_and_free_double(char *str, char *str2);
 
 //error messages
 void		set_error_and_display(int err, t_mini *attribs, const char *cmd);

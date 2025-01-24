@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 17:07:16 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/20 15:08:18 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/24 12:35:40 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,26 @@ void	ft_check_ast_array(t_cmd_table *print)
 		ft_triple_pointer(&print->cmd_arr);
 	if (print && print->herefile)
 		ft_triple_pointer(&print->herefile);
-	free(print->type_arr);
+	if (print->type_arr)
+	{
+		free(print->type_arr);
+		print->type_arr = NULL;
+	}
+}
+
+void	ft_free_left(t_cmd_table *table)
+{
+	if (table->type != t_pipe)
+	{
+		ft_check_ast_array(table);
+		free(table);
+		table = NULL;
+	}
+	else
+	{
+		free(table);
+		table = NULL;
+	}
 }
 
 int	ft_free_ast(t_mini *attributes)
@@ -74,15 +93,10 @@ int	ft_free_ast(t_mini *attributes)
 		{
 			ft_check_ast_array(table->right);
 			free(table->right);
+			table->right = NULL;
 		}
 		temp = table->left;
-		if (table->type != t_pipe)
-		{
-			ft_check_ast_array(table);
-			free(table);
-		}
-		else
-			free(table);
+		ft_free_left(table);
 		table = temp;
 	}
 	attributes->commands = NULL;

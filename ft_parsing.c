@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 18:12:26 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/23 10:24:41 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/24 13:27:23 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,15 @@ t_cmd_table	*ft_merge(t_mini *attributes, t_tokens **token, t_cmd_table *old)
 	{
 		old->herefile = ft_add_cmd_arr(old->herefile, (*token)->next->str);
 		if (old->herefile == NULL)
+		{
+			ft_free_merge_fail(old);
 			return (NULL);
+		}
 	}
 	old->type_arr = ft_add_type_arr(attributes, old->type_arr, (*token)->type);
 	if (old->type_arr == NULL)
 	{
-		ft_check_ast_array(old);
-		free(old);
+		ft_free_merge_fail(old);
 		return (NULL);
 	}
 	*token = (*token)->next;
@@ -71,36 +73,37 @@ t_cmd_table	*ft_merge_command(t_mini *attributes, t_tokens **token)
 			if (node->cmd_arr == NULL)
 			{	
 				free(node);
+				node = NULL;
 				return (NULL);
 			}
 		}
 		*token = (*token)->next;
 	}
-	attributes->cmd_index += 1;
 	return (node);
 }
 
-int	ft_start_parsing(t_mini *attributes)
+int	ft_start_parsing(t_mini *attributes, t_tokens *token)
 {
-	t_tokens	*token;
 	t_cmd_table	*new_table;
 
-	token = attributes->tokens;
 	attributes->commands = ft_merge_command(attributes, &token);
-	attributes->type_count = 0;
 	if (attributes->commands == NULL)
 		return (0);
+	attributes->type_count = 0;
+	attributes->cmd_index += 1;
 	while (token != NULL && token->type == t_pipe)
 	{
 		token = token->next;
 		new_table = ft_merge_command(attributes, &token);
-		attributes->type_count = 0;
 		if (new_table == NULL)
 			return (0);
+		attributes->type_count = 0;
+		attributes->cmd_index += 1;
 		if (!(ft_merge_pipe(attributes, new_table)))
 		{
 			ft_check_ast_array(new_table);
 			free(new_table);
+			new_table = NULL;
 			return (0);
 		}
 	}
@@ -109,11 +112,14 @@ int	ft_start_parsing(t_mini *attributes)
 
 int	ft_parsing(t_mini *attributes)
 {
+	t_tokens	*token;
+
+	token = attributes->tokens;
 	attributes->type_count = 0;
 	attributes->cmd_index = 0;
 	attributes->commands = NULL;
 	ft_convert(attributes);
-	if (!(ft_start_parsing(attributes)))
+	if (!(ft_start_parsing(attributes, token)))
 	{
 		ft_free_tokens(attributes);
 		ft_free_ast(attributes);

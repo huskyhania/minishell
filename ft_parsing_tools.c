@@ -6,7 +6,7 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 20:07:51 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/22 14:39:34 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/24 13:31:27 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ char	**ft_fill_array(char **old_array, char **new_array, char *str)
 	i = 0;
 	while (old_array && old_array[i])
 	{
-		new_array[i] = ft_strdup(old_array[i]);
+		new_array[i] = NULL;
 		if (new_array[i] == NULL)
 		{
 			ft_free_cmd_array(old_array);
@@ -80,7 +80,7 @@ char	**ft_fill_array(char **old_array, char **new_array, char *str)
 		return (NULL);
 	}
 	new_array[i + 1] = 0;
-	free_array(old_array);
+	ft_free_cmd_array(old_array);
 	return (new_array);
 }
 

@@ -6,11 +6,25 @@
 /*   By: hskrzypi <hskrzypi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 19:34:02 by hskrzypi          #+#    #+#             */
-/*   Updated: 2025/01/12 00:07:34 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/24 11:28:48 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	check_and_free_double(char *str, char *str2)
+{
+	if (str)
+	{
+		free(str);
+		str = NULL;
+	}
+	if (str2)
+	{
+		free(str2);
+		str2 = NULL;
+	}
+}
 
 void	free_array(char **array)
 {
