@@ -37,10 +37,9 @@ static char	*check_full_path(const char *cmd, const char *dir, int *found)
 	if (!full_path)
 		return (NULL);
 	if (check_access(full_path, found) == 1)
-	{
 		return (full_path);
-	}
 	free(full_path);
+	full_path = NULL;
 	return (NULL);
 }
 
@@ -83,6 +82,7 @@ char	*search_in_cwd(const char *cmd, t_mini *attributes)
 	}
 	cmd_path = join_paths(cwd, cmd);
 	free(cwd);
+	cwd = NULL;
 	if (cmd_path)
 	{
 		if (access(cmd_path, X_OK) == 0)
@@ -91,6 +91,7 @@ char	*search_in_cwd(const char *cmd, t_mini *attributes)
 			return (cmd_path);
 		}
 		free(cmd_path);
+		cmd_path = NULL;
 	}
 	return (NULL);
 }

@@ -91,7 +91,7 @@ t_envp	*create_node(char *s, t_envp **envp_heap)
 		node->value = NULL;
 	if (!node->key || (!node->value && ft_strchr(s, '=')))
 	{
-		printf("malloc error in evnp creation");
+		ft_putstr_fd("malloc error in evnp creation\n", 2);
 		if (node->key)
 			check_and_free_string(node->key);
 		free(node);

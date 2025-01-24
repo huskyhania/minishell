@@ -50,7 +50,7 @@ int	create_pipes(t_mini *attributes)
 	attributes->num_pipes = attributes->cmd_index - 1;
 	attributes->pipe_arr = malloc(attributes->num_pipes * sizeof(int *));
 	if (!attributes->pipe_arr)
-		return (syscall_fail(1, attributes, "malloc"), -1);
+		return (-1);
 	while (++i < attributes->num_pipes)
 	{
 		attributes->pipe_arr[i] = malloc(2 * sizeof(int));
@@ -84,6 +84,7 @@ void	free_pipes(t_mini *attributes)
 			if (attributes->pipe_arr[i][1] > 0)
 				close(attributes->pipe_arr[i][1]);
 			free(attributes->pipe_arr[i]);
+			attributes->pipe_arr[i] = NULL;
 		}
 		i++;
 	}

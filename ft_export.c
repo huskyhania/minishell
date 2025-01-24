@@ -45,13 +45,13 @@ int	export_single_var(t_mini *attributes, char *export)
 	{
 		if (!replace_append(export, &attributes->envp_heap))
 		{
-			printf("variable update fail\n");
+			ft_putstr_fd("variable update fail\n", 2);
 			return (1);
 		}
 	}
 	else if (!create_node(export, &attributes->envp_heap))
 	{
-		printf("malloc fail in node creation\n");
+		ft_putstr_fd("malloc fail in node creation\n", 2);
 		return (1);
 	}
 	return (0);

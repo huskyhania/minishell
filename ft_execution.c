@@ -22,7 +22,10 @@ void	execute_command(t_cmd_table *node, t_mini *attributes)
 	if (cmd_path)
 	{
 		if (execve(cmd_path, node->cmd_arr, attributes->envp_arr) == -1)
+		{
 			free(cmd_path);
+			cmd_path = NULL;
+		}
 	}
 	cleanup_child(attributes);
 	exit(attributes->exitcode);
@@ -115,7 +118,7 @@ void	ft_execution(t_mini *attributes)
 	else
 	{
 		if (create_pipes(attributes) == -1)
-			return (syscall_fail(1, attributes, "pipe"));
+			return (syscall_fail(1, attributes, "pipe arr"));
 		handle_command_or_pipe(attributes->commands, attributes);
 		if (g_signal == SIGINT)
 			g_signal = 0;

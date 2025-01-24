@@ -45,13 +45,14 @@ static int	update_oldpwd(t_envp **envp_heap, char *old_pwd)
 		{
 			free(current->value);
 			current->value = ft_strdup(old_pwd);
-			free(old_pwd);
+			check_and_free_string(old_pwd);
 			return (0);
 		}
 		current = current->next;
 	}
 	ft_putstr_fd("OLDPWD not found\n", 2);
 	free(old_pwd);
+	old_pwd = NULL;
 	return (1);
 }	
 
@@ -85,8 +86,7 @@ void	ft_cd(char **cmd_array, int i, t_mini *attributes)
 	{
 		if (chdir(cmd_array[1]) == -1)
 		{
-			if (old_pwd)
-				free(old_pwd);
+			check_and_free_string(old_pwd);
 			return (cd_error(2, attributes));
 		}
 	}

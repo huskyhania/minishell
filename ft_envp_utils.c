@@ -54,10 +54,17 @@ void	free_envp_list(t_envp *envp_heap)
 		temp = envp_heap;
 		envp_heap = envp_heap->next;
 		if (temp->key)
+		{
 			free(temp->key);
+			temp->key = NULL;
+		}
 		if (temp->value)
+		{
 			free(temp->value);
+			temp->value = NULL;
+		}
 		free(temp);
+		temp = NULL;
 	}
 }
 

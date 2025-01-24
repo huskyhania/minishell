@@ -51,7 +51,10 @@ void	execute_single(char **cmd_arr, t_mini *attributes, t_cmd_table *node)
 	if (cmd_path)
 	{
 		if (execve(cmd_path, cmd_arr, attributes->envp_arr) == -1)
+		{
 			free(cmd_path);
+			cmd_path = NULL;
+		}
 	}
 	cleanup_child(attributes);
 	exit(attributes->exitcode);

@@ -36,9 +36,11 @@ void	free_array(char **array)
 	while (array[i] != NULL)
 	{
 		free(array[i]);
+		array[i] = NULL;
 		i++;
 	}
 	free(array);
+	array = NULL;
 }
 
 int	is_empty_or_space(const char *cmd)

@@ -34,7 +34,7 @@ void	ft_pwd(t_mini *attributes, t_cmd_table *node)
 		}
 	}
 	printf("%s\n", cwd);
-	free(cwd);
+	check_and_free_string(cwd);
 	update_exitcode(0, attributes);
 	restore_std(saved_std, STDOUT_FILENO, attributes);
 }

@@ -36,7 +36,10 @@ void	cleanup_child(t_mini *attributes)
 	ft_free_ast(attributes);
 	envp_cleanup(attributes);
 	if (attributes->pids)
+	{	
 		free(attributes->pids);
+		attributes->pids = NULL;
+	}
 }
 
 void	cleanup_parent(t_mini *attributes)

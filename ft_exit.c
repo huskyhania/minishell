@@ -18,7 +18,10 @@ void	ft_final_exit(t_mini *attributes, int exit_number)
 	envp_cleanup(attributes);
 	ft_free_ast(attributes);
 	if (attributes->pids)
+	{
 		free(attributes->pids);
+		attributes->pids = NULL;
+	}
 	if (attributes->cmd_index > 1)
 		free_pipes(attributes);
 	exit(exit_number);

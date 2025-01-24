@@ -31,9 +31,9 @@ int	remove_env_var(char **cmd_array, t_mini *attributes)
 				current->next->prev = current->prev;
 			if (attributes->envp_heap == current)
 				attributes->envp_heap = current->next;
-			free(to_delete->key);
-			free(to_delete->value);
+			check_and_free_double(to_delete->key, to_delete->value);
 			free(to_delete);
+			to_delete = NULL;
 			return (0);
 		}
 		current = current->next;
