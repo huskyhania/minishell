@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/01/24 16:19:10 by llaakson          #+#    #+#             */
+/*   Updated: 2025/01/24 16:20:29 by llaakson         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
@@ -8,7 +19,6 @@
 # include <sys/wait.h>
 # include <sys/stat.h>
 # include <signal.h>
-# include <stdbool.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "../complete_Libft/libft.h"

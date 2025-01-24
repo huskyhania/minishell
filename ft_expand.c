@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 15:11:35 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/24 11:20:16 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/24 16:01:34 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,32 +52,32 @@ int	ft_expand_big(t_mini *attributes, t_tokens *token, int j, int i)
 	return (1);
 }
 
-int	ft_expand_word(t_mini *attributes, t_tokens *t, int j)
+int	ft_expand_word(t_mini *attributes, t_tokens *tk, int j)
 {
-	if (!t || !t->str)
+	if (!tk || !tk->str)
 		return (0);
-	while (t->str[j] != '\0')
+	while (tk->str[j] != '\0')
 	{
-		if (ft_check_expansion(t->str, j))
+		if (ft_check_expansion(tk->str, j))
 		{
-			if (t->str[j + 1] == '?'
-				|| t->str[j + 1] == '$' || ft_isdigit(t->str[j + 1]))
+			if (tk->str[j + 1] == '?'
+				|| tk->str[j + 1] == '$' || ft_isdigit(tk->str[j + 1]))
 			{
-				if (!ft_expand_small(attributes, t, j))
+				if (!ft_expand_small(attributes, tk, j))
 					return (0);
 			}
 			else
-				if (!ft_expand_big(attributes, t, j, 0))
+				if (!ft_expand_big(attributes, tk, j, 0))
 					return (0);
 			break ;
 		}
 		j++;
 	}
-	if (ft_strchr(t->str + j, 36))
-		if (!(ft_expand_word(attributes, t, 0)))
+	if (ft_strchr(tk->str + j, 36))
+		if (!(ft_expand_word(attributes, tk, 0)))
 			return (0);
-	if (t->failexp == -1)
-		t->failexp = 0;
+	if (tk->failexp == -1)
+		tk->failexp = 0;
 	return (1);
 }
 

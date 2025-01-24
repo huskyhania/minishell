@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/09 16:48:06 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/17 18:55:06 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/24 16:16:03 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,8 @@ int	ft_is_exit_digit(char *exit_str)
 	}
 	if (ret > 1)
 		return (ret);
+	if (ft_strlen(exit_str) > 19)
+		return (1);
 	if (exit_str[0] == '-')
 		return (ft_strcmp(exit_str, "-9223372036854775808") > 0);
 	else
