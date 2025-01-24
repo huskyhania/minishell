@@ -6,7 +6,7 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 15:11:35 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/22 17:47:40 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/24 11:20:16 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,7 @@ int	ft_expand_big2(t_mini *attributes, t_tokens *token, char *path)
 	{
 		token->str = ft_replace_expansion(token->str, path, "");
 		if (token->str == NULL)
-		{
-			free(path);
-			return (0);
-		}
+			return (check_and_free_string(path), 0);
 		if (token->failexp == -1)
 			token->failexp = 1;
 		free(path);
@@ -32,12 +29,10 @@ int	ft_expand_big2(t_mini *attributes, t_tokens *token, char *path)
 	}
 	token->str = ft_replace_expansion(token->str, path, expansion);
 	if (token->str == NULL)
-	{
-		free(path);
-		return (0);
-	}
+		return (check_and_free_string(path), 0);
 	token->failexp = 0;
 	free(path);
+	path = NULL;
 	return (1);
 }
 
@@ -52,7 +47,8 @@ int	ft_expand_big(t_mini *attributes, t_tokens *token, int j, int i)
 	path = ft_substr(token->str, j, i);
 	if (path == NULL)
 		return (0);
-	ft_expand_big2(attributes, token, path);
+	if (!(ft_expand_big2(attributes, token, path)))
+		return (0);
 	return (1);
 }
 

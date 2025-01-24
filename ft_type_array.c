@@ -6,21 +6,17 @@
 /*   By: llaakson <llaakson@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/11 16:42:19 by llaakson          #+#    #+#             */
-/*   Updated: 2025/01/20 15:00:51 by llaakson         ###   ########.fr       */
+/*   Updated: 2025/01/24 13:30:28 by llaakson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_free_type_array(int *array)
+void	ft_free_merge_fail(t_cmd_table *table)
 {
-	if (!array)
-		return ;
-	if (array)
-	{
-		free(array);
-		array = NULL;
-	}
+	ft_check_ast_array(table);
+	free(table);
+	table = NULL;
 }
 
 int	*ft_add_type_arr(t_mini *attributes, int *old_array, int type)
@@ -34,6 +30,7 @@ int	*ft_add_type_arr(t_mini *attributes, int *old_array, int type)
 	if (!new_array)
 	{
 		free(old_array);
+		old_array = NULL;
 		return (NULL);
 	}
 	i = 0;
