@@ -12,11 +12,6 @@
 
 #include "minishell.h"
 
-// [optional cmd] << DELIMITER
-// cmd << DELIMITER | cmd1 >> file
-//open temporary file with flags O_CREAT | O_WRONLY | O_TRUNCT, 0644
-//int here_doc_fd should it be in attributes?
-
 void	ft_heredoc_error(char *delimit)
 {
 	printf("here-document at line delimited");
@@ -51,7 +46,8 @@ static int	signal_interrupt_here(t_mini *attribs, int saved_fd, char *del)
 	{
 		ft_heredoc_error(del);
 		ft_resetposthere();
-		dup2(saved_fd, STDIN_FILENO);
+		if (dup2(saved_fd, STDIN_FILENO) == -1)
+			syscall_fail(1, attribs, "dup2");
 		attribs->exitcode = 0;
 		close(saved_fd);
 		return (0);
@@ -65,7 +61,7 @@ int	here_doc_handler(t_mini *attributes, char *delimit)
 	char	*line;
 
 	saved_stdin = save_std(attributes, STDIN_FILENO);
-	if (saved_stdin < -1 || here_doc_open(attributes, &temp_fd) < 0)
+	if (saved_stdin < 0 || here_doc_open(attributes, &temp_fd) < 0)
 		return (-1);
 	ft_heresignal();
 	while (1)

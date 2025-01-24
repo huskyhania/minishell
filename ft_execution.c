@@ -102,7 +102,10 @@ void	ft_execution(t_mini *attributes)
 {
 	ft_sigint();
 	if (create_pids_array(attributes))
+	{
+		ft_free_ast(attributes);
 		return (syscall_fail(1, attributes, "malloc"));
+	}
 	if (attributes->commands->type != t_pipe)
 	{
 		single_command(attributes->commands, attributes);
