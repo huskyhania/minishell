@@ -26,10 +26,7 @@ typedef enum e_token_type {
 	t_less,
 	t_greatgreat,
 	t_lessless,
-	t_bracketleft,
-	t_bracketrigth,
 	t_quote,
-	t_dollar
 }	t_token_type;
 
 // Builtin types
