@@ -20,7 +20,22 @@ HEADERS	:= -I ./include -I $(LIBLIBFT)
 
 LIBS := -L$(LIBLIBFT) -lreadline -lft
 
-SRCS 	:= main.c ft_tokens.c ft_parsing.c ft_execution.c ft_path.c ft_tokens_tools.c ft_builtins.c ft_envp_builtins.c ft_export_builtin.c ft_ll_envp.c ft_parsing_tools.c ft_expand.c ft_heredoc.c ft_tokens_memory.c ft_utils.c ft_single_command.c ft_syntax.c ft_piping.c ft_cleanup.c ft_signal.c ft_error_check.c ft_redirections.c ft_free_ast.c ft_command_checks.c ft_exit.c ft_type_array.c ft_ultimate_redirections.c ft_echo.c ft_cd.c ft_path_utils.c ft_merge_tokens.c ft_signal_handler.c ft_export.c ft_exec_utils.c ft_envp_utils.c ft_envp_creation.c ft_expand_tools.c ft_save_and_restore_std.c\
+SRC_DIR := sources
+
+SRCS_NO_DIR	:= main.c signals/ft_signal.c signals/ft_signal_handler.c \
+	parsing/ft_tokens.c parsing/ft_parsing.c parsing/ft_tokens_tools.c parsing/ft_parsing_tools.c \
+	parsing/ft_expand.c parsing/ft_tokens_memory.c parsing/ft_utils.c parsing/ft_syntax.c \
+	parsing/ft_free_ast.c parsing/ft_merge_tokens.c parsing/ft_expand_tools.c \
+	builtins/ft_builtins.c builtins/ft_exit.c builtins/ft_echo.c builtins/ft_cd.c \
+	execution/ft_execution.c execution/ft_path.c execution/ft_envp_builtins.c \
+	execution/ft_export_builtin.c execution/ft_ll_envp.c execution/ft_heredoc.c \
+	execution/ft_single_command.c execution/ft_piping.c execution/ft_cleanup.c \
+	execution/ft_error_check.c execution/ft_redirections.c execution/ft_command_checks.c \
+	execution/ft_type_array.c execution/ft_ultimate_redirections.c execution/ft_path_utils.c \
+	execution/ft_export.c execution/ft_exec_utils.c execution/ft_envp_utils.c \
+	execution/ft_envp_creation.c execution/ft_save_and_restore_std.c \
+
+SRCS := $(addprefix $(SRC_DIR)/, $(SRCS_NO_DIR))
 
 OBJS	:= ${SRCS:.c=.o}
 
