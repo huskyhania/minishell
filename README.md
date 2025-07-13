@@ -1,4 +1,4 @@
-🐚 THE MINISHELL 🐚
+🐚 **THE MINISHELL** 🐚
 
 In this repository you will find **the minishell**, an implementation of bash-like command interpreter written from scratch in C!
 
@@ -39,22 +39,27 @@ Later on just type ```./minishell``` and enjoy all it has to offer!
 
 3. User input is validated, tokenized and used to populate a syntax tree.
 
-4. Double and single quotes are handled exactly as in bash and environment variables are expanded (when necessary).
+4. Double and single quotes are handled exactly as in bash and environment variables are expanded (when necessary). You can test quotes with in quotes or see how expansion behaves with single and double quotes.
 
-The nodes of syntax tree contain information about the command (or commands), as well as input and output redirections (if any).
+5. The nodes of syntax tree contain information about the command (or commands), as well as input and output redirections (if any).
 
-[Recursion is used to traverse the syntax tree] and execute commands in order they were provided in by the user (from left to right).
+6. Recursion is used to traverse the syntax tree and execute commands in order they were provided by the user (from left to right).
 
-Environment variables are inherited from the original shell you run the program in, and stored in a linked list, but you can also add and delete them freely, as well as run the shell without any.
+7. Environment variables are inherited from the original shell you run the program in, and stored in a linked list, but you can also add and delete them freely, as well as run the shell without any. You can safely try to expand non-existent variables.
 
-Our minishell has several builtin commands: echo (and echo -n), export, unset, env, cd, pwd and exit. They behave exactly as in bash, handle redirections, etc.
+8. Our minishell has several builtin commands: **echo** (and echo -n), **export, unset, env, cd, pwd** and **exit**. They behave exactly as in bash, handle redirections, etc. Their behaviour mimics bash also when it comes to a pipeline of commands.
 
-[Signal handling of SIGINT, SIGQUIT and EOF is implemented] and its behaviour reflects bash both when testing single commands, a pipeline of commands and heredocs.
+9. Signal handling of SIGINT, SIGQUIT and EOF is implemented and its behaviour reflects bash both when testing single commands, a pipeline of commands and heredocs.
 
-User is able to create multiple heredoc files, both for single and multiple commands.
+10. User is able to create multiple heredoc files, both for single and multiple commands.
 
-Exit codes mimic those in bash and reflect the order of operations.
+11. Exit codes mimic those in bash and reflect the order of operations.
 
-Error messages are informative and bash-like, they encompass file descriptor issues, syntax errors, ambiguous redirections, permissions, commands not found, among others.
+12. Error messages are informative and bash-like, they encompass file descriptor issues, syntax errors, ambiguous redirections, permissions, commands not found, among others.
 
-No memory or file descriptor leaks were ever found ;)
+13. No memory or file descriptor leaks were ever found ;)
+
+## ⚠️ Known limitations:
+
+- No support for wildcard expansion (`*`)
+- No logical operators (&&, ||)
