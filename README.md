@@ -1,8 +1,8 @@
-🐚 **THE MINISHELL** 🐚
+## 🐚 THE MINISHELL 🐚
 
 In this repository you will find **the minishell**, an implementation of bash-like command interpreter written from scratch in C!
 
-Don't let the name fool you though - it is one of the biggest and most demanding project of 42 school curriculum, which introduces and reinforces concepts such as *processes, file descriptors, signals, parsing, memory management, environment management*, among others.
+Don't let the name fool you though - it is one of the biggest and most demanding projects of 42 school curriculum, which introduces and reinforces concepts such as *processes, file descriptors, signals, parsing, memory management, environment management*, among others.
 
 It was done over the course of approximately 7 weeks at Hive Helsinki, together with the parsing master and the lord of the signals - **[Leo Laaksonen](https://github.com/llaakson)**.
 
@@ -39,19 +39,19 @@ Later on just type ```./minishell``` and enjoy all it has to offer!
 
 3. User input is validated, tokenized and used to populate a syntax tree.
 
-4. Double and single quotes are handled exactly as in bash and environment variables are expanded (when necessary). You can test quotes with in quotes or see how expansion behaves with single and double quotes.
+4. Double and single quotes are handled exactly as in bash and environment variables are expanded (when necessary). You can test quotes within quotes or see how expansion behaves with single and double quotes.
 
 5. The nodes of syntax tree contain information about the command (or commands), as well as input and output redirections (if any).
 
 6. Recursion is used to traverse the syntax tree and execute commands in order they were provided by the user (from left to right).
 
-7. Environment variables are inherited from the original shell you run the program in, and stored in a linked list, but you can also add and delete them freely, as well as run the shell without any. You can safely try to expand non-existent variables.
+7. Environment variables are inherited from the original shell you run the program in, and stored in a linked list, but you can also add and delete them freely, as well as run the shell without any ```env -i ./minishell```. You can safely try to expand non-existent variables.
 
 8. Our minishell has several builtin commands: **echo** (and echo -n), **export, unset, env, cd, pwd** and **exit**. They behave exactly as in bash, handle redirections, etc. Their behaviour mimics bash also when it comes to a pipeline of commands.
 
 9. Signal handling of SIGINT, SIGQUIT and EOF is implemented and its behaviour reflects bash both when testing single commands, a pipeline of commands and heredocs.
 
-10. User is able to create multiple heredoc files, both for single and multiple commands.
+10. User is able to create multiple heredoc files, both for single and multiple commands. Input and output files are checked and opened/ created in order they were requested, with or without a command present.
 
 11. Exit codes mimic those in bash and reflect the order of operations.
 
@@ -63,3 +63,4 @@ Later on just type ```./minishell``` and enjoy all it has to offer!
 
 - No support for wildcard expansion (`*`)
 - No logical operators (&&, ||)
+- No support for multi-line commands (unclosed quotes will result in syntax errors)
